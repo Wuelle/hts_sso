@@ -1,5 +1,54 @@
-$primary: #ff0000;
+// $primary: #ff0000;
+$background: #151515;
+$background-elevated: #252525;
+$font-primary: #eee;
+$font-secondary: #ddd;
+$input-primary: #444;
+$shadow: #050505;
 
 @import '../node_modules/bootstrap/scss/bootstrap';
 
+.background {
+	background: $background;
+}
 
+.elevated {
+	background: $background-elevated;
+	box-shadow: 4px 4px 6px $shadow ;
+}
+
+.input-primary {
+	background: $input-primary;
+	color: $font-primary;
+
+	border-color: black;
+	border-width: 0px 0px 1px 0px;
+	border-style: solid;
+	border-radius: 0px;
+}
+
+.input-primary:focus {
+	background: $input-primary;
+	color: $font-primary;
+
+	border-color: black;
+	border-width: 0px 0px 1px 0px;
+	border-style: solid;
+	border-radius: 0px;
+}
+
+.button-primary {
+	$padding-y: 0.3rem;
+	$padding-x: 1.5rem;
+	border-radius: 1px;
+
+	padding: $padding-y $padding-x $padding-y $padding-x;
+}
+
+.font-primary {
+	color: $font-primary;
+}
+
+.font-secondary {
+	color: $font-secondary;
+}

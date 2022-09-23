@@ -5,7 +5,7 @@ info:
   Authentication is done in three steps: Username, 
   Password and MFA (if enabled)."
   version: 0.0.1
-paths: {
+paths:
   /login:
     post:
       summary: Send a value
@@ -17,9 +17,9 @@ paths: {
           schema:
             type: string
             enum:
-              "username"
-              "password"
-              "mfa"
+              -username
+              -password
+              -mfa
 
         - name: value
           description: "The value submitted by the user"
@@ -41,10 +41,10 @@ paths: {
                       "The next frame that should be shown to the user"
                     type: string
                     enum:
-                      "username"
-                      "password"
-                      "mfa"
-                      "done"
+                      -username
+                      -password
+                      -mfa
+                      -done
                   show_captcha:
                     description: "Whether or not the user must complete a captcha to continue authentication"
                     type: boolean
@@ -58,6 +58,3 @@ paths: {
                     type: boolean
         "500": 
           description: "The server has encountered a situation it does not know how to handle. The client should restart authentication from the beginning"
-
-
-}
