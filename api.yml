@@ -1,0 +1,63 @@
+openapi: 3.1.0
+info:
+  title: A mockup of the hts SSO frontend api
+  description: "This API allows the user to login to their hackthissite.org account. 
+  Authentication is done in three steps: Username, 
+  Password and MFA (if enabled)."
+  version: 0.0.1
+paths: {
+  /login:
+    post:
+      summary: Send a value
+      description: ""
+      parameters: 
+        - name: frame
+          description: "The frame that was submitted by the user"
+          required: true
+          schema:
+            type: string
+            enum:
+              "username"
+              "password"
+              "mfa"
+
+        - name: value
+          description: "The value submitted by the user"
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: "The server encountered no errors and is either ready to receive the next
+          info or returned an authentication cookie (authentication complete)"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  next:
+                    description:
+                      "The next frame that should be shown to the user"
+                    type: string
+                    enum:
+                      "username"
+                      "password"
+                      "mfa"
+                      "done"
+                  show_captcha:
+                    description: "Whether or not the user must complete a captcha to continue authentication"
+                    type: boolean
+        "403":
+          description: "The credentials submitted by the user are invalid. The client should re-send the previous request with the correct value"
+          content:
+            application/json:
+              schema:
+                show_captcha:
+                    description: "Whether or not the user must complete a captcha to continue authentication"
+                    type: boolean
+        "500": 
+          description: "The server has encountered a situation it does not know how to handle. The client should restart authentication from the beginning"
+
+
+}
