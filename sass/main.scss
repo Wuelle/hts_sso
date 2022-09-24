@@ -6,6 +6,9 @@ $font-secondary: #ddd;
 $input-primary: #444;
 $shadow: #050505;
 
+// used to compute the form offsets later
+$elevated-padding: 3rem;
+
 @import '../node_modules/bootstrap/scss/bootstrap';
 
 .background {
@@ -14,7 +17,8 @@ $shadow: #050505;
 
 .elevated {
 	background: $background-elevated;
-	box-shadow: 4px 4px 6px $shadow ;
+	box-shadow: 4px 4px 6px $shadow;
+	padding: $elevated-padding;
 }
 
 .input-primary {
@@ -37,6 +41,15 @@ $shadow: #050505;
 	border-radius: 0px;
 }
 
+.href-secondary {
+	color: $font-secondary;
+}
+
+.href-secondary:hover {
+	color: $font-secondary;
+	filter: brightness(0.7);
+}
+
 .button-primary {
 	$padding-y: 0.3rem;
 	$padding-x: 1.5rem;
@@ -51,4 +64,21 @@ $shadow: #050505;
 
 .font-secondary {
 	color: $font-secondary;
+}
+
+#frame-container {
+	position: relative;
+	display: grid;
+	grid-template-columns: repeat(3, 100%);
+	grid-column-gap: 2 * $elevated-padding;
+}
+
+#btn-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+#btn-container button:only-child{
+	margin: 0 auto;
 }

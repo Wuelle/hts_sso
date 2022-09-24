@@ -13,20 +13,39 @@
 	</head>
 	<body class="background">
 		<div class="text-center mt-5">
-			<form style="max-width:480px;margin:auto;" class="elevated p-5">
+			<form style="max-width:480px;margin:auto;overflow:hidden;" class="elevated" id="form-container">
+				<!-- Invisible input for automatically submitting the form if the user presses enter in an input -->
+				<input type="submit" style="display: none" />
 				<div class="mx-auto" style="display:block;width:50%;">
 					<img src="https://data.htscdn.org/images/hackthissite-meta-card.png" alt="HackThisSite Logo" class="rounded img-fluid bg-dark">
 				</div>
-				<h1 class="font-primary mt-3">Login to HackThisSite</h1>
-				<label class="visually-hidden" for="username">Username</label>
-				<input type="text" id="username" class="form-control input-primary" placeholder="Username" required autofocus>
-				<div class="fst-italic fs-6 font-primary mt-1">
-					Don't have an account? <a href="/register" class="font-secondary">Create one</a>
-					<br>
-					<a href="/username_reminder" class="font-secondary">Forgot your username?</a>
+				<div id="frame-container">
+					<div id="username-frame" class="frame">
+						<h1 class="font-primary mt-3">Login to HackThisSite</h1>
+						<label class="visually-hidden" for="username">Username</label>
+						<input type="text" id="username" class="form-control input-primary" placeholder="Username" autofocus>
+						<div class="fst-italic fs-6 font-primary mt-1">
+							Don't have an account? <a href="/register" class="href-secondary">Create one</a>
+							<br>
+							<a href="/username_reminder" class="href-secondary">Forgot your username?</a>
+						</div>
+					</div>
+					<div id="password-frame" class="frame">
+						<h1 class="font-primary mt-3">Login to HackThisSite</h1>
+						<label class="visually-hidden" for="password">Password</label>
+						<input type="text" id="password" class="form-control input-primary" placeholder="Password" autofocus>
+						<div class="fst-italic fs-6 font-primary mt-1">
+							<a href="/password_reminder" class="href-secondary">Forgot your password?</a>
+						</div>
+					</div>
+					<div id="mfa-frame" class="frame">
+						<h1 class="font-primary mt-3">Login to HackThisSite</h1>
+						<label class="visually-hidden" for="mfa">MFA</label>
+						<input type="text" id="mfa" class="form-control input-primary" placeholder="MFA" autofocus>
+					</div>
 				</div>
-				<div class="mt-3">
-					<button class="btn btn-lg btn-primary button-primary btn-block">Submit</button>
+				<div id="btn-container" class="mt-3">
+					<button id="submit-frame" class="btn btn-lg btn-primary button-primary btn-block">Continue</button>
 				</div>
 			</form>
 		</div>
