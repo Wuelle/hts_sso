@@ -1,0 +1,48 @@
+$input-primary: #444;
+$underline-color: #111;
+
+
+.input-primary {
+	background: $input-primary;
+	color: $font-primary;
+
+	// remove ugly bootstrap stuff
+	border:none;
+	border-radius: 0;
+	transition: none;
+}
+
+.input-primary:focus {
+	background: $input-primary;
+	color: $font-primary;
+
+	border: none;
+	box-shadow: none;
+}
+
+.input-underline-container {
+	position: relative;
+  	display: block;
+  	overflow: hidden;
+}
+.input-underline-container {
+	border: none;
+	outline: none;
+}
+
+.underline {
+ 	transition: all 0.5s ease;
+  	display: inline-block;
+  	bottom: 0;
+  	left: -100%;
+  	position: absolute;
+  	width: 100%;
+  	height: 2px;
+  	background-color: $underline-color;
+}
+
+.input-underline-container > input:focus + .underline,  .input-underline-container > input:hover + .underline {
+  left: 0;
+}
+
+

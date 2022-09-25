@@ -3,13 +3,16 @@ $background: #151515;
 $background-elevated: #252525;
 $font-primary: #eee;
 $font-secondary: #ddd;
-$input-primary: #444;
+
 $shadow: #050505;
 
 // used to compute the form offsets later
 $elevated-padding: 3rem;
 
 @import '../node_modules/bootstrap/scss/bootstrap';
+@import 'inputs.scss';
+@import 'links.scss';
+@import 'buttons.scss';
 
 .background {
 	background: $background;
@@ -19,43 +22,6 @@ $elevated-padding: 3rem;
 	background: $background-elevated;
 	box-shadow: 4px 4px 6px $shadow;
 	padding: $elevated-padding;
-}
-
-.input-primary {
-	background: $input-primary;
-	color: $font-primary;
-
-	border-color: black;
-	border-width: 0px 0px 1px 0px;
-	border-style: solid;
-	border-radius: 0px;
-}
-
-.input-primary:focus {
-	background: $input-primary;
-	color: $font-primary;
-
-	border-color: black;
-	border-width: 0px 0px 1px 0px;
-	border-style: solid;
-	border-radius: 0px;
-}
-
-.href-secondary {
-	color: $font-secondary;
-}
-
-.href-secondary:hover {
-	color: $font-secondary;
-	filter: brightness(0.7);
-}
-
-.button-primary {
-	$padding-y: 0.3rem;
-	$padding-x: 1.5rem;
-	border-radius: 1px;
-
-	padding: $padding-y $padding-x $padding-y $padding-x;
 }
 
 .font-primary {

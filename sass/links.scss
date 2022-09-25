@@ -1,0 +1,8 @@
+.href-secondary {
+	color: $font-secondary;
+}
+
+.href-secondary:hover {
+	color: $font-secondary;
+	filter: brightness(0.7);
+}

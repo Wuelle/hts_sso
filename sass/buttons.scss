@@ -1,0 +1,31 @@
+$input-underline: darkblue;
+
+.button-primary {
+	$padding-y: 0.3rem;
+	$padding-x: 1.5rem;
+	border-radius: 1px;
+
+	padding: $padding-y $padding-x $padding-y $padding-x;
+}
+
+.button-border-underline {
+	position: relative;
+}
+
+.button-border-underline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: $input-underline;
+  transition: transform 300ms ease-in-out;
+
+  transform: scaleX(0);
+}
+
+.button-border-underline:hover::before,
+.button-border-underline:focus::before {
+  transform: scaleX(1);
+}
