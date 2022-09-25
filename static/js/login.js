@@ -12,6 +12,10 @@ function __next_frame(current) {
 	}
 }
 
+function make_invalid() {
+	// color the input in the current frame as being invalid
+}
+
 function get_frame(name) {
 	if (name == "username") {
 		return $("#username-frame");
@@ -58,7 +62,18 @@ function on_submit_frame(e) {
 		active_frame = next_frame;
 		shift_view_left();
 	}
-	
+}
+
+// visually indicate that the input was incorrect
+function bad_input() {
+	let container = get_frame(active_frame).children(".input-container").eq(0);
+	container.addClass("input-error");
+	container.focusin((e) => {
+		$(e.delegateTarget).removeClass("input-error");
+	});
+	container.hover((e) => {
+		$(e.delegateTarget).removeClass("input-error");
+	});
 }
 
 function shift_view_left() {

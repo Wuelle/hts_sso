@@ -1,7 +1,6 @@
 $input-primary: #444;
 $underline-color: #111;
 
-
 .input-primary {
 	background: $input-primary;
 	color: $font-primary;
@@ -12,6 +11,10 @@ $underline-color: #111;
 	transition: none;
 }
 
+::placeholder {
+	color: #aaa!important;
+}
+
 .input-primary:focus {
 	background: $input-primary;
 	color: $font-primary;
@@ -20,12 +23,10 @@ $underline-color: #111;
 	box-shadow: none;
 }
 
-.input-underline-container {
+.input-container {
 	position: relative;
   	display: block;
   	overflow: hidden;
-}
-.input-underline-container {
 	border: none;
 	outline: none;
 }
@@ -41,8 +42,21 @@ $underline-color: #111;
   	background-color: $underline-color;
 }
 
-.input-underline-container > input:focus + .underline,  .input-underline-container > input:hover + .underline {
+.input-container > input:focus + .underline,  .input-container > input:hover + .underline {
   left: 0;
 }
 
+$rotate-angle: 1deg;
 
+@keyframes wiggle {
+	0% { transform: rotate(0deg); }
+   33% { transform: rotate($rotate-angle); }
+   66% { transform: rotate(-$rotate-angle); }
+  100% { transform: rotate(0deg); }
+}
+
+
+.input-error {
+	animation: wiggle 0.2s;
+	box-shadow: 0px 0px 7px $danger;
+}

@@ -3,9 +3,15 @@ $input-underline: darkblue;
 .button-primary {
 	$padding-y: 0.3rem;
 	$padding-x: 1.5rem;
-	border-radius: 1px;
+	border-radius: 3px;
+	background-color: #163ea7;
+	border: none;
 
 	padding: $padding-y $padding-x $padding-y $padding-x;
+}
+
+.button-primary:hover {
+	background-color: #00379f!important;
 }
 
 .button-border-underline {

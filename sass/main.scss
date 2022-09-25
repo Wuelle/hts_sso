@@ -9,7 +9,7 @@ $shadow: #050505;
 // used to compute the form offsets later
 $elevated-padding: 3rem;
 
-@import '../node_modules/bootstrap/scss/bootstrap';
+@import '../bootstrap/scss/bootstrap';
 @import 'inputs.scss';
 @import 'links.scss';
 @import 'buttons.scss';
@@ -47,4 +47,8 @@ $elevated-padding: 3rem;
 
 #btn-container button:only-child{
 	margin: 0 auto;
+}
+
+.warning {
+	box-shadow: 3px 3px 5px #A00;
 }
