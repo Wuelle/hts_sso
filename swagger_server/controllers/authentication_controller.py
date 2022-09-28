@@ -2,8 +2,9 @@ import connexion
 import six
 
 from swagger_server.models.captcha_prompt import CaptchaPrompt  # noqa: E501
-from swagger_server.models.login_body import LoginBody  # noqa: E501
+from swagger_server.models.init_login_session import InitLoginSession  # noqa: E501
 from swagger_server.models.next_frame import NextFrame  # noqa: E501
+from swagger_server.models.submitted_frame import SubmittedFrame  # noqa: E501
 from swagger_server.models.successful_authentication import SuccessfulAuthentication  # noqa: E501
 from swagger_server import util
 
@@ -38,62 +39,35 @@ def next_expected_frame(s):
         else:
             return None
 
-def login_start_reauth(redirect, username):  # noqa: E501
-    """Reauthenticate a user in case their session expired, without needing to enter the username again
-
-    Returns a html page guiding the user through the login process. The login is for a specific account, meaning the user does not have the option to enter a username and is instead directly shown the password screen # noqa: E501
-
-    :param redirect: The AES-encrypted redirection url. If this is not a valid url belonging to hackthissite.org, the server must respond with a 403 Not Allowed.
-    :type redirect: str
-    :param username: The account name that should be reauthenticated
-    :type username: str
-
-    :rtype: None
-    """
-    try:
-        domain = b64decode(redirect).decode("ascii")
-    except UnicodeDecodeError:
-        return "bad redirect domain", 400
-
-    if domain.startswith("HTS"):
-        # start a new login session
-        session["password"] = None
-        session["mfa"] = None
-        session["redirect"] = domain[3:].strip()
-
-        if username in ACCOUNTS.keys():
-            session["username"] = username
-            return send_file("static/index.html")  # TODO: start with pw/mfa frame here
-        else:  # unknown username, fallback to regular login
-            session["username"] = None
-            return send_file("static/index.html")
-    else:
-        return "Unauthorized redirect domain", 403
-
-
-def login_start_session(redirect):  # noqa: E501
+def login_start_session(body):  # noqa: E501
     """Start logging in
 
-    Returns a html page guiding the user through the login process. The first frame shown will prompt the user to enter their username, the order (and number) of subsequent frames is determined by the server. Also returns a session cookie that is used to keep track of login progress on the server # noqa: E501
+    Validates the users redirect url and, if it is valid, starts a login session on the server. If a username is provided, the client will not have to fill out the username frame while logging in (re-authentication) # noqa: E501
 
-    :param redirect: The AES-encrypted redirection url. If this is not a valid url belonging to hackthissite.org, the server must respond with a 403 Not Allowed.
-    :type redirect: str
+    :param body: 
+    :type body: dict | bytes
 
-    :rtype: None
+    :rtype: NextFrame
     """
+    if connexion.request.is_json:
+        body = InitLoginSession.from_dict(connexion.request.get_json())  # noqa: E501
     try:
-        domain = b64decode(redirect).decode("ascii")
+        domain = b64decode(body.redirect).decode("ascii")
     except UnicodeDecodeError:
         return "bad redirect domain", 400
 
     if domain.startswith("HTS"):
         # start a new login session
-        session["username"] = None
         session["password"] = None
         session["mfa"] = None
         session["redirect"] = domain[3:].strip()
 
-        return send_file("static/index.html")
+        if body.username is not None and body.username in ACCOUNTS.keys():
+            session["username"] = body.username
+            return NextFrame(next_expected_frame(session)), 200
+        else:  # unknown username, fallback to regular login
+            session["username"] = None
+            return NextFrame(next_expected_frame(session)), 200
     else:
         return "Unauthorized redirect domain", 403
 
@@ -111,8 +85,7 @@ def login_submit_frame(body, login_session=None):  # noqa: E501
     :rtype: NextFrame
     """
     if connexion.request.is_json:
-        body = LoginBody.from_dict(connexion.request.get_json())  # noqa: E501
-
+        body = SubmittedFrame.from_dict(connexion.request.get_json())  # noqa: E501
     # username frames are always allowed
     if body.frame != next_expected_frame(session) and body.frame != "username":
         return "unexpected frame", 409
