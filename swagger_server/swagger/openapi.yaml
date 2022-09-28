@@ -3,6 +3,8 @@ info:
   title: HackThisSite Single Sign-On API
   description: "This API should allow users to login, register and manage their HTS accounts. It also provides them with a login cookie that is used to authenticate them on various HTS apps"
   version: 0.0.1
+servers:
+  - url: /_api/
 paths:
   /login:
     get:
@@ -11,12 +13,14 @@ paths:
       summary:
         Start logging in
       description: "Returns a html page guiding the user through the login process. The first frame shown will prompt the user to enter their username, the order (and number) of subsequent frames is determined by the server. Also returns a session cookie that is used to keep track of login progress on the server"
+      operationId: login.start_session
       parameters:
-        - name: redirect-to
+        - name: redirect
           description: "The AES-encrypted redirection url. If this is not a valid url belonging to hackthissite.org, the server must respond with a 403 Not Allowed."
           in: query
           schema:
             type: string
+          required: true
           example: "forums.hackthissite.org"
           
       responses:
@@ -34,9 +38,13 @@ paths:
       tags:
         - Authentication
       summary: Submit one of multiple credential frames
-      security:
-        - LoginSession: []
       description: "This API allows the user to login to their hackthissite.org account. Authentication is done in three steps: Username, Password and MFA (if enabled). The order in which the user must enter these is unspecified (the client is told after submitting the previous value). After each step, the user may be required to complete a CAPTCHA."
+      operationId: login.submit_frame
+      parameters:
+        - name: LoginSession
+          in: cookie
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -69,40 +77,14 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  next:
-                    description:
-                      "The next frame that should be shown to the user"
-                    type: string
-                    enum:
-                      - username
-                      - password
-                      - mfa
-                      - done
-                  show-captcha:
-                    description: "Whether or not the user must complete a captcha to continue authentication"
-                    type: boolean
-                  auth_id:
-                    description: "An id that should be sent along with the next request, for the server to keep track of login state"
-                    type: string
-                example:
-                  next: password
-                  show-captcha: false
+                $ref: "#/components/schemas/NextFrame"
           
         "201":
           description: "The user was successfully authenticated and will be redirected to their destination"
-          headers: 
-            Set-Cookie:
-              description: "Authentication cookie proving account ownership"
-              schema: 
-                type: string
-                example: HackThisSite=<token>;
-            Location:
-              description: "The redirect url that was specified when the login session was created"
+          content:
+            application/json:
               schema:
-                type: string
-                example: https://forums.hackthissite.org
+                $ref: "#/components/schemas/SuccessfulAuthentication"
               
         "401":
           description: "Invalid session or captcha token"
@@ -111,11 +93,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  show-captcha:
-                    description: "Whether or not the user must complete a captcha to continue authentication"
-                    type: boolean
+                $ref: "#/components/schemas/CaptchaPrompt"
+
         "409":
           description: "The frame type expected by the server did not match the one sent by the client. As this likely means that something has gone wrong on the clients side, the user should be asked to reload the page and restart authentication from the beginning. The server will not accept further requests for the current login sequence."
   /reauth:
@@ -125,33 +104,77 @@ paths:
       summary:
         Reauthenticate a user in case their session expired, without needing to enter the username again
       description: "Returns a html page guiding the user through the login process. The login is for a specific account, meaning the user does not have the option to enter a username and is instead directly shown the password screen"
+      operationId: login.start_reauth
       parameters:
-        - name: redirect-to
+        - name: redirect
           description: "The AES-encrypted redirection url. If this is not a valid url belonging to hackthissite.org, the server must respond with a 403 Not Allowed."
           in: query
           schema:
             type: string
+          required: true
           example: "forums.hackthissite.org"
         - name: username
           description: "The account name that should be reauthenticated"
           in: query
           schema:
             type: string
+          required: true
           example: "Alaska"
       responses:
         "200":
           description: "OK, the user may start the login process"
           headers: 
             Set-Cookie:
-              description: "An login session token that should be sent along with future request."
+              description: "An login session token that should be sent along with future requests."
               schema: 
                 type: string
                 example: LoginSession=<token>;
         "403":
-          description: "The redirect-to parameter was not a valid hackthissite url. Authentication for this url is not allowed."
+          description: "The redirect-to parameter was not a valid hackthissite url or the given username does not exist."
 components:
-  securitySchemes:
-    LoginSession:
-      type: apiKey
-      in: cookie
-      name: LoginSession
+  schemas:
+    NextFrame:
+      description: "Information about the next login frame shown to the user"
+      type: object
+      properties:
+        next:
+          description: "The next frame that should be shown to the user"
+          type: string
+          enum:
+            - username
+            - password
+            - mfa
+        show-captcha:
+          description: "Whether or not the user must complete a captcha to continue authentication"
+          type: boolean
+      required:
+        - next
+        - show-captcha
+      example:
+        next: password
+        show-captcha: false
+    CaptchaPrompt:
+      description: "Tells the client whether or not the server expects it to complete a captcha with the next frame"
+      type: object
+      properties:
+        show-captcha:
+          description: "Whether or not the user must complete a captcha to continue authentication"
+          type: boolean
+      required:
+        - show-captcha
+    SuccessfulAuthentication:
+      description: "Provides the client with an authentication cookie and a redirection url after completing login"
+      type: object
+      properties:
+        redirect:
+          description: "The client should visit this domain next"
+          type: string
+          example: "forums.hackthissite.org"
+        token:
+          description: "A cookie that will prove account ownership to HTS apps"
+          type: string
+          example: "HackThisSite=<token>;path=/;domain=hackthissite.org"
+      required:
+        - redirect
+        - token
+          

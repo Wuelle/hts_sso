@@ -1,3 +1,1 @@
-sass sass/main.scss public/css/bootstrap.css
-npm start
-
+sudo docker run $(sudo docker build . -q)

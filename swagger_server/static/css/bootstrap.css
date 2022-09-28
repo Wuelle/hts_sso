@@ -10906,4 +10906,11 @@ textarea.form-control-lg {
   box-shadow: 3px 3px 5px #A00;
 }
 
+.inactive-captcha {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
 /*# sourceMappingURL=bootstrap.css.map */
