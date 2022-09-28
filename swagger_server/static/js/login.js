@@ -26,9 +26,15 @@ function on_submit_frame(e) {
 	// remove potential input warnings
 	get_frame(active_frame).children(".input-container").eq(0).removeClass("input-error");
 
+	let value = get_frame(active_frame).find("input").eq(0).val();
+	if (value == "") {
+		bad_input();
+		return;
+	}
+
 	let data = { 
   		 frame: active_frame, 
-  		 value: get_frame(active_frame).find("input").eq(0).val(),
+  		 value: value,
   	};
   	if (captcha_visible) {
   		let captcha_token = hcaptcha.getResponse();
@@ -50,9 +56,12 @@ function on_submit_frame(e) {
   					show_captcha();
   				}
   			},
+  			409: () => {
+  				$("#error-modal").modal("show");
+  			},
   			201: (e) => {
-  				window.location = e["redirect"];
   				document.cookie = e["token"];
+  				window.location = e["redirect"];
   			},
   			403: bad_input,
   		}

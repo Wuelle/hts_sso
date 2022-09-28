@@ -1,6 +1,7 @@
 $input-primary: #444;
 $underline-color: #111;
 
+// TODO: fix webkit autofill changing the bg color, then reenable autofill on the forms
 .input-primary {
 	background: $input-primary;
 	color: $font-primary;
@@ -25,8 +26,8 @@ $underline-color: #111;
 
 .input-container {
 	position: relative;
-  	display: block;
-  	overflow: hidden;
+  display: block;
+  overflow: hidden;
 	border: none;
 	outline: none;
 }
@@ -58,5 +59,5 @@ $rotate-angle: 1deg;
 
 .input-error {
 	animation: wiggle 0.2s;
-	box-shadow: 0px 0px 7px $danger;
+	box-shadow: 0px 0px 7px #dc3545;
 }

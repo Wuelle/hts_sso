@@ -14,13 +14,13 @@ class SuccessfulAuthentication(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, redirect: str=None, token: bool=None):  # noqa: E501
-        """redirectFrame - a model defined in Swagger
+    def __init__(self, redirect: str=None, token: str=None):  # noqa: E501
+        """SuccessfulAuthentication - a model defined in Swagger
 
         :param redirect: The redirect of this SuccessfulAuthentication.  # noqa: E501
         :type redirect: str
         :param token: The token of this SuccessfulAuthentication.  # noqa: E501
-        :type token: bool
+        :type token: str
         """
         self.swagger_types = {
             'redirect': str,
@@ -29,19 +29,19 @@ class SuccessfulAuthentication(Model):
 
         self.attribute_map = {
             'redirect': 'redirect',
-            'token': 'show-captcha'
+            'token': 'token'
         }
         self._redirect = redirect
         self._token = token
 
     @classmethod
-    def from_dict(cls, dikt) -> 'redirectFrame':
+    def from_dict(cls, dikt) -> 'SuccessfulAuthentication':
         """Returns the dict as a model
 
         :param dikt: A dict.
         :type: dict
-        :return: The redirectFrame of this SuccessfulAuthentication.  # noqa: E501
-        :rtype: redirectFrame
+        :return: The SuccessfulAuthentication of this SuccessfulAuthentication.  # noqa: E501
+        :rtype: SuccessfulAuthentication
         """
         return util.deserialize_model(dikt, cls)
 
@@ -49,7 +49,7 @@ class SuccessfulAuthentication(Model):
     def redirect(self) -> str:
         """Gets the redirect of this SuccessfulAuthentication.
 
-        The redirect frame that should be shown to the user  # noqa: E501
+        The client should visit this domain next  # noqa: E501
 
         :return: The redirect of this SuccessfulAuthentication.
         :rtype: str
@@ -60,39 +60,35 @@ class SuccessfulAuthentication(Model):
     def redirect(self, redirect: str):
         """Sets the redirect of this SuccessfulAuthentication.
 
-        The redirect frame that should be shown to the user  # noqa: E501
+        The client should visit this domain next  # noqa: E501
 
         :param redirect: The redirect of this SuccessfulAuthentication.
         :type redirect: str
         """
-        allowed_values = ["username", "password", "mfa"]  # noqa: E501
-        if redirect not in allowed_values:
-            raise ValueError(
-                "Invalid value for `redirect` ({0}), must be one of {1}"
-                .format(redirect, allowed_values)
-            )
+        if redirect is None:
+            raise ValueError("Invalid value for `redirect`, must not be `None`")  # noqa: E501
 
         self._redirect = redirect
 
     @property
-    def token(self) -> bool:
+    def token(self) -> str:
         """Gets the token of this SuccessfulAuthentication.
 
-        Whether or not the user must complete a captcha to continue authentication  # noqa: E501
+        A cookie that will prove account ownership to HTS apps  # noqa: E501
 
         :return: The token of this SuccessfulAuthentication.
-        :rtype: bool
+        :rtype: str
         """
         return self._token
 
     @token.setter
-    def token(self, token: bool):
+    def token(self, token: str):
         """Sets the token of this SuccessfulAuthentication.
 
-        Whether or not the user must complete a captcha to continue authentication  # noqa: E501
+        A cookie that will prove account ownership to HTS apps  # noqa: E501
 
         :param token: The token of this SuccessfulAuthentication.
-        :type token: bool
+        :type token: str
         """
         if token is None:
             raise ValueError("Invalid value for `token`, must not be `None`")  # noqa: E501

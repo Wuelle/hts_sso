@@ -8,6 +8,7 @@ from six import BytesIO
 from swagger_server.models.captcha_prompt import CaptchaPrompt  # noqa: E501
 from swagger_server.models.login_body import LoginBody  # noqa: E501
 from swagger_server.models.next_frame import NextFrame  # noqa: E501
+from swagger_server.models.successful_authentication import SuccessfulAuthentication  # noqa: E501
 from swagger_server.test import BaseTestCase
 
 

@@ -16,8 +16,29 @@
 		<script type="text/javascript" src="http://172.17.0.2:8080/static/js/login.js"></script>
 	</head>
 	<body class="background">
+		<div id="error-modal" class="modal" tabindex="-1" role="dialog">
+  			<div class="modal-dialog" role="document">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<h5 class="modal-title">Invalid request</h5>
+        				<button type="button" class="modal-close" data-dismiss="error-modal" aria-label="Close" onclick="$('#error-modal').modal('hide')";>
+        					<span aria-hidden="true">&times;</span>
+        				</button>
+      				</div>
+      				<div class="modal-body">
+        				<p>
+        					Your client sent an unexpected request. You should reload the page and start logging in again.
+        					If the error persists, please contact a developer.
+        				</p>
+      				</div>
+      				<div class="modal-footer">
+        				<button type="button" class="btn btn-primary btn-block button-primary" onclick="location.reload()">Reload now</button>
+      				</div>
+    			</div>
+  			</div>
+		</div>
 		<div class="text-center mt-5">
-			<form style="max-width:480px;margin:auto;overflow:hidden;" class="elevated" id="form-container">
+			<form style="max-width:480px;margin:auto;overflow:hidden;" class="elevated" id="form-container" autocomplete="off">
 				<!-- Invisible input for automatically submitting the form if the user presses enter in an input -->
 				<input type="submit" style="display: none" />
 				<div class="mx-auto" style="display:block;width:50%;">

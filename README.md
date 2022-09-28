@@ -1,3 +1,13 @@
+# SSO Frontend
+There are two test accounts
+
+| Account name | Password | MFA | frame order | Will be shown captcha |
+| --- | --- | --- | --- | --- |
+| Alaska | beepboop | not enabled | password | true |
+| Kage | boopbeep | 123 | mfa-password | false |
+
+Start the docker & click [this link](http://172.17.0.2:8080/_api/login?redirect=SFRTaHR0cHM6Ly9oYWNrdGhpc3NpdGUub3JnCg==) to test logging in.
+
 # Swagger generated server
 
 ## Overview
@@ -23,6 +33,7 @@ and open your browser to here:
 ```
 http://localhost:8080/ui/
 ```
+(Note from Alaska: that's a lie, the ui lives at `/_api/ui`)
 
 Your Swagger definition lives here:
 

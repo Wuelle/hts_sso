@@ -1,0 +1,16 @@
+.modal-content {
+	color: $font-primary;
+	background-color: #222;
+	border-radius: 3px;
+}
+
+.modal-header, .modal-footer {
+	border-color: #444;
+}
+
+.modal-close {
+	color: $font-primary;
+	background-color: #555;
+	border: none;
+	box-shadow: 1px 1px 1px black;
+}

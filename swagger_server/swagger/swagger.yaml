@@ -82,22 +82,10 @@ paths:
         "201":
           description: The user was successfully authenticated and will be redirected
             to their destination
-          headers:
-            Set-Cookie:
-              description: Authentication cookie proving account ownership
-              style: simple
-              explode: false
+          content:
+            application/json:
               schema:
-                type: string
-                example: HackThisSite=<token>;
-            Location:
-              description: The redirect url that was specified when the login session
-                was created
-              style: simple
-              explode: false
-              schema:
-                type: string
-                example: https://forums.hackthissite.org
+                $ref: '#/components/schemas/SuccessfulAuthentication'
         "401":
           description: Invalid session or captcha token
         "403":
@@ -195,6 +183,22 @@ components:
             authentication
       description: Tells the client whether or not the server expects it to complete
         a captcha with the next frame
+    SuccessfulAuthentication:
+      required:
+      - redirect
+      - token
+      type: object
+      properties:
+        redirect:
+          type: string
+          description: The client should visit this domain next
+          example: forums.hackthissite.org
+        token:
+          type: string
+          description: A cookie that will prove account ownership to HTS apps
+          example: HackThisSite=<token>;path=/;domain=hackthissite.org
+      description: Provides the client with an authentication cookie and a redirection
+        url after completing login
     login_body:
       required:
       - frame

@@ -23,9 +23,6 @@ ACCOUNTS = {
     "Kage": Account(password="boopbeep", mfa="123", mfa_first=True)
 }
 
-def session_is_complete(s):
-    return s["username"] is not None and s["password"] is not None and s["mfa"] is not None
-
 def next_expected_frame(s):
     """
     Return the next frame that should be submitted by the user or None if authentication is complete
@@ -40,7 +37,6 @@ def next_expected_frame(s):
             return "password"
         else:
             return None
-
 
 def login_start_reauth(redirect, username):  # noqa: E501
     """Reauthenticate a user in case their session expired, without needing to enter the username again
@@ -85,7 +81,6 @@ def login_start_session(redirect):  # noqa: E501
 
     :rtype: None
     """
-    # make sure not to accidentally build some kind of oracle here... ^^
     try:
         domain = b64decode(redirect).decode("ascii")
     except UnicodeDecodeError:
@@ -147,6 +142,7 @@ def login_submit_frame(body, login_session=None):  # noqa: E501
             return "wrong mfa code", 403
 
     if (next_expected_frame(session) is None):
-        return SuccessfulAuthentication(session["redirect"], "theauthtoken"), 201
+        # restrict cookie lifetime and domain stuff here
+        return SuccessfulAuthentication(session["redirect"], "HackThisSite=theauthtoken"), 201
     else:
         return NextFrame(next_expected_frame(session), show_captcha=False), 200

@@ -9,10 +9,11 @@ $shadow: #050505;
 // used to compute the form offsets later
 $elevated-padding: 3rem;
 
-@import '../bootstrap/scss/bootstrap';
+@import 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css';
 @import 'inputs.scss';
 @import 'links.scss';
 @import 'buttons.scss';
+@import 'modal.scss';
 
 .background {
 	background: $background;
