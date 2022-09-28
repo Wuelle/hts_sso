@@ -129,6 +129,11 @@ function on_restart(e) {
 		hide_captcha()
 	}
 
+	// clear username input
+	// other frames are cleared later so the user still sees
+	// their input sliding away
+	get_frame("username").find("input").eq(0).val("")
+
 	// put the username frame on the left
 	$("#frame-container").css("left", -$("#form-container").outerWidth());
 	$("#frame-container").prepend(get_frame("username"));
@@ -139,7 +144,14 @@ function on_restart(e) {
 			left: "+=" + $("#form-container").outerWidth()
 		},
 		animation_duration,
-		after_frame_change,
+		() => {
+			after_frame_change();
+
+			// clear other inputs
+			get_frame("password").find("input").eq(0).val("")
+			get_frame("mfa").find("input").eq(0).val("")
+
+		},
 	);
 	$("#restart-btn").remove();
 }

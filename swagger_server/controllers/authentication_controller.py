@@ -27,7 +27,7 @@ def next_expected_frame(s):
     """
     Return the next frame that should be submitted by the user or None if authentication is complete
     """
-    if s["username"] is None:
+    if s.get("username", None) is None:
         return "username"
     else:
         account = ACCOUNTS[s["username"]]
@@ -113,13 +113,19 @@ def login_submit_frame(body, login_session=None):  # noqa: E501
     if connexion.request.is_json:
         body = LoginBody.from_dict(connexion.request.get_json())  # noqa: E501
 
-    if body.frame != next_expected_frame(session):
+    # username frames are always allowed
+    if body.frame != next_expected_frame(session) and body.frame != "username":
         return "unexpected frame", 409
 
     if body.frame == "username":
         username = body.value
         if username in ACCOUNTS.keys():
+            # username frames are special because they always restart authentication
+            # (there is no way to submit a password and later the username, at least 
+            # not with this stub)
             session["username"] = username
+            session["password"] = None
+            session["mfa"] = None
             if username == "Alaska":  # Alaska is suspicious, let's make them complete a captcha
                 return NextFrame(next_expected_frame(session), show_captcha=True), 200           
         else:

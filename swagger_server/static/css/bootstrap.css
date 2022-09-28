@@ -60,6 +60,10 @@
   box-shadow: 0px 0px 7px #dc3545;
 }
 
+.input-error > .underline {
+  opacity: 0;
+}
+
 .href-secondary {
   color: #ddd;
 }
