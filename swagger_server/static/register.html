@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <meta property="og:title" content="Register a HackThisSite Account" />
+        <meta property="og:image" content="https://data.htscdn.org/images/hackthissite-meta-card.png" />
+        <meta property="og:type" content="website" />
+
+		<title>HackThisSite Login</title>
+
+		<link href="http://172.17.0.2:8080/static/css/bootstrap.css" rel="stylesheet">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+		<script type="text/javascript" src="http://172.17.0.2:8080/static/js/register.js"></script>
+	</head>
+	<body class="background">
+		<div class="text-center mt-5">
+			<form style="max-width:480px;margin:auto;overflow:hidden;" class="elevated" id="form-container" autocomplete="off">
+				<!-- Invisible input for automatically submitting the form if the user presses enter in an input -->
+				<input type="submit" style="display: none" />
+				<div class="mx-auto" style="display:block;width:50%;">
+					<img src="https://data.htscdn.org/images/hackthissite-meta-card.png" alt="HackThisSite Logo" class="rounded img-fluid bg-dark">
+				</div>
+				<h1 class="font-primary mt-3">Register at HackThisSite</h1>
+				<div id="frame-container">
+					<div class="frame">
+						<div class="font-primary">
+                            Fill out the details below to finish setting up your account
+						</div>
+                        <div class="grouped-inputs mt-3">
+                            <div class="input-container">
+                                <label class="visually-hidden" for="secret-question">Secret Question</label>
+                                <input type="text" id="secret-question" class="form-control input-primary input-underline" placeholder="Secret question">
+                                <span class="underline"></span>
+                            </div>
+                            <div class="input-container mt-3">
+                                <label class="visually-hidden" for="secret-answer">Secret answer</label>
+                                <input type="text" id="secret-answer" class="form-control input-primary input-underline" placeholder="Secret answer">
+                                <span class="underline"></span>
+                            </div>
+                            <!--
+                            <div class="input-container mt-3">
+                                <label class="visually-hidden" for="confirm-secret-answer">Confirm secret answer</label>
+                                <input type="text" id="confirm-secret-answer" class="form-control input-primary input-underline" placeholder="Confirm secret answer">
+                                <span class="underline"></span>
+                            </div>
+                            -->
+                            <div class="fst-italic fs-6 font-primary mt-1">
+                                Used for account recovery. You may leave this empty.
+                            </div>
+                        </div>
+                        <div class="grouped-inputs mt-3">
+                            <div class="input-container">
+                                <label class="visually-hidden" for="password">Password</label>
+                                <input type="password" id="password" class="form-control input-primary input-underline" placeholder="Password">
+                                <span class="underline"></span>
+                            </div>
+                            <div class="input-container mt-3">
+                                <label class="visually-hidden" for="confirm-password">Confirm password</label>
+                                <input type="password" id="confirm-password" class="form-control input-primary input-underline" placeholder="Confirm password">
+                                <span class="underline"></span>
+                            </div>
+                            <div class="checkbox-container mt-3">
+                                <input type="checkbox" id="terms-and-conditions" class="form-check-input">
+                                <br>
+                                <label for="terms-and-conditions" class="font-primary fst-italic"> 
+                                    I have read and accept the <a href="https://legal.hackthissite.org/terms" class="href-secondary">Terms and Conditions</a>
+                                </label>
+                            </div>
+                        </div>
+
+					</div>
+					<div class="frame">
+						<div class="font-primary">
+							We sent a email with a verification code to <br>
+								<span class="inline-highlight">foo@example.com</span><br>
+							Please enter this code below. 
+						</div>
+						<div class="input-container">
+							<label class="visually-hidden" for="verification-code">Verification code</label>
+							<input type="text" id="verification-code" class="form-control input-primary input-underline" placeholder="Verification Code">
+							<span class="underline"></span>
+						</div>
+						<div class="fst-italic fs-6 font-primary mt-1">
+							<a href="#" class="href-secondary" id="resend-mail">Didn't get a mail?</a><br>
+							<a href="#" class="href-secondary" id="change-verification-mail">Change Email Address</a>
+						</div>
+					</div>
+					<div class="frame">
+						<div id="username-warnings" class="font-primary fs-6"> 
+						</div>
+						<div class="input-container">
+							<label class="visually-hidden" for="username">Username</label>
+							<input type="text" id="username" class="form-control input-primary input-underline" placeholder="Username" onkeyup="validate_username()">
+							<span class="underline"></span>
+						</div>
+						<div class="input-container mt-3">
+							<label class="visually-hidden" for="email">Email Address</label>
+							<input type="email" id="email" class="form-control input-primary input-underline" placeholder="Email Address">
+							<span class="underline"></span>	
+						</div>
+						<div class="fst-italic fs-6 font-primary mt-1">
+							Only used for account recovery
+						</div>
+					</div>
+				</div>
+				<div id="btn-container" class="mt-3">
+					<button id="submit-frame" class="btn btn-lg btn-primary button-primary btn-block">Continue</button>
+				</div>
+			</form>
+		</div>
+		
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
+        </script>
+	</body>
+</html>

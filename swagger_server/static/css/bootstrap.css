@@ -60,6 +60,20 @@
   box-shadow: 0px 0px 7px #dc3545;
 }
 
+.grouped-inputs {
+  border: 1px solid #444;
+  padding: 1rem;
+}
+
+.form-check-input[type=checkbox], .form-check-input[type=checkbox]:focus {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.form-check-input[type=checkbox]:not(:checked) {
+  background-color: #ccc;
+}
+
 .href-secondary {
   color: #ddd;
 }
@@ -163,6 +177,12 @@
   top: 0;
   left: 0;
   z-index: -1;
+}
+
+.inline-highlight {
+  background-color: #353535;
+  padding: 2px 5px 2px 5px;
+  border-radius: 2px;
 }
 
 /*# sourceMappingURL=bootstrap.css.map */
