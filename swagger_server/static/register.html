@@ -8,11 +8,11 @@
         <meta property="og:image" content="https://data.htscdn.org/images/hackthissite-meta-card.png" />
         <meta property="og:type" content="website" />
 
-		<title>HackThisSite Login</title>
+		<title>HackThisSite Registration</title>
 
-		<link href="http://172.17.0.2:8080/static/css/bootstrap.css" rel="stylesheet">
+		<link href="http://172.17.0.2:8080/static/_assets/css/bootstrap.css" rel="stylesheet">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-		<script type="text/javascript" src="http://172.17.0.2:8080/static/js/register.js"></script>
+		<script type="text/javascript" src="http://172.17.0.2:8080/static/_assets/js/register.js"></script>
 	</head>
 	<body class="background">
 		<div class="text-center mt-5">
@@ -24,7 +24,43 @@
 				</div>
 				<h1 class="font-primary mt-3">Register at HackThisSite</h1>
 				<div id="frame-container">
-					<div class="frame">
+					<div class="frame measure" id="first-frame">
+						<div id="username-warnings" class="font-primary fs-6"> 
+						</div>
+						<div class="input-container">
+							<label class="visually-hidden" for="username">Username</label>
+							<input type="text" id="username" class="form-control input-primary input-underline" placeholder="Username" onkeyup="validate_username()">
+							<span class="underline"></span>
+						</div>
+						<div class="input-container mt-3">
+							<label class="visually-hidden" for="email">Email Address</label>
+							<input type="email" id="email" class="form-control input-primary input-underline" placeholder="Email Address">
+							<span class="underline"></span>	
+						</div>
+						<div class="fst-italic fs-6 font-primary mt-1">
+							Only used for account recovery
+						</div>
+					</div>
+
+					<div class="frame measure" id="second-frame">
+						<div class="font-primary">
+							We sent a email with a verification code to <br>
+								<span id="email-used" class="inline-highlight">foo@example.com</span><br>
+							Please enter this code below. 
+						</div>
+						<div class="input-container mt-1">
+							<label class="visually-hidden" for="verification-code">Verification code</label>
+							<input type="text" id="verification-code" class="form-control input-primary input-underline" placeholder="Verification Code">
+							<span class="underline"></span>
+						</div>
+						<div class="fst-italic fs-6 font-primary mt-1">
+							<a href="#" class="href-secondary" id="change-verification-mail">Change Email Address</a>
+                            <br>
+							<a href="#" class="href-secondary" id="resend-mail">Didn't get a mail?</a>
+						</div>
+					</div>
+
+					<div class="frame measure" id="third-frame">
 						<div class="font-primary">
                             Fill out the details below to finish setting up your account
 						</div>
@@ -71,39 +107,7 @@
                         </div>
 
 					</div>
-					<div class="frame">
-						<div class="font-primary">
-							We sent a email with a verification code to <br>
-								<span class="inline-highlight">foo@example.com</span><br>
-							Please enter this code below. 
-						</div>
-						<div class="input-container">
-							<label class="visually-hidden" for="verification-code">Verification code</label>
-							<input type="text" id="verification-code" class="form-control input-primary input-underline" placeholder="Verification Code">
-							<span class="underline"></span>
-						</div>
-						<div class="fst-italic fs-6 font-primary mt-1">
-							<a href="#" class="href-secondary" id="resend-mail">Didn't get a mail?</a><br>
-							<a href="#" class="href-secondary" id="change-verification-mail">Change Email Address</a>
-						</div>
-					</div>
-					<div class="frame">
-						<div id="username-warnings" class="font-primary fs-6"> 
-						</div>
-						<div class="input-container">
-							<label class="visually-hidden" for="username">Username</label>
-							<input type="text" id="username" class="form-control input-primary input-underline" placeholder="Username" onkeyup="validate_username()">
-							<span class="underline"></span>
-						</div>
-						<div class="input-container mt-3">
-							<label class="visually-hidden" for="email">Email Address</label>
-							<input type="email" id="email" class="form-control input-primary input-underline" placeholder="Email Address">
-							<span class="underline"></span>	
-						</div>
-						<div class="fst-italic fs-6 font-primary mt-1">
-							Only used for account recovery
-						</div>
-					</div>
+
 				</div>
 				<div id="btn-container" class="mt-3">
 					<button id="submit-frame" class="btn btn-lg btn-primary button-primary btn-block">Continue</button>

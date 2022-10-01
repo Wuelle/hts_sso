@@ -74,6 +74,11 @@
   background-color: #ccc;
 }
 
+#username-warnings {
+  min-height: 1.5rem;
+  line-height: 1.5rem;
+}
+
 .href-secondary {
   color: #ddd;
 }
@@ -183,6 +188,13 @@
   background-color: #353535;
   padding: 2px 5px 2px 5px;
   border-radius: 2px;
+}
+
+.measure {
+  position: absolute;
+  visibility: hidden;
+  left: -10000px;
+  top: -10000px;
 }
 
 /*# sourceMappingURL=bootstrap.css.map */

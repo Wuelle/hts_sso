@@ -13,17 +13,17 @@ from swagger_server.models.successful_authentication import SuccessfulAuthentica
 from swagger_server.test import BaseTestCase
 
 
-class TestAuthenticationController(BaseTestCase):
-    """AuthenticationController integration test stubs"""
+class TestLoginController(BaseTestCase):
+    """LoginController integration test stubs"""
 
-    def test_login_start_session(self):
-        """Test case for login_start_session
+    def test_login_init_session(self):
+        """Test case for login_init_session
 
         Start logging in
         """
         body = InitLoginSession()
         response = self.client.open(
-            '/init_login_session',
+            '/login/init_session',
             method='POST',
             data=json.dumps(body),
             content_type='application/json')
@@ -37,7 +37,7 @@ class TestAuthenticationController(BaseTestCase):
         """
         body = SubmittedFrame()
         response = self.client.open(
-            '/submit_login_frame',
+            '/login/submit_frame',
             method='POST',
             data=json.dumps(body),
             content_type='application/json')

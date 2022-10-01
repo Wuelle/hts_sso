@@ -7,16 +7,21 @@ info:
   version: 0.0.1
 servers:
 - url: /_api/
+tags:
+- name: Login
+  description: Log into an existing account
+- name: Registration
+  description: Create a new account
 paths:
-  /init_login_session:
+  /login/init_session:
     post:
       tags:
-      - Authentication
+      - Login
       summary: Start logging in
       description: "Validates the users redirect url and, if it is valid, starts a\
         \ login session on the server. If a username is provided, the client will\
         \ not have to fill out the username frame while logging in (re-authentication)"
-      operationId: login_start_session
+      operationId: login_init_session
       requestBody:
         content:
           application/json:
@@ -42,11 +47,11 @@ paths:
         "403":
           description: The redirect-to parameter was not a valid hackthissite url
             or the given username does not exist.
-      x-openapi-router-controller: swagger_server.controllers.authentication_controller
-  /submit_login_frame:
+      x-openapi-router-controller: swagger_server.controllers.login_controller
+  /login/submit_frame:
     post:
       tags:
-      - Authentication
+      - Login
       summary: Submit one of multiple credential frames
       description: "This API allows the user to login to their hackthissite.org account.\
         \ Authentication is done in three steps: Username, Password and MFA (if enabled).\
@@ -98,7 +103,137 @@ paths:
             \ on the clients side, the user should be asked to reload the page and\
             \ restart authentication from the beginning. The server will not accept\
             \ further requests for the current login sequence."
-      x-openapi-router-controller: swagger_server.controllers.authentication_controller
+      x-openapi-router-controller: swagger_server.controllers.login_controller
+  /register/is_username_available:
+    post:
+      tags:
+      - Registration
+      summary: Check if a username is available
+      description: If the username is not valid (too long/short etc) the server should
+        ignore that and simply respond with 'not available'
+      operationId: register_is_username_available
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Username'
+        required: true
+      responses:
+        "200":
+          description: Response describing whether the username is available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsUsernameAvailable'
+      x-openapi-router-controller: swagger_server.controllers.registration_controller
+  /register/start_registration:
+    post:
+      tags:
+      - Registration
+      summary: Reserve an account name and link it with an email
+      description: "This is the first stage of registration, the user will need to\
+        \ verify their email and then set their passphrase/account details"
+      operationId: register_start_registration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrimaryAccountDetails'
+        required: true
+      responses:
+        "200":
+          description: The server sent a verification mail to the provided email address.
+            The client must provide the security code from that email
+        "403":
+          description: Username or email are not valid.
+      x-openapi-router-controller: swagger_server.controllers.registration_controller
+  /register/resend_verification_mail:
+    post:
+      tags:
+      - Registration
+      summary: Send another verification mail
+      operationId: register_resend_verification_mail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResendVerificationMail'
+        required: true
+      responses:
+        "200":
+          description: Another mail was sent to the same address. The old verification
+            code is no longer valid
+        "403":
+          description: No new mail was sent. Username/email did not match any account
+            currently being registered
+      x-openapi-router-controller: swagger_server.controllers.registration_controller
+  /register/change_verification_email:
+    post:
+      tags:
+      - Registration
+      summary: Change the email linked with an account that is currently being registered.
+      description: "This exists in case the user mistyped their email. The user must\
+        \ be able to provide the email that was previously used as well as the username\
+        \ that should be registered. If the address was successfully changed, a new\
+        \ verification mail should be sent."
+      operationId: register_change_verification_mail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeVericationMailAddress'
+        required: true
+      responses:
+        "200":
+          description: Account mail was changed and a new verification mail was sent
+        "403":
+          description: Account email was not changed. Possible reasons include username/old
+            email not matching or no account with the given username currently being
+            registered
+      x-openapi-router-controller: swagger_server.controllers.registration_controller
+  /register/verify_email_address:
+    post:
+      tags:
+      - Registration
+      summary: Verify a users account email
+      operationId: register_verify_email_address
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailVerificationToken'
+        required: true
+      responses:
+        "200":
+          description: Email was successfully verified
+        "403":
+          description: Invalid verification code
+      x-openapi-router-controller: swagger_server.controllers.registration_controller
+  /register/finish_registration:
+    post:
+      tags:
+      - Registration
+      summary: Complete a users account
+      description: Allows the user to set their password/secret question to complete
+        their account setup
+      operationId: register_finish_registration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FinishRegistration'
+        required: true
+      responses:
+        "201":
+          description: The account was successfully created. The user receives a authentication
+            cookie and will be redirected to some landing page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessfulAuthentication'
+        "403":
+          description: Invalid verification code
+      x-openapi-router-controller: swagger_server.controllers.registration_controller
 components:
   schemas:
     InitLoginSession:
@@ -188,4 +323,111 @@ components:
           example: HackThisSite=<token>;path=/;domain=hackthissite.org
       description: Provides the client with an authentication cookie and a redirection
         url after completing login
+      example:
+        redirect: forums.hackthissite.org
+        token: HackThisSite=<token>;path=/;domain=hackthissite.org
+    Username:
+      title: Username
+      required:
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+          description: An account name
+          example: Alaska
+    IsUsernameAvailable:
+      title: IsUsernameAvailable
+      required:
+      - is-available
+      type: object
+      properties:
+        is-available:
+          type: boolean
+      example:
+        is-available: true
+    PrimaryAccountDetails:
+      title: PrimaryAccountDetails
+      required:
+      - email
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+          example: Alaska
+        email:
+          type: string
+          example: user@example.com
+    ResendVerificationMail:
+      title: ResendVerificationMail
+      required:
+      - old-email
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+          example: Alaska
+        email:
+          type: string
+          example: user@example.com
+    ChangeVericationMailAddress:
+      title: ChangeVericationMailAddress
+      required:
+      - new-email
+      - old-email
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+          example: Alaska
+        old-email:
+          type: string
+          example: old@example.com
+        new-email:
+          type: string
+          example: new@example.com
+    EmailVerificationToken:
+      title: EmailVerificationToken
+      required:
+      - username
+      - verification-code
+      type: object
+      properties:
+        username:
+          type: string
+          description: The name of the account that should be verified
+          example: Alaska
+        verification-code:
+          type: string
+          description: A secret code used to prove ownership of an email address
+          example: <verification code>
+    FinishRegistration:
+      title: FinishRegistration
+      required:
+      - password
+      - verification-code
+      type: object
+      properties:
+        verification-code:
+          type: string
+          description: The token the user previously received via the verification
+            email
+          example: <verification code>
+        password:
+          type: string
+          description: The account password
+          example: my-very-secure-password123
+        secret-question:
+          type: string
+          description: A question which the user can answer to recover the account
+            in case they ever forget their password or lose their MFA device
+          example: What is the last name of the teacher who gave me my first failing
+            grade?
+        secret-answer:
+          type: string
+          description: The answer to the secret question.
+          example: Schmidt
 

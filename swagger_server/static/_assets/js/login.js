@@ -14,7 +14,6 @@ function get_frame(name) {
 
 $(document).ready(() => {
 	// only the input in the active frame is required for form submission
-	console.log(active_frame)
 	$("#form-container").on("submit", on_submit_frame);
 	
 

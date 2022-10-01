@@ -62,3 +62,11 @@ $elevated-padding: 3rem;
 	padding: 2px 5px 2px 5px;
 	border-radius: 2px;
 }
+
+/// Assigned to elements whose height must be calculated without displaying them
+.measure {
+    position: absolute;
+    visibility: hidden;
+    left: -10000px;
+    top: -10000px;
+}
