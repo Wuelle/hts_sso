@@ -6,7 +6,22 @@ let animation_duration = 700;  // ms
 let active_frame = 1;
 
 // initialize session manager
-init_session("registration");
+init_session("registration").then(() => {
+    // check whether we need a captcha on the first frame
+	$.ajax({
+		method: "POST",
+  		url: "http://172.17.0.2:8080/_api/register/is_initial_captcha_required",
+  		contentType: "application/json",
+  		dataType: "json",
+  		statusCode: {
+  			200: (e) => {
+                if (e["captcha-required"]) {
+                    console.log("show captcha");
+                }
+  			},
+  		}
+	});
+});
 
 if (window.location.href.search("frame=") != -1) {
     active_frame = new RegExp('[\?&]frame=([^&#]*)').exec(window.location.href)[1]
@@ -35,8 +50,6 @@ function get_frame(frame_index) {
         return $("#third-frame");
     }
 }
-
-
 
 function grow_to(target_height) {
     $("#frame-container").animate(
@@ -74,45 +87,138 @@ function on_submit_frame(e) {
     if (active_frame == 1) {
         let username = $("#username").val();
         let email = $("#email").val();
-        // if (username.length == 0) {
-        //     bad_input($(".input-container:has('#username')"));
-        //     return;
-        // }
-        // if (email.length == 0) {
-        //     bad_input($(".input-container:has('#email')"));
-        //     return;
-        // }
+        if (username.length == 0) {
+            bad_input($(".input-container:has('#username')"));
+            return;
+        }
+        if (email.length == 0) {
+            bad_input($(".input-container:has('#email')"));
+            return;
+        }
+        $.ajax({
+            method: "POST",
+            url: "http://172.17.0.2:8080/_api/register/start_registration",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({
+                email: email,
+                username: username,
+            }),
+            statusCode: {
+                200: (e) => {
+                    active_frame = 2;
+                    grow_to($("#second-frame").height());
+                    $("#second-frame").removeClass("measure");
+                    $("#second-frame").find("#email-used").text(email);
+                    $("#frame-container").animate(
+                        {
+                            left: "-=" + $("#form-container").outerWidth()
+                        },
+                        animation_duration,
+                        after_frame_change,
+                    );
+                },
+                403: (e) => {
+                    // in theory, the email could also be invalid
+                    // but since type=email does not allow you to submit invalid email adresses,
+                    // we can be sure that its the username.
+                    bad_input($(".input-container:has('#username')"));
+                },
+            }
+        });
 
-        active_frame = 2;
-        grow_to($("#second-frame").height());
-        $("#second-frame").removeClass("measure");
-        $("#second-frame").find("#email-used").text(email);
-        $("#frame-container").animate(
-            {
-                left: "-=" + $("#form-container").outerWidth()
-            },
-            animation_duration,
-            after_frame_change,
-        );
     } else if (active_frame == 2) {
+        // verify email
         let verification_code = $("#verification-code").val();
-        // if (verification-code.length == 0) {
-        //     bad_input($(".input-container:has('#verification-code')"));
-        //     return;
-        // }
+        let username = $("#username").val(); // TODO remove on next API iteration
+        
+        if (verification_code.length == 0) {
+            bad_input($(".input-container:has('#verification-code')"));
+            return;
+        }
 
-        active_frame = 3;
-        $("#third-frame").removeClass("measure");
-        grow_to($("#third-frame").height());
-        $("#second-frame").after($("#third-frame"));
-        $("#frame-container").animate(
-            {
-                left: "-=" + $("#form-container").outerWidth()
-            },
-            animation_duration,
-            after_frame_change,
-        );
+        $.ajax({
+            method: "POST",
+            url: "http://172.17.0.2:8080/_api/register/verify_email_address",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({
+                username: username,
+                "verification-code": verification_code,
+            }),
+            statusCode: {
+                200: (e) => {
+                    active_frame = 3;
+                    $("#third-frame").removeClass("measure");
+                    grow_to($("#third-frame").height());
+                    $("#second-frame").after($("#third-frame"));
+                    $("#frame-container").animate(
+                        {
+                            left: "-=" + $("#form-container").outerWidth()
+                        },
+                        animation_duration,
+                        after_frame_change,
+                    );
+                },
+                403: (e) => {
+                    // in theory, the email could also be invalid
+                    // but since type=email does not allow you to submit invalid email adresses,
+                    // we can be sure that its the username.
+                    bad_input($(".input-container:has('#verification-code')"));
+                },
+            }
+        });
     } else {
+        // finish registration
+        let secret_question = $("#secret-question").val();
+        let secret_answer = $("#secret-answer").val();
+        let password = $("#password").val();
+        let password_confirm = $("#confirm-password").val();
+
+        if (secret_question != "" && secret_answer == "") {
+            bad_input($(".input-container:has('#secret-answer')"));
+            return;
+        }
+
+
+        if (password == "") {
+            bad_input($(".input-container:has('#password')"));
+            return;
+        }
+
+        if (password != password_confirm) {
+            bad_input($(".input-container:has('#confirm-password')"));
+            return;
+        }
+
+        if (!$("#terms-and-conditions").is(":checked")) {
+            bad_input($(".input-container:has('#terms-and-conditions')"));
+            return;
+        }
+
+        data = {
+            password: password,
+        }
+
+        // VERY important to not send empty questions/answers
+        if (secret_question != "") {
+            data["secret-question"] = secret_question;
+            data["secret-answer"] = secret_answer;
+        }
+
+        $.ajax({
+            method: "POST",
+            url: "http://172.17.0.2:8080/_api/register/finish_registration",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(data),
+            statusCode: {
+                201: (e) => {
+                    window.location = e["redirect"];
+                    document.cookie = e["token"];
+                },
+            }
+        });
     }
 }
 
