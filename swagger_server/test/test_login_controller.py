@@ -5,11 +5,14 @@ from __future__ import absolute_import
 from flask import json
 from six import BytesIO
 
-from swagger_server.models.captcha_prompt import CaptchaPrompt  # noqa: E501
 from swagger_server.models.init_login_session import InitLoginSession  # noqa: E501
-from swagger_server.models.next_frame import NextFrame  # noqa: E501
-from swagger_server.models.submitted_frame import SubmittedFrame  # noqa: E501
-from swagger_server.models.successful_authentication import SuccessfulAuthentication  # noqa: E501
+from swagger_server.models.initialized_session import InitializedSession  # noqa: E501
+from swagger_server.models.initialized_session1 import InitializedSession1  # noqa: E501
+from swagger_server.models.inline_response201 import InlineResponse201  # noqa: E501
+from swagger_server.models.inline_response401 import InlineResponse401  # noqa: E501
+from swagger_server.models.inline_response403 import InlineResponse403  # noqa: E501
+from swagger_server.models.login_submit_frame_body import LoginSubmitFrameBody  # noqa: E501
+from swagger_server.models.nonce_token1 import NonceToken1  # noqa: E501
 from swagger_server.test import BaseTestCase
 
 
@@ -35,7 +38,7 @@ class TestLoginController(BaseTestCase):
 
         Submit one of multiple credential frames
         """
-        body = SubmittedFrame()
+        body = LoginSubmitFrameBody()
         response = self.client.open(
             '/login/submit_frame',
             method='POST',

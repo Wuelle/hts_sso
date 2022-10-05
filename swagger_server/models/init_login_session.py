@@ -6,6 +6,8 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
+from swagger_server.models.logininit_session_content import LogininitSessionContent  # noqa: F401,E501
+from swagger_server.models.nonce_token import NonceToken  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -14,25 +16,25 @@ class InitLoginSession(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, redirect: str=None, username: str=None):  # noqa: E501
+    def __init__(self, nonce: NonceToken=None, content: LogininitSessionContent=None):  # noqa: E501
         """InitLoginSession - a model defined in Swagger
 
-        :param redirect: The redirect of this InitLoginSession.  # noqa: E501
-        :type redirect: str
-        :param username: The username of this InitLoginSession.  # noqa: E501
-        :type username: str
+        :param nonce: The nonce of this InitLoginSession.  # noqa: E501
+        :type nonce: NonceToken
+        :param content: The content of this InitLoginSession.  # noqa: E501
+        :type content: LogininitSessionContent
         """
         self.swagger_types = {
-            'redirect': str,
-            'username': str
+            'nonce': NonceToken,
+            'content': LogininitSessionContent
         }
 
         self.attribute_map = {
-            'redirect': 'redirect',
-            'username': 'username'
+            'nonce': 'nonce',
+            'content': 'content'
         }
-        self._redirect = redirect
-        self._username = username
+        self._nonce = nonce
+        self._content = content
 
     @classmethod
     def from_dict(cls, dikt) -> 'InitLoginSession':
@@ -46,49 +48,47 @@ class InitLoginSession(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def redirect(self) -> str:
-        """Gets the redirect of this InitLoginSession.
+    def nonce(self) -> NonceToken:
+        """Gets the nonce of this InitLoginSession.
 
-        The AES-encrypted domain that the client will be redirected to after authentication completes. If this is not a valid url belonging to hackthissite.org, the server must not open a session.  # noqa: E501
 
-        :return: The redirect of this InitLoginSession.
-        :rtype: str
+        :return: The nonce of this InitLoginSession.
+        :rtype: NonceToken
         """
-        return self._redirect
+        return self._nonce
 
-    @redirect.setter
-    def redirect(self, redirect: str):
-        """Sets the redirect of this InitLoginSession.
+    @nonce.setter
+    def nonce(self, nonce: NonceToken):
+        """Sets the nonce of this InitLoginSession.
 
-        The AES-encrypted domain that the client will be redirected to after authentication completes. If this is not a valid url belonging to hackthissite.org, the server must not open a session.  # noqa: E501
 
-        :param redirect: The redirect of this InitLoginSession.
-        :type redirect: str
+        :param nonce: The nonce of this InitLoginSession.
+        :type nonce: NonceToken
         """
-        if redirect is None:
-            raise ValueError("Invalid value for `redirect`, must not be `None`")  # noqa: E501
+        if nonce is None:
+            raise ValueError("Invalid value for `nonce`, must not be `None`")  # noqa: E501
 
-        self._redirect = redirect
+        self._nonce = nonce
 
     @property
-    def username(self) -> str:
-        """Gets the username of this InitLoginSession.
+    def content(self) -> LogininitSessionContent:
+        """Gets the content of this InitLoginSession.
 
-        The account name that should be reauthenticated  # noqa: E501
 
-        :return: The username of this InitLoginSession.
-        :rtype: str
+        :return: The content of this InitLoginSession.
+        :rtype: LogininitSessionContent
         """
-        return self._username
+        return self._content
 
-    @username.setter
-    def username(self, username: str):
-        """Sets the username of this InitLoginSession.
+    @content.setter
+    def content(self, content: LogininitSessionContent):
+        """Sets the content of this InitLoginSession.
 
-        The account name that should be reauthenticated  # noqa: E501
 
-        :param username: The username of this InitLoginSession.
-        :type username: str
+        :param content: The content of this InitLoginSession.
+        :type content: LogininitSessionContent
         """
+        if content is None:
+            raise ValueError("Invalid value for `content`, must not be `None`")  # noqa: E501
 
-        self._username = username
+        self._content = content

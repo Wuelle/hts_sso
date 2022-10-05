@@ -6,6 +6,8 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
+from swagger_server.models.nonce_token import NonceToken  # noqa: F401,E501
+from swagger_server.models.registerverify_email_address_content import RegisterverifyEmailAddressContent  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -14,25 +16,25 @@ class EmailVerificationToken(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, username: str=None, verification_code: str=None):  # noqa: E501
+    def __init__(self, nonce: NonceToken=None, content: RegisterverifyEmailAddressContent=None):  # noqa: E501
         """EmailVerificationToken - a model defined in Swagger
 
-        :param username: The username of this EmailVerificationToken.  # noqa: E501
-        :type username: str
-        :param verification_code: The verification_code of this EmailVerificationToken.  # noqa: E501
-        :type verification_code: str
+        :param nonce: The nonce of this EmailVerificationToken.  # noqa: E501
+        :type nonce: NonceToken
+        :param content: The content of this EmailVerificationToken.  # noqa: E501
+        :type content: RegisterverifyEmailAddressContent
         """
         self.swagger_types = {
-            'username': str,
-            'verification_code': str
+            'nonce': NonceToken,
+            'content': RegisterverifyEmailAddressContent
         }
 
         self.attribute_map = {
-            'username': 'username',
-            'verification_code': 'verification-code'
+            'nonce': 'nonce',
+            'content': 'content'
         }
-        self._username = username
-        self._verification_code = verification_code
+        self._nonce = nonce
+        self._content = content
 
     @classmethod
     def from_dict(cls, dikt) -> 'EmailVerificationToken':
@@ -46,51 +48,47 @@ class EmailVerificationToken(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def username(self) -> str:
-        """Gets the username of this EmailVerificationToken.
+    def nonce(self) -> NonceToken:
+        """Gets the nonce of this EmailVerificationToken.
 
-        The name of the account that should be verified  # noqa: E501
 
-        :return: The username of this EmailVerificationToken.
-        :rtype: str
+        :return: The nonce of this EmailVerificationToken.
+        :rtype: NonceToken
         """
-        return self._username
+        return self._nonce
 
-    @username.setter
-    def username(self, username: str):
-        """Sets the username of this EmailVerificationToken.
+    @nonce.setter
+    def nonce(self, nonce: NonceToken):
+        """Sets the nonce of this EmailVerificationToken.
 
-        The name of the account that should be verified  # noqa: E501
 
-        :param username: The username of this EmailVerificationToken.
-        :type username: str
+        :param nonce: The nonce of this EmailVerificationToken.
+        :type nonce: NonceToken
         """
-        if username is None:
-            raise ValueError("Invalid value for `username`, must not be `None`")  # noqa: E501
+        if nonce is None:
+            raise ValueError("Invalid value for `nonce`, must not be `None`")  # noqa: E501
 
-        self._username = username
+        self._nonce = nonce
 
     @property
-    def verification_code(self) -> str:
-        """Gets the verification_code of this EmailVerificationToken.
+    def content(self) -> RegisterverifyEmailAddressContent:
+        """Gets the content of this EmailVerificationToken.
 
-        A secret code used to prove ownership of an email address  # noqa: E501
 
-        :return: The verification_code of this EmailVerificationToken.
-        :rtype: str
+        :return: The content of this EmailVerificationToken.
+        :rtype: RegisterverifyEmailAddressContent
         """
-        return self._verification_code
+        return self._content
 
-    @verification_code.setter
-    def verification_code(self, verification_code: str):
-        """Sets the verification_code of this EmailVerificationToken.
+    @content.setter
+    def content(self, content: RegisterverifyEmailAddressContent):
+        """Sets the content of this EmailVerificationToken.
 
-        A secret code used to prove ownership of an email address  # noqa: E501
 
-        :param verification_code: The verification_code of this EmailVerificationToken.
-        :type verification_code: str
+        :param content: The content of this EmailVerificationToken.
+        :type content: RegisterverifyEmailAddressContent
         """
-        if verification_code is None:
-            raise ValueError("Invalid value for `verification_code`, must not be `None`")  # noqa: E501
+        if content is None:
+            raise ValueError("Invalid value for `content`, must not be `None`")  # noqa: E501
 
-        self._verification_code = verification_code
+        self._content = content

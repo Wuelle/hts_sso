@@ -6,6 +6,8 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
+from swagger_server.models.nonce_token import NonceToken  # noqa: F401,E501
+from swagger_server.models.registerchange_verification_email_content import RegisterchangeVerificationEmailContent  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -14,30 +16,25 @@ class ChangeVericationMailAddress(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, username: str=None, old_email: str=None, new_email: str=None):  # noqa: E501
+    def __init__(self, nonce: NonceToken=None, content: RegisterchangeVerificationEmailContent=None):  # noqa: E501
         """ChangeVericationMailAddress - a model defined in Swagger
 
-        :param username: The username of this ChangeVericationMailAddress.  # noqa: E501
-        :type username: str
-        :param old_email: The old_email of this ChangeVericationMailAddress.  # noqa: E501
-        :type old_email: str
-        :param new_email: The new_email of this ChangeVericationMailAddress.  # noqa: E501
-        :type new_email: str
+        :param nonce: The nonce of this ChangeVericationMailAddress.  # noqa: E501
+        :type nonce: NonceToken
+        :param content: The content of this ChangeVericationMailAddress.  # noqa: E501
+        :type content: RegisterchangeVerificationEmailContent
         """
         self.swagger_types = {
-            'username': str,
-            'old_email': str,
-            'new_email': str
+            'nonce': NonceToken,
+            'content': RegisterchangeVerificationEmailContent
         }
 
         self.attribute_map = {
-            'username': 'username',
-            'old_email': 'old-email',
-            'new_email': 'new-email'
+            'nonce': 'nonce',
+            'content': 'content'
         }
-        self._username = username
-        self._old_email = old_email
-        self._new_email = new_email
+        self._nonce = nonce
+        self._content = content
 
     @classmethod
     def from_dict(cls, dikt) -> 'ChangeVericationMailAddress':
@@ -51,70 +48,47 @@ class ChangeVericationMailAddress(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def username(self) -> str:
-        """Gets the username of this ChangeVericationMailAddress.
+    def nonce(self) -> NonceToken:
+        """Gets the nonce of this ChangeVericationMailAddress.
 
 
-        :return: The username of this ChangeVericationMailAddress.
-        :rtype: str
+        :return: The nonce of this ChangeVericationMailAddress.
+        :rtype: NonceToken
         """
-        return self._username
+        return self._nonce
 
-    @username.setter
-    def username(self, username: str):
-        """Sets the username of this ChangeVericationMailAddress.
+    @nonce.setter
+    def nonce(self, nonce: NonceToken):
+        """Sets the nonce of this ChangeVericationMailAddress.
 
 
-        :param username: The username of this ChangeVericationMailAddress.
-        :type username: str
+        :param nonce: The nonce of this ChangeVericationMailAddress.
+        :type nonce: NonceToken
         """
-        if username is None:
-            raise ValueError("Invalid value for `username`, must not be `None`")  # noqa: E501
+        if nonce is None:
+            raise ValueError("Invalid value for `nonce`, must not be `None`")  # noqa: E501
 
-        self._username = username
+        self._nonce = nonce
 
     @property
-    def old_email(self) -> str:
-        """Gets the old_email of this ChangeVericationMailAddress.
+    def content(self) -> RegisterchangeVerificationEmailContent:
+        """Gets the content of this ChangeVericationMailAddress.
 
 
-        :return: The old_email of this ChangeVericationMailAddress.
-        :rtype: str
+        :return: The content of this ChangeVericationMailAddress.
+        :rtype: RegisterchangeVerificationEmailContent
         """
-        return self._old_email
+        return self._content
 
-    @old_email.setter
-    def old_email(self, old_email: str):
-        """Sets the old_email of this ChangeVericationMailAddress.
+    @content.setter
+    def content(self, content: RegisterchangeVerificationEmailContent):
+        """Sets the content of this ChangeVericationMailAddress.
 
 
-        :param old_email: The old_email of this ChangeVericationMailAddress.
-        :type old_email: str
+        :param content: The content of this ChangeVericationMailAddress.
+        :type content: RegisterchangeVerificationEmailContent
         """
-        if old_email is None:
-            raise ValueError("Invalid value for `old_email`, must not be `None`")  # noqa: E501
+        if content is None:
+            raise ValueError("Invalid value for `content`, must not be `None`")  # noqa: E501
 
-        self._old_email = old_email
-
-    @property
-    def new_email(self) -> str:
-        """Gets the new_email of this ChangeVericationMailAddress.
-
-
-        :return: The new_email of this ChangeVericationMailAddress.
-        :rtype: str
-        """
-        return self._new_email
-
-    @new_email.setter
-    def new_email(self, new_email: str):
-        """Sets the new_email of this ChangeVericationMailAddress.
-
-
-        :param new_email: The new_email of this ChangeVericationMailAddress.
-        :type new_email: str
-        """
-        if new_email is None:
-            raise ValueError("Invalid value for `new_email`, must not be `None`")  # noqa: E501
-
-        self._new_email = new_email
+        self._content = content

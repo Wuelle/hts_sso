@@ -6,6 +6,8 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
+from swagger_server.models.is_username_available_content import IsUsernameAvailableContent  # noqa: F401,E501
+from swagger_server.models.nonce_token import NonceToken  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -14,20 +16,25 @@ class IsUsernameAvailable(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, is_available: bool=None):  # noqa: E501
+    def __init__(self, nonce: NonceToken=None, content: IsUsernameAvailableContent=None):  # noqa: E501
         """IsUsernameAvailable - a model defined in Swagger
 
-        :param is_available: The is_available of this IsUsernameAvailable.  # noqa: E501
-        :type is_available: bool
+        :param nonce: The nonce of this IsUsernameAvailable.  # noqa: E501
+        :type nonce: NonceToken
+        :param content: The content of this IsUsernameAvailable.  # noqa: E501
+        :type content: IsUsernameAvailableContent
         """
         self.swagger_types = {
-            'is_available': bool
+            'nonce': NonceToken,
+            'content': IsUsernameAvailableContent
         }
 
         self.attribute_map = {
-            'is_available': 'is-available'
+            'nonce': 'nonce',
+            'content': 'content'
         }
-        self._is_available = is_available
+        self._nonce = nonce
+        self._content = content
 
     @classmethod
     def from_dict(cls, dikt) -> 'IsUsernameAvailable':
@@ -41,24 +48,47 @@ class IsUsernameAvailable(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def is_available(self) -> bool:
-        """Gets the is_available of this IsUsernameAvailable.
+    def nonce(self) -> NonceToken:
+        """Gets the nonce of this IsUsernameAvailable.
 
 
-        :return: The is_available of this IsUsernameAvailable.
-        :rtype: bool
+        :return: The nonce of this IsUsernameAvailable.
+        :rtype: NonceToken
         """
-        return self._is_available
+        return self._nonce
 
-    @is_available.setter
-    def is_available(self, is_available: bool):
-        """Sets the is_available of this IsUsernameAvailable.
+    @nonce.setter
+    def nonce(self, nonce: NonceToken):
+        """Sets the nonce of this IsUsernameAvailable.
 
 
-        :param is_available: The is_available of this IsUsernameAvailable.
-        :type is_available: bool
+        :param nonce: The nonce of this IsUsernameAvailable.
+        :type nonce: NonceToken
         """
-        if is_available is None:
-            raise ValueError("Invalid value for `is_available`, must not be `None`")  # noqa: E501
+        if nonce is None:
+            raise ValueError("Invalid value for `nonce`, must not be `None`")  # noqa: E501
 
-        self._is_available = is_available
+        self._nonce = nonce
+
+    @property
+    def content(self) -> IsUsernameAvailableContent:
+        """Gets the content of this IsUsernameAvailable.
+
+
+        :return: The content of this IsUsernameAvailable.
+        :rtype: IsUsernameAvailableContent
+        """
+        return self._content
+
+    @content.setter
+    def content(self, content: IsUsernameAvailableContent):
+        """Sets the content of this IsUsernameAvailable.
+
+
+        :param content: The content of this IsUsernameAvailable.
+        :type content: IsUsernameAvailableContent
+        """
+        if content is None:
+            raise ValueError("Invalid value for `content`, must not be `None`")  # noqa: E501
+
+        self._content = content

@@ -5,6 +5,9 @@ let USERNAME_LEGAL_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVW123
 let animation_duration = 700;  // ms
 let active_frame = 1;
 
+// initialize session manager
+init_session("registration");
+
 if (window.location.href.search("frame=") != -1) {
     active_frame = new RegExp('[\?&]frame=([^&#]*)').exec(window.location.href)[1]
 }
@@ -140,10 +143,21 @@ function check_username_available() {
         let username = $("#username").val();
 	    let warnings = $("#username-warnings");
 
-        // replace with ajax call later
-        if (username == "Alaska") {
-			warnings.html("<span class='inline-highlight'>" + username + "</span> is not available");
-        }
+        $.ajax({
+            method: "POST",
+            url: "http://172.17.0.2:8080/_api/register/is_username_available",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({
+                username: username,
+            }),
+            statusCode: {
+                200: (e) => {
+                    if (!e["is-available"]) {
+			            warnings.html("<span class='inline-highlight'>" + username + "</span> is not available");
+                    }
+                }
+            }
+        })
     }
-
 }

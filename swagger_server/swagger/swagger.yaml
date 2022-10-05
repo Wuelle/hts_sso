@@ -13,6 +13,31 @@ tags:
 - name: Registration
   description: Create a new account
 paths:
+  /session/get_nonce_token:
+    get:
+      tags:
+      - Session
+      summary: Get a nonce
+      description: "Get a one time session token for a specific area of the site (login,\
+        \ registration...)"
+      operationId: session_get_nonce_token
+      parameters:
+      - name: area
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: login
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonceToken_1'
+      x-openapi-router-controller: swagger_server.controllers.session_controller
   /login/init_session:
     post:
       tags:
@@ -31,22 +56,17 @@ paths:
       responses:
         "200":
           description: "OK, the user may start the login process"
-          headers:
-            Set-Cookie:
-              description: An login session token that should be sent along with future
-                requests.
-              style: simple
-              explode: false
-              schema:
-                type: string
-                example: LoginSession=<token>;
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NextFrame'
+                $ref: '#/components/schemas/InitializedSession'
         "403":
           description: The redirect-to parameter was not a valid hackthissite url
             or the given username does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonceToken_1'
       x-openapi-router-controller: swagger_server.controllers.login_controller
   /login/submit_frame:
     post:
@@ -71,7 +91,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SubmittedFrame'
+              $ref: '#/components/schemas/login_submit_frame_body'
         required: true
       responses:
         "200":
@@ -80,30 +100,59 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NextFrame'
+                $ref: '#/components/schemas/InitializedSession_1'
         "201":
           description: The user was successfully authenticated and will be redirected
             to their destination
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessfulAuthentication'
+                $ref: '#/components/schemas/inline_response_201'
         "401":
           description: Invalid session or captcha token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
         "403":
           description: The client sent either a nonexisting username or an invalid
             password/mfa code. The client may retry.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CaptchaPrompt'
+                $ref: '#/components/schemas/inline_response_403'
         "409":
           description: "The frame type expected by the server did not match the one\
             \ sent by the client. As this likely means that something has gone wrong\
             \ on the clients side, the user should be asked to reload the page and\
             \ restart authentication from the beginning. The server will not accept\
             \ further requests for the current login sequence."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
       x-openapi-router-controller: swagger_server.controllers.login_controller
+  /register/is_initial_captcha_required:
+    post:
+      tags:
+      - Registration
+      summary: Whether the user needs to complete a captcha on the first frame
+      operationId: register_is_initial_captcha_required
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResendVerificationMail'
+        required: true
+      responses:
+        "200":
+          description: Response describing whether the user needs to complete a captcha
+            on the first frame
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsInitialCaptchaRequired'
+      x-openapi-router-controller: swagger_server.controllers.registration_controller
   /register/is_username_available:
     post:
       tags:
@@ -144,8 +193,16 @@ paths:
         "200":
           description: The server sent a verification mail to the provided email address.
             The client must provide the security code from that email
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
         "403":
           description: Username or email are not valid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
       x-openapi-router-controller: swagger_server.controllers.registration_controller
   /register/resend_verification_mail:
     post:
@@ -157,15 +214,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ResendVerificationMail'
+              $ref: '#/components/schemas/ResendVerificationMail_1'
         required: true
       responses:
         "200":
           description: Another mail was sent to the same address. The old verification
             code is no longer valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
         "403":
           description: No new mail was sent. Username/email did not match any account
             currently being registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
       x-openapi-router-controller: swagger_server.controllers.registration_controller
   /register/change_verification_email:
     post:
@@ -186,10 +251,18 @@ paths:
       responses:
         "200":
           description: Account mail was changed and a new verification mail was sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
         "403":
           description: Account email was not changed. Possible reasons include username/old
             email not matching or no account with the given username currently being
             registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
       x-openapi-router-controller: swagger_server.controllers.registration_controller
   /register/verify_email_address:
     post:
@@ -206,8 +279,16 @@ paths:
       responses:
         "200":
           description: Email was successfully verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
         "403":
           description: Invalid verification code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidVerificationCode'
       x-openapi-router-controller: swagger_server.controllers.registration_controller
   /register/finish_registration:
     post:
@@ -230,51 +311,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessfulAuthentication'
-        "403":
-          description: Invalid verification code
+                $ref: '#/components/schemas/inline_response_201'
       x-openapi-router-controller: swagger_server.controllers.registration_controller
 components:
   schemas:
-    InitLoginSession:
-      required:
-      - redirect
-      type: object
-      properties:
-        redirect:
-          type: string
-          description: "The AES-encrypted domain that the client will be redirected\
-            \ to after authentication completes. If this is not a valid url belonging\
-            \ to hackthissite.org, the server must not open a session."
-        username:
-          type: string
-          description: The account name that should be reauthenticated
-          example: Alaska
-      description: The initial payload sent by the client which starts a login session
-        on the server
-    SubmittedFrame:
-      required:
-      - frame
-      - value
-      type: object
-      properties:
-        frame:
-          type: string
-          description: The frame that was submitted by the user
-          example: password
-          enum:
-          - username
-          - password
-          - mfa
-        value:
-          type: string
-          description: The value submitted by the user
-          example: my-very-secure-password123
-        h-captcha-response:
-          type: string
-          description: A token proving the user has completed the hcaptcha challenge.
-            Only required if the user was prompted to complete a captcha before
-          example: <challenge token>
+    NonceToken:
+      type: string
+      example: <token>
     NextFrame:
       required:
       - next
@@ -326,8 +369,154 @@ components:
       example:
         redirect: forums.hackthissite.org
         token: HackThisSite=<token>;path=/;domain=hackthissite.org
-    Username:
-      title: Username
+    NonceToken_1:
+      title: NonceToken
+      properties:
+        nonce:
+          type: string
+      example:
+        nonce: nonce
+    logininit_session_content:
+      required:
+      - redirect
+      type: object
+      properties:
+        redirect:
+          type: string
+          description: "The AES-encrypted domain that the client will be redirected\
+            \ to after authentication completes. If this is not a valid url belonging\
+            \ to hackthissite.org, the server must not open a session."
+        username:
+          type: string
+          description: The account name that should be reauthenticated
+          example: Alaska
+    InitLoginSession:
+      title: InitLoginSession
+      required:
+      - content
+      - nonce
+      type: object
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/logininit_session_content'
+      description: The initial payload sent by the client which starts a login session
+        on the server
+    InitializedSession:
+      title: InitializedSession
+      type: object
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/NextFrame'
+      example:
+        nonce: <token>
+        content:
+          next: password
+          show-captcha: false
+    loginsubmit_frame_content:
+      required:
+      - frame
+      - value
+      type: object
+      properties:
+        frame:
+          type: string
+          description: The frame that was submitted by the user
+          example: password
+          enum:
+          - username
+          - password
+          - mfa
+        value:
+          type: string
+          description: The value submitted by the user
+          example: my-very-secure-password123
+        h-captcha-response:
+          type: string
+          description: A token proving the user has completed the hcaptcha challenge.
+            Only required if the user was prompted to complete a captcha before
+          example: <challenge token>
+    login_submit_frame_body:
+      type: object
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/loginsubmit_frame_content'
+    InitializedSession_1:
+      title: InitializedSession
+      required:
+      - content
+      - nonce
+      type: object
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/NextFrame'
+      example:
+        nonce: <token>
+        content:
+          next: password
+          show-captcha: false
+    inline_response_201:
+      required:
+      - content
+      - nonce
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/SuccessfulAuthentication'
+      example:
+        nonce: <token>
+        content:
+          redirect: forums.hackthissite.org
+          token: HackThisSite=<token>;path=/;domain=hackthissite.org
+    inline_response_401:
+      required:
+      - nonce
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+      example:
+        nonce: <token>
+    inline_response_403:
+      required:
+      - content
+      - nonce
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/CaptchaPrompt'
+    ResendVerificationMail:
+      title: ResendVerificationMail
+      required:
+      - nonce
+      type: object
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+    IsInitialCaptchaRequired:
+      title: IsInitialCaptchaRequired
+      required:
+      - content
+      - nonce
+      type: object
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/IsInitialCaptchaRequired_content'
+      example:
+        nonce: <token>
+        content:
+          captcha-required: true
+    registeris_username_available_content:
       required:
       - username
       type: object
@@ -336,31 +525,61 @@ components:
           type: string
           description: An account name
           example: Alaska
+    Username:
+      title: Username
+      required:
+      - content
+      - nonce
+      type: object
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/registeris_username_available_content'
     IsUsernameAvailable:
       title: IsUsernameAvailable
       required:
-      - is-available
+      - content
+      - nonce
       type: object
       properties:
-        is-available:
-          type: boolean
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/IsUsernameAvailable_content'
       example:
-        is-available: true
-    PrimaryAccountDetails:
-      title: PrimaryAccountDetails
+        nonce: <token>
+        content:
+          is-available: true
+    registerstart_registration_content:
       required:
       - email
       - username
       type: object
       properties:
+        h-captcha-response:
+          type: string
+          description: A token proving the user has completed the hcaptcha challenge.
+            Only required if the user was prompted to complete a captcha before
+          example: <challenge token>
         username:
           type: string
           example: Alaska
         email:
           type: string
           example: user@example.com
-    ResendVerificationMail:
-      title: ResendVerificationMail
+    PrimaryAccountDetails:
+      title: PrimaryAccountDetails
+      required:
+      - content
+      - nonce
+      type: object
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/registerstart_registration_content'
+    registerresend_verification_mail_content:
       required:
       - old-email
       - username
@@ -372,8 +591,18 @@ components:
         email:
           type: string
           example: user@example.com
-    ChangeVericationMailAddress:
-      title: ChangeVericationMailAddress
+    ResendVerificationMail_1:
+      title: ResendVerificationMail
+      required:
+      - content
+      - nonce
+      type: object
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/registerresend_verification_mail_content'
+    registerchange_verification_email_content:
       required:
       - new-email
       - old-email
@@ -389,8 +618,18 @@ components:
         new-email:
           type: string
           example: new@example.com
-    EmailVerificationToken:
-      title: EmailVerificationToken
+    ChangeVericationMailAddress:
+      title: ChangeVericationMailAddress
+      required:
+      - content
+      - nonce
+      type: object
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/registerchange_verification_email_content'
+    registerverify_email_address_content:
       required:
       - username
       - verification-code
@@ -404,18 +643,34 @@ components:
           type: string
           description: A secret code used to prove ownership of an email address
           example: <verification code>
-    FinishRegistration:
-      title: FinishRegistration
+    EmailVerificationToken:
+      title: EmailVerificationToken
       required:
-      - password
-      - verification-code
+      - content
+      - nonce
       type: object
       properties:
-        verification-code:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/registerverify_email_address_content'
+    InvalidVerificationCode:
+      title: InvalidVerificationCode
+      required:
+      - nonce
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+    registerfinish_registration_content:
+      required:
+      - password
+      type: object
+      properties:
+        h-captcha-response:
           type: string
-          description: The token the user previously received via the verification
-            email
-          example: <verification code>
+          description: A token proving the user has completed the hcaptcha challenge.
+            Only required if the user was prompted to complete a captcha before
+          example: <challenge token>
         password:
           type: string
           description: The account password
@@ -430,4 +685,33 @@ components:
           type: string
           description: The answer to the secret question.
           example: Schmidt
+    FinishRegistration:
+      title: FinishRegistration
+      required:
+      - content
+      - nonce
+      type: object
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/registerfinish_registration_content'
+    IsInitialCaptchaRequired_content:
+      required:
+      - captcha-required
+      type: object
+      properties:
+        captcha-required:
+          type: boolean
+      example:
+        captcha-required: true
+    IsUsernameAvailable_content:
+      required:
+      - is-available
+      type: object
+      properties:
+        is-available:
+          type: boolean
+      example:
+        is-available: true
 

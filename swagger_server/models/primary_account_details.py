@@ -6,6 +6,8 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
+from swagger_server.models.nonce_token import NonceToken  # noqa: F401,E501
+from swagger_server.models.registerstart_registration_content import RegisterstartRegistrationContent  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -14,25 +16,25 @@ class PrimaryAccountDetails(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, username: str=None, email: str=None):  # noqa: E501
+    def __init__(self, nonce: NonceToken=None, content: RegisterstartRegistrationContent=None):  # noqa: E501
         """PrimaryAccountDetails - a model defined in Swagger
 
-        :param username: The username of this PrimaryAccountDetails.  # noqa: E501
-        :type username: str
-        :param email: The email of this PrimaryAccountDetails.  # noqa: E501
-        :type email: str
+        :param nonce: The nonce of this PrimaryAccountDetails.  # noqa: E501
+        :type nonce: NonceToken
+        :param content: The content of this PrimaryAccountDetails.  # noqa: E501
+        :type content: RegisterstartRegistrationContent
         """
         self.swagger_types = {
-            'username': str,
-            'email': str
+            'nonce': NonceToken,
+            'content': RegisterstartRegistrationContent
         }
 
         self.attribute_map = {
-            'username': 'username',
-            'email': 'email'
+            'nonce': 'nonce',
+            'content': 'content'
         }
-        self._username = username
-        self._email = email
+        self._nonce = nonce
+        self._content = content
 
     @classmethod
     def from_dict(cls, dikt) -> 'PrimaryAccountDetails':
@@ -46,47 +48,47 @@ class PrimaryAccountDetails(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def username(self) -> str:
-        """Gets the username of this PrimaryAccountDetails.
+    def nonce(self) -> NonceToken:
+        """Gets the nonce of this PrimaryAccountDetails.
 
 
-        :return: The username of this PrimaryAccountDetails.
-        :rtype: str
+        :return: The nonce of this PrimaryAccountDetails.
+        :rtype: NonceToken
         """
-        return self._username
+        return self._nonce
 
-    @username.setter
-    def username(self, username: str):
-        """Sets the username of this PrimaryAccountDetails.
+    @nonce.setter
+    def nonce(self, nonce: NonceToken):
+        """Sets the nonce of this PrimaryAccountDetails.
 
 
-        :param username: The username of this PrimaryAccountDetails.
-        :type username: str
+        :param nonce: The nonce of this PrimaryAccountDetails.
+        :type nonce: NonceToken
         """
-        if username is None:
-            raise ValueError("Invalid value for `username`, must not be `None`")  # noqa: E501
+        if nonce is None:
+            raise ValueError("Invalid value for `nonce`, must not be `None`")  # noqa: E501
 
-        self._username = username
+        self._nonce = nonce
 
     @property
-    def email(self) -> str:
-        """Gets the email of this PrimaryAccountDetails.
+    def content(self) -> RegisterstartRegistrationContent:
+        """Gets the content of this PrimaryAccountDetails.
 
 
-        :return: The email of this PrimaryAccountDetails.
-        :rtype: str
+        :return: The content of this PrimaryAccountDetails.
+        :rtype: RegisterstartRegistrationContent
         """
-        return self._email
+        return self._content
 
-    @email.setter
-    def email(self, email: str):
-        """Sets the email of this PrimaryAccountDetails.
+    @content.setter
+    def content(self, content: RegisterstartRegistrationContent):
+        """Sets the content of this PrimaryAccountDetails.
 
 
-        :param email: The email of this PrimaryAccountDetails.
-        :type email: str
+        :param content: The content of this PrimaryAccountDetails.
+        :type content: RegisterstartRegistrationContent
         """
-        if email is None:
-            raise ValueError("Invalid value for `email`, must not be `None`")  # noqa: E501
+        if content is None:
+            raise ValueError("Invalid value for `content`, must not be `None`")  # noqa: E501
 
-        self._email = email
+        self._content = content

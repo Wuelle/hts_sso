@@ -1,11 +1,14 @@
 import connexion
 import six
 
-from swagger_server.models.captcha_prompt import CaptchaPrompt  # noqa: E501
 from swagger_server.models.init_login_session import InitLoginSession  # noqa: E501
-from swagger_server.models.next_frame import NextFrame  # noqa: E501
-from swagger_server.models.submitted_frame import SubmittedFrame  # noqa: E501
-from swagger_server.models.successful_authentication import SuccessfulAuthentication  # noqa: E501
+from swagger_server.models.initialized_session import InitializedSession  # noqa: E501
+from swagger_server.models.initialized_session1 import InitializedSession1  # noqa: E501
+from swagger_server.models.inline_response201 import InlineResponse201  # noqa: E501
+from swagger_server.models.inline_response401 import InlineResponse401  # noqa: E501
+from swagger_server.models.inline_response403 import InlineResponse403  # noqa: E501
+from swagger_server.models.login_submit_frame_body import LoginSubmitFrameBody  # noqa: E501
+from swagger_server.models.nonce_token1 import NonceToken1  # noqa: E501
 from swagger_server import util
 
 
@@ -17,7 +20,7 @@ def login_init_session(body):  # noqa: E501
     :param body: 
     :type body: dict | bytes
 
-    :rtype: NextFrame
+    :rtype: InitializedSession
     """
     if connexion.request.is_json:
         body = InitLoginSession.from_dict(connexion.request.get_json())  # noqa: E501
@@ -34,8 +37,8 @@ def login_submit_frame(body, login_session=None):  # noqa: E501
     :param login_session: 
     :type login_session: str
 
-    :rtype: NextFrame
+    :rtype: InitializedSession1
     """
     if connexion.request.is_json:
-        body = SubmittedFrame.from_dict(connexion.request.get_json())  # noqa: E501
+        body = LoginSubmitFrameBody.from_dict(connexion.request.get_json())  # noqa: E501
     return 'do some magic!'
