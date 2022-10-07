@@ -31,7 +31,7 @@ def register_change_verification_mail(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = ChangeVericationMailAddress.from_dict(connexion.request.get_json())  # noqa: E501
-    return InlineResponse401(nonce="new nonce");
+    return InlineResponse401(nonce="new nonce"), 200;
 
 
 def register_finish_registration(body):  # noqa: E501
@@ -101,7 +101,7 @@ def register_resend_verification_mail(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = ResendVerificationMail1.from_dict(connexion.request.get_json())  # noqa: E501
-    return InlineResponse401(nonce="new nonce");
+    return InlineResponse401(nonce="new nonce"), 200;
 
 
 def register_start_registration(body):  # noqa: E501

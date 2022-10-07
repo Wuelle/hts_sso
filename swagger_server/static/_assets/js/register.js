@@ -4,38 +4,48 @@ let USERNAME_LEGAL_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVW123
 
 let animation_duration = 700;  // ms
 let active_frame = 1;
+let captcha_visible = false;
 
-// initialize session manager
-init_session("registration").then(() => {
-    // check whether we need a captcha on the first frame
-	$.ajax({
-		method: "POST",
-  		url: "http://172.17.0.2:8080/_api/register/is_initial_captcha_required",
-  		contentType: "application/json",
-  		dataType: "json",
-  		statusCode: {
-  			200: (e) => {
-                if (e["captcha-required"]) {
-                    console.log("show captcha");
-                }
-  			},
-  		}
-	});
-});
 
-if (window.location.href.search("frame=") != -1) {
-    active_frame = new RegExp('[\?&]frame=([^&#]*)').exec(window.location.href)[1]
+let verification_code = undefined;
+if (window.location.href.search("verification_code=") != -1) {
+    verification_code = new RegExp('[\?&]verification_code=([^&#]*)').exec(window.location.href)[1]
 }
 
 $(document).ready(() => {
+    // initialize session manager
+    init_session("registration").then(() => {
+        // check whether we need a captcha on the first frame
+        $.ajax({
+            method: "POST",
+            url: "http://172.17.0.2:8080/_api/register/is_initial_captcha_required",
+            contentType: "application/json",
+            dataType: "json",
+            statusCode: {
+                200: (e) => {
+	                let captcha = $(".h-captcha").eq(0);
+                    captcha.css("opacity", 1);
+                    if (e["captcha-required"]) {
+			            captcha.removeClass("inactive-captcha");
+                        $("#first-frame").append(captcha);
+                    }
+                },
+            }
+        });
+    });
+
+
 	$("#form-container").on("submit", on_submit_frame);
     $("#first-frame").on("focusout", check_username_available);
 
     let initial_frame;
-    if (active_frame == 1) {
+    if (verification_code === undefined) {
+        active_frame = 1;
         initial_frame = $("#first-frame");
     } else {
         initial_frame = $("#second-frame");
+        active_frame = 2;
+        $("#verification-code").val(verification_code);
     }
     initial_frame.removeClass("measure");
 })
@@ -46,8 +56,58 @@ function get_frame(frame_index) {
         return $("#first-frame");
     } else if (frame_index == 2) {
         return $("#second-frame");
-    } else {
+    } else if (frame_index == 3) {
         return $("#third-frame");
+    } else {
+        return $("#fourth-frame");
+    }
+}
+
+function change_verification_mail() {
+    animate_change_frame(4);
+}
+
+function resend_verification_mail() {
+    console.log("resend mail");
+    let email = $("#email").val();
+    let username = $("#username").val(); // TODO remove on next API iteration
+    $.ajax({
+        method: "POST",
+        url: "http://172.17.0.2:8080/_api/register/resend_verification_mail",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+            email: email,
+            username: username,
+        }),
+        statusCode: {
+            200: (e) => {
+            },
+        }
+    });
+}
+
+function animate_change_frame(new_frame_nr) {
+    if (new_frame_nr != active_frame) {
+        let old_frame = get_frame(active_frame);
+        let new_frame = get_frame(new_frame_nr);
+
+        // to compute .height() the element must be visible
+        new_frame.removeClass("measure");
+        grow_to(new_frame.height());
+
+        old_frame.after(get_frame(new_frame));
+        active_frame = new_frame_nr;
+        $("#frame-container").animate(
+            {
+                left: "-=" + $("#form-container").outerWidth()
+            },
+            animation_duration,
+            after_frame_change,
+        );
+    } else {
+        let old_frame = get_frame(active_frame);
+        let new_frame = old_frame.clone();
     }
 }
 
@@ -106,17 +166,8 @@ function on_submit_frame(e) {
             }),
             statusCode: {
                 200: (e) => {
-                    active_frame = 2;
-                    grow_to($("#second-frame").height());
-                    $("#second-frame").removeClass("measure");
                     $("#second-frame").find("#email-used").text(email);
-                    $("#frame-container").animate(
-                        {
-                            left: "-=" + $("#form-container").outerWidth()
-                        },
-                        animation_duration,
-                        after_frame_change,
-                    );
+                    animate_change_frame(2);
                 },
                 403: (e) => {
                     // in theory, the email could also be invalid
@@ -148,17 +199,7 @@ function on_submit_frame(e) {
             }),
             statusCode: {
                 200: (e) => {
-                    active_frame = 3;
-                    $("#third-frame").removeClass("measure");
-                    grow_to($("#third-frame").height());
-                    $("#second-frame").after($("#third-frame"));
-                    $("#frame-container").animate(
-                        {
-                            left: "-=" + $("#form-container").outerWidth()
-                        },
-                        animation_duration,
-                        after_frame_change,
-                    );
+                    animate_change_frame(3);
                 },
                 403: (e) => {
                     // in theory, the email could also be invalid
@@ -168,7 +209,7 @@ function on_submit_frame(e) {
                 },
             }
         });
-    } else {
+    } else if (active_frame == 3) {
         // finish registration
         let secret_question = $("#secret-question").val();
         let secret_answer = $("#secret-answer").val();
@@ -179,7 +220,6 @@ function on_submit_frame(e) {
             bad_input($(".input-container:has('#secret-answer')"));
             return;
         }
-
 
         if (password == "") {
             bad_input($(".input-container:has('#password')"));
@@ -196,7 +236,7 @@ function on_submit_frame(e) {
             return;
         }
 
-        data = {
+        let data = {
             password: password,
         }
 
@@ -218,6 +258,33 @@ function on_submit_frame(e) {
                     document.cookie = e["token"];
                 },
             }
+        });
+    } else if (active_frame == 4) {
+        let old_email = $("#old-email").val();
+        let new_email = $("#new-email").val();
+        let username = $("#username").val(); // TODO remove on next API iteration
+
+
+        $.ajax({
+            method: "POST",
+            url: "http://172.17.0.2:8080/_api/register/change_verification_email",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({
+                "old-email": old_email,
+                "new-email": new_email,
+                "username": username,
+            }),
+            statusCode: {
+                200: (e) => {
+                    $("#second-frame").find("#email-used").text(new_email);
+                    animate_change_frame(2);
+                },
+                403: (e) => {
+                    bad_input($(".input-container:has('#old-email')"));
+                }
+            },
+
         });
     }
 }
@@ -266,4 +333,40 @@ function check_username_available() {
             }
         })
     }
+}
+
+function show_captcha() {
+	captcha_visible = true;
+	// need to do some black magic to smoothly animate captcha
+	let captcha = $(".h-captcha").eq(0);
+	$("#captcha-container").animate(
+		{
+			height: "+=" + captcha.height(),
+		},
+		animation_duration / 2,
+		() => {
+			captcha.removeClass("inactive-captcha");
+			captcha.animate({
+				"opacity": 1
+			}, animation_duration / 2);
+		},
+	);
+}
+
+function hide_captcha() {
+	captcha_visible = false;
+	let captcha = $(".h-captcha").eq(0);
+	captcha.animate({
+			"opacity": 0
+		}, 
+		animation_duration / 2, 
+		() => {
+			captcha.addClass("inactive-captcha");
+			$("#captcha-container").animate(
+			{
+				height: "-=" + captcha.height()
+			},
+			animation_duration / 2);
+	});
+	hcaptcha.reset();
 }
