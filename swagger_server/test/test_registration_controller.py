@@ -8,6 +8,7 @@ from six import BytesIO
 from swagger_server.models.change_verication_mail_address import ChangeVericationMailAddress  # noqa: E501
 from swagger_server.models.email_verification_token import EmailVerificationToken  # noqa: E501
 from swagger_server.models.finish_registration import FinishRegistration  # noqa: E501
+from swagger_server.models.inline_response200 import InlineResponse200  # noqa: E501
 from swagger_server.models.inline_response201 import InlineResponse201  # noqa: E501
 from swagger_server.models.inline_response401 import InlineResponse401  # noqa: E501
 from swagger_server.models.invalid_verification_code import InvalidVerificationCode  # noqa: E501

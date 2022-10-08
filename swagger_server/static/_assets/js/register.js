@@ -28,6 +28,7 @@ $(document).ready(() => {
                     if (e["captcha-required"]) {
 			            captcha.removeClass("inactive-captcha");
                         $("#first-frame").append(captcha);
+                        captcha_visible = true;
                     }
                 },
             }
@@ -68,9 +69,7 @@ function change_verification_mail() {
 }
 
 function resend_verification_mail() {
-    console.log("resend mail");
     let email = $("#email").val();
-    let username = $("#username").val(); // TODO remove on next API iteration
     $.ajax({
         method: "POST",
         url: "http://172.17.0.2:8080/_api/register/resend_verification_mail",
@@ -78,10 +77,10 @@ function resend_verification_mail() {
         dataType: "json",
         data: JSON.stringify({
             email: email,
-            username: username,
         }),
         statusCode: {
             200: (e) => {
+                animate_change_frame(2);  // transition to same frame for visual feedback
             },
         }
     });
@@ -92,22 +91,70 @@ function animate_change_frame(new_frame_nr) {
         let old_frame = get_frame(active_frame);
         let new_frame = get_frame(new_frame_nr);
 
-        // to compute .height() the element must be visible
-        new_frame.removeClass("measure");
-        grow_to(new_frame.height());
+        // lock container height
+        $("#frame-container").css("height", $("#frame-container").height());
 
+        // some trickery is necessary to compute the height of the element correctly
+        new_frame.css("max-width", $(old_frame).width())
         old_frame.after(get_frame(new_frame));
+        new_frame.removeClass("measure");
+        new_height = new_frame.height();
+
         active_frame = new_frame_nr;
+
+        if (new_height > old_frame.height()) {
+            // grow first, then transition
+            grow_to(new_frame.height());
+            active_frame = new_frame_nr;
+            $("#frame-container").animate(
+                {
+                    left: "-=" + $("#form-container").outerWidth()
+                },
+                animation_duration,
+                () => {
+                    old_frame.addClass("measure");
+                    // seamlessly reset the shift
+                    $("#frame-container").css("left", 0);
+                    $("#frame-container").prepend(get_frame(active_frame));
+                    // focus the new input
+                    get_frame(active_frame).find("input").eq(0).focus();
+                }
+            );
+        } else {
+            // transition first, then shrink
+            active_frame = new_frame_nr;
+            $("#frame-container").animate(
+                {
+                    left: "-=" + $("#form-container").outerWidth()
+                },
+                animation_duration,
+                () => {
+                    grow_to(new_height);
+                    old_frame.addClass("measure");
+                    // seamlessly reset the shift
+                    $("#frame-container").css("left", 0);
+                    $("#frame-container").prepend(get_frame(active_frame));
+                    // focus the new input
+                    get_frame(active_frame).find("input").eq(0).focus();
+                }
+            );
+        }
+    } else {
+        let old_frame = get_frame(active_frame);
+        let new_frame = old_frame.clone();
+        old_frame.before(new_frame);
         $("#frame-container").animate(
             {
                 left: "-=" + $("#form-container").outerWidth()
             },
             animation_duration,
-            after_frame_change,
+            () => {
+                // different frame change than usual
+	            $("#frame-container").css("left", 0);
+                old_frame.remove();
+	            get_frame(active_frame).find("input").eq(0).focus();
+            }
         );
-    } else {
-        let old_frame = get_frame(active_frame);
-        let new_frame = old_frame.clone();
     }
 }
 
@@ -130,14 +177,6 @@ function bad_input(container) {
     });
 }
 
-function after_frame_change() {
-	// seamlessly reset the shift
-	$("#frame-container").css("left", 0);
-	$("#frame-container").prepend(get_frame(active_frame));
-	// focus the new input
-	get_frame(active_frame).find("input").eq(0).focus();
-}
-
 function on_submit_frame(e) {
     e.preventDefault();
 
@@ -147,6 +186,7 @@ function on_submit_frame(e) {
     if (active_frame == 1) {
         let username = $("#username").val();
         let email = $("#email").val();
+
         if (username.length == 0) {
             bad_input($(".input-container:has('#username')"));
             return;
@@ -155,19 +195,29 @@ function on_submit_frame(e) {
             bad_input($(".input-container:has('#email')"));
             return;
         }
+
+        let data = {
+            email: email,
+            username: username,
+        };
+
+        if (captcha_visible) {
+            let captcha_token = hcaptcha.getResponse();
+            if (captcha_token == "") return
+            data["h-captcha-response"] = captcha_token;
+        }
+
         $.ajax({
             method: "POST",
             url: "http://172.17.0.2:8080/_api/register/start_registration",
             contentType: "application/json",
             dataType: "json",
-            data: JSON.stringify({
-                email: email,
-                username: username,
-            }),
+            data: JSON.stringify(data),
             statusCode: {
                 200: (e) => {
                     $("#second-frame").find("#email-used").text(email);
                     animate_change_frame(2);
+                    captcha_visible = false;
                 },
                 403: (e) => {
                     // in theory, the email could also be invalid
@@ -177,7 +227,6 @@ function on_submit_frame(e) {
                 },
             }
         });
-
     } else if (active_frame == 2) {
         // verify email
         let verification_code = $("#verification-code").val();
@@ -199,6 +248,10 @@ function on_submit_frame(e) {
             }),
             statusCode: {
                 200: (e) => {
+                    if (e["captcha-required"]) {
+                        $("#third-frame").append($(".h-captcha").eq(0));
+                        show_captcha();
+                    }
                     animate_change_frame(3);
                 },
                 403: (e) => {
@@ -238,6 +291,12 @@ function on_submit_frame(e) {
 
         let data = {
             password: password,
+        }
+
+        if (captcha_visible) {
+            let captcha_token = hcaptcha.getResponse();
+            if (captcha_token == "") return
+            data["h-captcha-response"] = captcha_token;
         }
 
         // VERY important to not send empty questions/answers
@@ -336,37 +395,8 @@ function check_username_available() {
 }
 
 function show_captcha() {
+	let captcha = $(".h-captcha").eq(0);
 	captcha_visible = true;
-	// need to do some black magic to smoothly animate captcha
-	let captcha = $(".h-captcha").eq(0);
-	$("#captcha-container").animate(
-		{
-			height: "+=" + captcha.height(),
-		},
-		animation_duration / 2,
-		() => {
-			captcha.removeClass("inactive-captcha");
-			captcha.animate({
-				"opacity": 1
-			}, animation_duration / 2);
-		},
-	);
-}
-
-function hide_captcha() {
-	captcha_visible = false;
-	let captcha = $(".h-captcha").eq(0);
-	captcha.animate({
-			"opacity": 0
-		}, 
-		animation_duration / 2, 
-		() => {
-			captcha.addClass("inactive-captcha");
-			$("#captcha-container").animate(
-			{
-				height: "-=" + captcha.height()
-			},
-			animation_duration / 2);
-	});
+	captcha.removeClass("inactive-captcha");
 	hcaptcha.reset();
 }

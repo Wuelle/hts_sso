@@ -10,6 +10,8 @@ from swagger_server.models.finish_registration import FinishRegistration
 from swagger_server.models.init_login_session import InitLoginSession
 from swagger_server.models.initialized_session import InitializedSession
 from swagger_server.models.initialized_session1 import InitializedSession1
+from swagger_server.models.inline_response200 import InlineResponse200
+from swagger_server.models.inline_response200_content import InlineResponse200Content
 from swagger_server.models.inline_response201 import InlineResponse201
 from swagger_server.models.inline_response401 import InlineResponse401
 from swagger_server.models.inline_response403 import InlineResponse403

@@ -36,8 +36,12 @@ $elevated-padding: 3rem;
 #frame-container {
 	position: relative;
 	display: grid;
-	grid-template-columns: repeat(3, 100%);
+	grid-template-columns: repeat(10, 100%);
 	grid-column-gap: 2 * $elevated-padding;
+}
+
+.frame {
+    height: min-content;
 }
 
 #btn-container {

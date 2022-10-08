@@ -14,24 +14,19 @@ class RegisterresendVerificationMailContent(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, username: str=None, email: str=None):  # noqa: E501
+    def __init__(self, email: str=None):  # noqa: E501
         """RegisterresendVerificationMailContent - a model defined in Swagger
 
-        :param username: The username of this RegisterresendVerificationMailContent.  # noqa: E501
-        :type username: str
         :param email: The email of this RegisterresendVerificationMailContent.  # noqa: E501
         :type email: str
         """
         self.swagger_types = {
-            'username': str,
             'email': str
         }
 
         self.attribute_map = {
-            'username': 'username',
             'email': 'email'
         }
-        self._username = username
         self._email = email
 
     @classmethod
@@ -44,29 +39,6 @@ class RegisterresendVerificationMailContent(Model):
         :rtype: RegisterresendVerificationMailContent
         """
         return util.deserialize_model(dikt, cls)
-
-    @property
-    def username(self) -> str:
-        """Gets the username of this RegisterresendVerificationMailContent.
-
-
-        :return: The username of this RegisterresendVerificationMailContent.
-        :rtype: str
-        """
-        return self._username
-
-    @username.setter
-    def username(self, username: str):
-        """Sets the username of this RegisterresendVerificationMailContent.
-
-
-        :param username: The username of this RegisterresendVerificationMailContent.
-        :type username: str
-        """
-        if username is None:
-            raise ValueError("Invalid value for `username`, must not be `None`")  # noqa: E501
-
-        self._username = username
 
     @property
     def email(self) -> str:
@@ -86,5 +58,7 @@ class RegisterresendVerificationMailContent(Model):
         :param email: The email of this RegisterresendVerificationMailContent.
         :type email: str
         """
+        if email is None:
+            raise ValueError("Invalid value for `email`, must not be `None`")  # noqa: E501
 
         self._email = email

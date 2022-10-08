@@ -15,4 +15,4 @@ def session_get_nonce_token(area=None):  # noqa: E501
 
     :rtype: NonceToken1
     """
-    return NonceToken1("example token");
+    return NonceToken1("example token")

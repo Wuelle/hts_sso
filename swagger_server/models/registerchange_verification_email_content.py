@@ -14,28 +14,23 @@ class RegisterchangeVerificationEmailContent(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, username: str=None, old_email: str=None, new_email: str=None):  # noqa: E501
+    def __init__(self, old_email: str=None, new_email: str=None):  # noqa: E501
         """RegisterchangeVerificationEmailContent - a model defined in Swagger
 
-        :param username: The username of this RegisterchangeVerificationEmailContent.  # noqa: E501
-        :type username: str
         :param old_email: The old_email of this RegisterchangeVerificationEmailContent.  # noqa: E501
         :type old_email: str
         :param new_email: The new_email of this RegisterchangeVerificationEmailContent.  # noqa: E501
         :type new_email: str
         """
         self.swagger_types = {
-            'username': str,
             'old_email': str,
             'new_email': str
         }
 
         self.attribute_map = {
-            'username': 'username',
             'old_email': 'old-email',
             'new_email': 'new-email'
         }
-        self._username = username
         self._old_email = old_email
         self._new_email = new_email
 
@@ -49,29 +44,6 @@ class RegisterchangeVerificationEmailContent(Model):
         :rtype: RegisterchangeVerificationEmailContent
         """
         return util.deserialize_model(dikt, cls)
-
-    @property
-    def username(self) -> str:
-        """Gets the username of this RegisterchangeVerificationEmailContent.
-
-
-        :return: The username of this RegisterchangeVerificationEmailContent.
-        :rtype: str
-        """
-        return self._username
-
-    @username.setter
-    def username(self, username: str):
-        """Sets the username of this RegisterchangeVerificationEmailContent.
-
-
-        :param username: The username of this RegisterchangeVerificationEmailContent.
-        :type username: str
-        """
-        if username is None:
-            raise ValueError("Invalid value for `username`, must not be `None`")  # noqa: E501
-
-        self._username = username
 
     @property
     def old_email(self) -> str:

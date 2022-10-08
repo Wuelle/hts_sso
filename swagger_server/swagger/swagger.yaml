@@ -282,7 +282,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_401'
+                $ref: '#/components/schemas/inline_response_200'
         "403":
           description: Invalid verification code
           content:
@@ -581,13 +581,9 @@ components:
           $ref: '#/components/schemas/registerstart_registration_content'
     registerresend_verification_mail_content:
       required:
-      - old-email
-      - username
+      - email
       type: object
       properties:
-        username:
-          type: string
-          example: Alaska
         email:
           type: string
           example: user@example.com
@@ -609,9 +605,6 @@ components:
       - username
       type: object
       properties:
-        username:
-          type: string
-          example: Alaska
         old-email:
           type: string
           example: old@example.com
@@ -635,10 +628,6 @@ components:
       - verification-code
       type: object
       properties:
-        username:
-          type: string
-          description: The name of the account that should be verified
-          example: Alaska
         verification-code:
           type: string
           description: A secret code used to prove ownership of an email address
@@ -654,6 +643,18 @@ components:
           $ref: '#/components/schemas/NonceToken'
         content:
           $ref: '#/components/schemas/registerverify_email_address_content'
+    inline_response_200:
+      required:
+      - nonce
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/inline_response_200_content'
+      example:
+        nonce: <token>
+        content:
+          captcha-required: true
     InvalidVerificationCode:
       title: InvalidVerificationCode
       required:
@@ -714,4 +715,11 @@ components:
           type: boolean
       example:
         is-available: true
+    inline_response_200_content:
+      type: object
+      properties:
+        captcha-required:
+          type: boolean
+      example:
+        captcha-required: true
 

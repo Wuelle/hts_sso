@@ -14,24 +14,19 @@ class RegisterverifyEmailAddressContent(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, username: str=None, verification_code: str=None):  # noqa: E501
+    def __init__(self, verification_code: str=None):  # noqa: E501
         """RegisterverifyEmailAddressContent - a model defined in Swagger
 
-        :param username: The username of this RegisterverifyEmailAddressContent.  # noqa: E501
-        :type username: str
         :param verification_code: The verification_code of this RegisterverifyEmailAddressContent.  # noqa: E501
         :type verification_code: str
         """
         self.swagger_types = {
-            'username': str,
             'verification_code': str
         }
 
         self.attribute_map = {
-            'username': 'username',
             'verification_code': 'verification-code'
         }
-        self._username = username
         self._verification_code = verification_code
 
     @classmethod
@@ -44,31 +39,6 @@ class RegisterverifyEmailAddressContent(Model):
         :rtype: RegisterverifyEmailAddressContent
         """
         return util.deserialize_model(dikt, cls)
-
-    @property
-    def username(self) -> str:
-        """Gets the username of this RegisterverifyEmailAddressContent.
-
-        The name of the account that should be verified  # noqa: E501
-
-        :return: The username of this RegisterverifyEmailAddressContent.
-        :rtype: str
-        """
-        return self._username
-
-    @username.setter
-    def username(self, username: str):
-        """Sets the username of this RegisterverifyEmailAddressContent.
-
-        The name of the account that should be verified  # noqa: E501
-
-        :param username: The username of this RegisterverifyEmailAddressContent.
-        :type username: str
-        """
-        if username is None:
-            raise ValueError("Invalid value for `username`, must not be `None`")  # noqa: E501
-
-        self._username = username
 
     @property
     def verification_code(self) -> str:
