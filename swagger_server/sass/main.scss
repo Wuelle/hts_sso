@@ -14,6 +14,7 @@ $elevated-padding: 3rem;
 @import 'links.scss';
 @import 'buttons.scss';
 @import 'modal.scss';
+@import 'frame.scss';
 
 .background {
 	background: $background;
@@ -31,17 +32,6 @@ $elevated-padding: 3rem;
 
 .font-secondary {
 	color: $font-secondary;
-}
-
-#frame-container {
-	position: relative;
-	display: grid;
-	grid-template-columns: repeat(10, 100%);
-	grid-column-gap: 2 * $elevated-padding;
-}
-
-.frame {
-    height: min-content;
 }
 
 #btn-container {
@@ -65,12 +55,4 @@ $elevated-padding: 3rem;
 	background-color: #353535;
 	padding: 2px 5px 2px 5px;
 	border-radius: 2px;
-}
-
-/// Assigned to elements whose height must be calculated without displaying them
-.measure {
-    position: absolute;
-    visibility: hidden;
-    left: -10000px;
-    top: -10000px;
 }

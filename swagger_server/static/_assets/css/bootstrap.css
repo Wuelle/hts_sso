@@ -142,6 +142,21 @@
   box-shadow: 1px 1px 1px black;
 }
 
+[data-frame-store] {
+  display: none;
+}
+
+[data-frame-container] {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(10, 100%);
+  grid-column-gap: 6rem;
+}
+
+.frame {
+  height: min-content;
+}
+
 .background {
   background: #151515;
 }
@@ -158,17 +173,6 @@
 
 .font-secondary {
   color: #ddd;
-}
-
-#frame-container {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(10, 100%);
-  grid-column-gap: 6rem;
-}
-
-.frame {
-  height: min-content;
 }
 
 #btn-container {
@@ -192,13 +196,6 @@
   background-color: #353535;
   padding: 2px 5px 2px 5px;
   border-radius: 2px;
-}
-
-.measure {
-  position: absolute;
-  visibility: hidden;
-  left: -10000px;
-  top: -10000px;
 }
 
 /*# sourceMappingURL=bootstrap.css.map */

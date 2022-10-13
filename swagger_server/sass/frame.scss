@@ -1,0 +1,14 @@
+[data-frame-store] {
+    display: none;
+}
+
+[data-frame-container] {
+	position: relative;
+	display: grid;
+	grid-template-columns: repeat(10, 100%);
+	grid-column-gap: 2 * $elevated-padding;
+}
+
+.frame {
+    height: min-content;
+}

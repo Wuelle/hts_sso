@@ -2,8 +2,6 @@ let MIN_USERNAME_LENGTH = 4;
 let MAX_USERNAME_LENGTH = 32;
 let USERNAME_LEGAL_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVW1234567890-_ ";
 
-let animation_duration = 700;  // ms
-let active_frame = 1;
 let captcha_visible = false;
 
 
@@ -14,58 +12,21 @@ if (window.location.href.search("verification_code=") != -1) {
 
 $(document).ready(() => {
     // initialize session manager
-    init_session("registration").then(() => {
-        // check whether we need a captcha on the first frame
-        $.ajax({
-            method: "POST",
-            url: "http://172.17.0.2:8080/_api/register/is_initial_captcha_required",
-            contentType: "application/json",
-            dataType: "json",
-            statusCode: {
-                200: (e) => {
-	                let captcha = $(".h-captcha").eq(0);
-                    captcha.css("opacity", 1);
-                    if (e["captcha-required"]) {
-			            captcha.removeClass("inactive-captcha");
-                        $("#first-frame").append(captcha);
-                        captcha_visible = true;
-                    }
-                },
-            }
-        });
-    });
-
+    init_session("registration")
 
 	$("#form-container").on("submit", on_submit_frame);
-    $("#first-frame").on("focusout", check_username_available);
+    get_frame("username").on("focusout", check_username_available);
 
-    let initial_frame;
     if (verification_code === undefined) {
-        active_frame = 1;
-        initial_frame = $("#first-frame");
+        set_initial_frame("username");
     } else {
-        initial_frame = $("#second-frame");
-        active_frame = 2;
+        set_initial_frame("verification-code");
         $("#verification-code").val(verification_code);
     }
-    initial_frame.removeClass("measure");
 })
 
-
-function get_frame(frame_index) {
-    if (frame_index == 1) {
-        return $("#first-frame");
-    } else if (frame_index == 2) {
-        return $("#second-frame");
-    } else if (frame_index == 3) {
-        return $("#third-frame");
-    } else {
-        return $("#fourth-frame");
-    }
-}
-
 function change_verification_mail() {
-    animate_change_frame(4);
+    next_frame("update-email-address");
 }
 
 function resend_verification_mail() {
@@ -80,91 +41,11 @@ function resend_verification_mail() {
         }),
         statusCode: {
             200: (e) => {
-                animate_change_frame(2);  // transition to same frame for visual feedback
+                // transition to same frame for visual feedback
+                next_frame("verification-code");
             },
         }
     });
-}
-
-function animate_change_frame(new_frame_nr) {
-    if (new_frame_nr != active_frame) {
-        let old_frame = get_frame(active_frame);
-        let new_frame = get_frame(new_frame_nr);
-
-        // lock container height
-        $("#frame-container").css("height", $("#frame-container").height());
-
-        // some trickery is necessary to compute the height of the element correctly
-        new_frame.css("max-width", $(old_frame).width())
-        old_frame.after(get_frame(new_frame));
-        new_frame.removeClass("measure");
-        new_height = new_frame.height();
-
-        active_frame = new_frame_nr;
-
-        if (new_height > old_frame.height()) {
-            // grow first, then transition
-            grow_to(new_frame.height());
-            active_frame = new_frame_nr;
-            $("#frame-container").animate(
-                {
-                    left: "-=" + $("#form-container").outerWidth()
-                },
-                animation_duration,
-                () => {
-                    old_frame.addClass("measure");
-                    // seamlessly reset the shift
-                    $("#frame-container").css("left", 0);
-                    $("#frame-container").prepend(get_frame(active_frame));
-                    // focus the new input
-                    get_frame(active_frame).find("input").eq(0).focus();
-                }
-            );
-        } else {
-            // transition first, then shrink
-            active_frame = new_frame_nr;
-            $("#frame-container").animate(
-                {
-                    left: "-=" + $("#form-container").outerWidth()
-                },
-                animation_duration,
-                () => {
-                    grow_to(new_height);
-                    old_frame.addClass("measure");
-                    // seamlessly reset the shift
-                    $("#frame-container").css("left", 0);
-                    $("#frame-container").prepend(get_frame(active_frame));
-                    // focus the new input
-                    get_frame(active_frame).find("input").eq(0).focus();
-                }
-            );
-        }
-    } else {
-        let old_frame = get_frame(active_frame);
-        let new_frame = old_frame.clone();
-        old_frame.before(new_frame);
-        $("#frame-container").animate(
-            {
-                left: "-=" + $("#form-container").outerWidth()
-            },
-            animation_duration,
-            () => {
-                // different frame change than usual
-	            $("#frame-container").css("left", 0);
-                old_frame.remove();
-	            get_frame(active_frame).find("input").eq(0).focus();
-            }
-        );
-    }
-}
-
-function grow_to(target_height) {
-    $("#frame-container").animate(
-        {
-            height: "+=" + (target_height - $("#frame-container").height()),
-        },
-        animation_duration,
-    );
 }
 
 function bad_input(container) {
@@ -183,7 +64,8 @@ function on_submit_frame(e) {
     // remove all status effects
     $(".input-container").removeClass("input-error");
 
-    if (active_frame == 1) {
+    let active_frame = get_current_frame_name();
+    if (active_frame == "username") {
         let username = $("#username").val();
         let email = $("#email").val();
 
@@ -215,8 +97,8 @@ function on_submit_frame(e) {
             data: JSON.stringify(data),
             statusCode: {
                 200: (e) => {
-                    $("#second-frame").find("#email-used").text(email);
-                    animate_change_frame(2);
+                    get_frame("verification-code").find("#email-used").text(email);
+                    next_frame("verification-code");
                     captcha_visible = false;
                 },
                 403: (e) => {
@@ -227,7 +109,7 @@ function on_submit_frame(e) {
                 },
             }
         });
-    } else if (active_frame == 2) {
+    } else if (active_frame == "verification-code") {
         // verify email
         let verification_code = $("#verification-code").val();
         let username = $("#username").val(); // TODO remove on next API iteration
@@ -252,7 +134,7 @@ function on_submit_frame(e) {
                         $("#third-frame").append($(".h-captcha").eq(0));
                         show_captcha();
                     }
-                    animate_change_frame(3);
+                    next_frame("set-password");
                 },
                 403: (e) => {
                     // in theory, the email could also be invalid
@@ -262,8 +144,8 @@ function on_submit_frame(e) {
                 },
             }
         });
-    } else if (active_frame == 3) {
-        // finish registration
+    } else if (active_frame == "set-password") {
+        console.log("finish");
         let secret_question = $("#secret-question").val();
         let secret_answer = $("#secret-answer").val();
         let password = $("#password").val();
@@ -291,7 +173,7 @@ function on_submit_frame(e) {
 
         let data = {
             password: password,
-        }
+        };
 
         if (captcha_visible) {
             let captcha_token = hcaptcha.getResponse();
@@ -318,7 +200,7 @@ function on_submit_frame(e) {
                 },
             }
         });
-    } else if (active_frame == 4) {
+    } else if (active_frame == "update-email-address") {
         let old_email = $("#old-email").val();
         let new_email = $("#new-email").val();
         let username = $("#username").val(); // TODO remove on next API iteration
@@ -337,7 +219,7 @@ function on_submit_frame(e) {
             statusCode: {
                 200: (e) => {
                     $("#second-frame").find("#email-used").text(new_email);
-                    animate_change_frame(2);
+                    next_frame("verification-code");
                 },
                 403: (e) => {
                     bad_input($(".input-container:has('#old-email')"));
