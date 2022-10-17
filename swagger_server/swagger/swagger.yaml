@@ -12,7 +12,104 @@ tags:
   description: Log into an existing account
 - name: Registration
   description: Create a new account
+- name: Account Recovery
+  description: Get access to your account in case you forgot the login credentials
 paths:
+  /account_recovery/submit_captcha_token:
+    post:
+      tags:
+      - Account Recovery
+      operationId: account_recovery_submit_captcha_token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitCaptchaToken'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonceToken_1'
+      x-openapi-router-controller: swagger_server.controllers.account_recovery_controller
+  /account_recovery/request_passphrase_update_token:
+    post:
+      tags:
+      - Account Recovery
+      description: "This can be called multiple times in the same session, if the\
+        \ user clicks the 'resend mail' link"
+      operationId: account_recovery_request_passphrase_reset_token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestPasswordResetToken'
+        required: true
+      responses:
+        "200":
+          description: "OK, a mail with the code was sent"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonceToken_1'
+        "404":
+          description: Username not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonceToken_1'
+      x-openapi-router-controller: swagger_server.controllers.account_recovery_controller
+  /account_recovery/update_passphrase:
+    post:
+      tags:
+      - Account Recovery
+      operationId: account_recovery_update_passphrase
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePassphrase'
+        required: true
+      responses:
+        "200":
+          description: Passphrase was successfully changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonceToken_2'
+        "403":
+          description: Invalid verification token or passphrase
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonceToken_3'
+      x-openapi-router-controller: swagger_server.controllers.account_recovery_controller
+  /account_recovery/request_username_reminder:
+    post:
+      tags:
+      - Account Recovery
+      summary: Send a username reminder mail
+      description: Receive a mail containing the usernames associated with a given
+        address. Note that the response does *not* reveal whether that email belongs
+        to *any* account
+      operationId: account_recovery_request_username_reminder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestUsernameReminder'
+        required: true
+      responses:
+        "200":
+          description: "If any accounts are associated with that email address, then\
+            \ we sent a list of their usernames to it"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonceToken_2'
+      x-openapi-router-controller: swagger_server.controllers.account_recovery_controller
   /session/get_nonce_token:
     get:
       tags:
@@ -132,27 +229,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/inline_response_401'
       x-openapi-router-controller: swagger_server.controllers.login_controller
-  /register/is_initial_captcha_required:
-    post:
-      tags:
-      - Registration
-      summary: Whether the user needs to complete a captcha on the first frame
-      operationId: register_is_initial_captcha_required
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ResendVerificationMail'
-        required: true
-      responses:
-        "200":
-          description: Response describing whether the user needs to complete a captcha
-            on the first frame
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IsInitialCaptchaRequired'
-      x-openapi-router-controller: swagger_server.controllers.registration_controller
   /register/is_username_available:
     post:
       tags:
@@ -214,7 +290,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ResendVerificationMail_1'
+              $ref: '#/components/schemas/ResendVerificationMail'
         required: true
       responses:
         "200":
@@ -369,6 +445,24 @@ components:
       example:
         redirect: forums.hackthissite.org
         token: HackThisSite=<token>;path=/;domain=hackthissite.org
+    account_recoverysubmit_captcha_token_content:
+      required:
+      - h-captcha-token
+      type: object
+      properties:
+        h-captcha-token:
+          type: string
+    SubmitCaptchaToken:
+      title: SubmitCaptchaToken
+      required:
+      - content
+      - nonce
+      type: object
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/account_recoverysubmit_captcha_token_content'
     NonceToken_1:
       title: NonceToken
       properties:
@@ -376,6 +470,87 @@ components:
           type: string
       example:
         nonce: nonce
+    account_recoveryrequest_passphrase_update_token_content:
+      required:
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+          example: Alaska
+    RequestPasswordResetToken:
+      title: RequestPasswordResetToken
+      required:
+      - content
+      - nonce
+      type: object
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/account_recoveryrequest_passphrase_update_token_content'
+    account_recoveryupdate_passphrase_content:
+      required:
+      - new-passphrase
+      - update-token
+      type: object
+      properties:
+        update-token:
+          type: string
+          example: <reset token>
+        new-passphrase:
+          type: string
+    UpdatePassphrase:
+      title: UpdatePassphrase
+      required:
+      - content
+      - nonce
+      type: object
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/account_recoveryupdate_passphrase_content'
+    NonceToken_2:
+      title: NonceToken
+      required:
+      - content
+      - nonce
+      properties:
+        nonce:
+          type: string
+        content:
+          $ref: '#/components/schemas/NonceToken_2_content'
+      example:
+        nonce: nonce
+        content:
+          captcha-required: true
+    NonceToken_3:
+      title: NonceToken
+      required:
+      - nonce
+      properties:
+        nonce:
+          type: string
+    account_recoveryrequest_username_reminder_content:
+      required:
+      - email
+      type: object
+      properties:
+        email:
+          type: string
+          example: user@example.com
+    RequestUsernameReminder:
+      title: RequestUsernameReminder
+      required:
+      - content
+      - nonce
+      type: object
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/account_recoveryrequest_username_reminder_content'
     logininit_session_content:
       required:
       - redirect
@@ -493,29 +668,6 @@ components:
           $ref: '#/components/schemas/NonceToken'
         content:
           $ref: '#/components/schemas/CaptchaPrompt'
-    ResendVerificationMail:
-      title: ResendVerificationMail
-      required:
-      - nonce
-      type: object
-      properties:
-        nonce:
-          $ref: '#/components/schemas/NonceToken'
-    IsInitialCaptchaRequired:
-      title: IsInitialCaptchaRequired
-      required:
-      - content
-      - nonce
-      type: object
-      properties:
-        nonce:
-          $ref: '#/components/schemas/NonceToken'
-        content:
-          $ref: '#/components/schemas/IsInitialCaptchaRequired_content'
-      example:
-        nonce: <token>
-        content:
-          captcha-required: true
     registeris_username_available_content:
       required:
       - username
@@ -557,11 +709,6 @@ components:
       - username
       type: object
       properties:
-        h-captcha-response:
-          type: string
-          description: A token proving the user has completed the hcaptcha challenge.
-            Only required if the user was prompted to complete a captcha before
-          example: <challenge token>
         username:
           type: string
           example: Alaska
@@ -579,15 +726,7 @@ components:
           $ref: '#/components/schemas/NonceToken'
         content:
           $ref: '#/components/schemas/registerstart_registration_content'
-    registerresend_verification_mail_content:
-      required:
-      - email
-      type: object
-      properties:
-        email:
-          type: string
-          example: user@example.com
-    ResendVerificationMail_1:
+    ResendVerificationMail:
       title: ResendVerificationMail
       required:
       - content
@@ -597,12 +736,11 @@ components:
         nonce:
           $ref: '#/components/schemas/NonceToken'
         content:
-          $ref: '#/components/schemas/registerresend_verification_mail_content'
+          $ref: '#/components/schemas/account_recoveryrequest_username_reminder_content'
     registerchange_verification_email_content:
       required:
       - new-email
       - old-email
-      - username
       type: object
       properties:
         old-email:
@@ -624,7 +762,6 @@ components:
           $ref: '#/components/schemas/registerchange_verification_email_content'
     registerverify_email_address_content:
       required:
-      - username
       - verification-code
       type: object
       properties:
@@ -697,7 +834,7 @@ components:
           $ref: '#/components/schemas/NonceToken'
         content:
           $ref: '#/components/schemas/registerfinish_registration_content'
-    IsInitialCaptchaRequired_content:
+    NonceToken_2_content:
       required:
       - captcha-required
       type: object

@@ -20,7 +20,7 @@ $.ajaxPrefilter(function(options, original_options, xhr) {
     // callers can disable the intercept by setting session = false
     if(!(options.hasOwnProperty("session") && !options.session)) {
         if (current_token === undefined) {
-            alert("Attempting to make a request but no session has been initiated yet! This is a bug");
+            alert("Attempting to make a request but no session has been initiated yet! This is a bug, you probably forgot to call init_session('area')");
         }
         let data = {
             nonce: current_token

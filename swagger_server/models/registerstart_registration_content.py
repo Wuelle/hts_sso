@@ -14,28 +14,23 @@ class RegisterstartRegistrationContent(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, h_captcha_response: str=None, username: str=None, email: str=None):  # noqa: E501
+    def __init__(self, username: str=None, email: str=None):  # noqa: E501
         """RegisterstartRegistrationContent - a model defined in Swagger
 
-        :param h_captcha_response: The h_captcha_response of this RegisterstartRegistrationContent.  # noqa: E501
-        :type h_captcha_response: str
         :param username: The username of this RegisterstartRegistrationContent.  # noqa: E501
         :type username: str
         :param email: The email of this RegisterstartRegistrationContent.  # noqa: E501
         :type email: str
         """
         self.swagger_types = {
-            'h_captcha_response': str,
             'username': str,
             'email': str
         }
 
         self.attribute_map = {
-            'h_captcha_response': 'h-captcha-response',
             'username': 'username',
             'email': 'email'
         }
-        self._h_captcha_response = h_captcha_response
         self._username = username
         self._email = email
 
@@ -49,29 +44,6 @@ class RegisterstartRegistrationContent(Model):
         :rtype: RegisterstartRegistrationContent
         """
         return util.deserialize_model(dikt, cls)
-
-    @property
-    def h_captcha_response(self) -> str:
-        """Gets the h_captcha_response of this RegisterstartRegistrationContent.
-
-        A token proving the user has completed the hcaptcha challenge. Only required if the user was prompted to complete a captcha before  # noqa: E501
-
-        :return: The h_captcha_response of this RegisterstartRegistrationContent.
-        :rtype: str
-        """
-        return self._h_captcha_response
-
-    @h_captcha_response.setter
-    def h_captcha_response(self, h_captcha_response: str):
-        """Sets the h_captcha_response of this RegisterstartRegistrationContent.
-
-        A token proving the user has completed the hcaptcha challenge. Only required if the user was prompted to complete a captcha before  # noqa: E501
-
-        :param h_captcha_response: The h_captcha_response of this RegisterstartRegistrationContent.
-        :type h_captcha_response: str
-        """
-
-        self._h_captcha_response = h_captcha_response
 
     @property
     def username(self) -> str:

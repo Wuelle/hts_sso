@@ -12,11 +12,9 @@ from swagger_server.models.inline_response200 import InlineResponse200  # noqa: 
 from swagger_server.models.inline_response201 import InlineResponse201  # noqa: E501
 from swagger_server.models.inline_response401 import InlineResponse401  # noqa: E501
 from swagger_server.models.invalid_verification_code import InvalidVerificationCode  # noqa: E501
-from swagger_server.models.is_initial_captcha_required import IsInitialCaptchaRequired  # noqa: E501
 from swagger_server.models.is_username_available import IsUsernameAvailable  # noqa: E501
 from swagger_server.models.primary_account_details import PrimaryAccountDetails  # noqa: E501
 from swagger_server.models.resend_verification_mail import ResendVerificationMail  # noqa: E501
-from swagger_server.models.resend_verification_mail1 import ResendVerificationMail1  # noqa: E501
 from swagger_server.models.username import Username  # noqa: E501
 from swagger_server.test import BaseTestCase
 
@@ -52,20 +50,6 @@ class TestRegistrationController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-    def test_register_is_initial_captcha_required(self):
-        """Test case for register_is_initial_captcha_required
-
-        Whether the user needs to complete a captcha on the first frame
-        """
-        body = ResendVerificationMail()
-        response = self.client.open(
-            '/register/is_initial_captcha_required',
-            method='POST',
-            data=json.dumps(body),
-            content_type='application/json')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
-
     def test_register_is_username_available(self):
         """Test case for register_is_username_available
 
@@ -85,7 +69,7 @@ class TestRegistrationController(BaseTestCase):
 
         Send another verification mail
         """
-        body = ResendVerificationMail1()
+        body = ResendVerificationMail()
         response = self.client.open(
             '/register/resend_verification_mail',
             method='POST',
