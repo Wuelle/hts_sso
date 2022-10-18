@@ -68,7 +68,6 @@
                         </div>
                         <div class="grouped-inputs mt-3">
                             <div id="secret-question" class="font-primary">
-                                What is my dogs name?
                             </div>
                             <div class="input-container mt-1">
                                 <label class="visually-hidden" for="secret-answer">Secret Answer</label>
@@ -82,9 +81,14 @@
                         <div class="font-primary">
                             You're ready to enter your new passphrase
                         </div>
+                        <div class="font-primary fs-6 input-constraints" id="passphrase-warnings"></div>
 						<div class="input-container">
 							<label class="visually-hidden" for="new-passphrase">New Passphrase</label>
-							<input type="password" id="new-passphrase" class="form-control input-primary input-underline" placeholder="New Passphrase">
+							<input type="password" 
+                                id="new-passphrase" 
+                                class="form-control input-primary input-underline" 
+                                placeholder="New Passphrase" 
+                                onkeyup="validate_passphrase()">
 							<span class="underline"></span>
 						</div>
 						<div class="input-container mt-3">

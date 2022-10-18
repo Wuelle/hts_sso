@@ -36,7 +36,7 @@
 		</div>
         <div data-frame-store>
             <div class="frame" data-frame="username">
-                <div id="username-warnings" class="font-primary fs-6"> 
+                <div id="username-warnings" class="font-primary fs-6 input-constraints"> 
                 </div>
                 <div class="input-container">
                     <label class="visually-hidden" for="username">Username</label>
@@ -92,9 +92,15 @@
                     </div>
                 </div>
                 <div class="grouped-inputs mt-3">
+                    <div class="font-primary fs-6 input-constraints" id="passphrase-warnings"></div>
                     <div class="input-container">
                         <label class="visually-hidden" for="password">Password</label>
-                        <input type="password" id="password" class="form-control input-primary input-underline" placeholder="Password">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            class="form-control input-primary input-underline" 
+                            placeholder="Password"
+                            onkeyup="validate_passphrase();">
                         <span class="underline"></span>
                     </div>
                     <div class="input-container mt-3">

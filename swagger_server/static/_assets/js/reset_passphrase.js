@@ -13,6 +13,35 @@ $(document).ready(() => {
     }
 });
 
+const contains_uppercase = new RegExp("(?=.*[a-z])");
+const contains_lowercase = new RegExp("(?=.*[a-z])");
+const contains_nonalphabetic = new RegExp("(?=.*[^a-zA-Z])");
+
+function validate_passphrase() {
+    let passphrase = $("#new-passphrase").val();
+    let warnings = $("#passphrase-warnings");
+    if (passphrase.length < 15) {
+        warnings.text("must be at least 15 characters long");
+        return false;
+    }
+    if (passphrase.length > 140) {
+        warnings.text("must be no more than 140 characters long");
+        return false;
+    }
+    if (!contains_uppercase.test(passphrase)) {
+        warnings.text("must contain an uppercase character");
+        return false;
+    }
+    if (!contains_lowercase.test(passphrase)) {
+        warnings.text("must contain an lowercase character");
+        return false;
+    }
+    if (!contains_nonalphabetic.test(passphrase)) {
+        warnings.text("must contain an nonalphabetic character");
+        return false;
+    }
+}
+
 function resend_security_mail() {
     next_frame("security-code");
 }
@@ -115,7 +144,7 @@ function on_submit_frame(e) {
         let passphrase = $("#new-passphrase").val();
         let passphrase_confirm = $("#confirm-passphrase").val();
 
-        if (passphrase === "") {
+        if (passphrase === "" || !validate_passphrase()) {
             bad_input($(".input-container:has('#new-passphrase')"));
             return;
         }

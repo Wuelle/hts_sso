@@ -25,6 +25,35 @@ $(document).ready(() => {
     }
 })
 
+const contains_uppercase = new RegExp("(?=.*[a-z])");
+const contains_lowercase = new RegExp("(?=.*[a-z])");
+const contains_nonalphabetic = new RegExp("(?=.*[^a-zA-Z])");
+
+function validate_passphrase() {
+    let passphrase = $("#password").val();
+    let warnings = $("#passphrase-warnings");
+    if (passphrase.length < 15) {
+        warnings.text("must be at least 15 characters long");
+        return false;
+    }
+    if (passphrase.length > 140) {
+        warnings.text("must be no more than 140 characters long");
+        return false;
+    }
+    if (!contains_uppercase.test(passphrase)) {
+        warnings.text("must contain an uppercase character");
+        return false;
+    }
+    if (!contains_lowercase.test(passphrase)) {
+        warnings.text("must contain an lowercase character");
+        return false;
+    }
+    if (!contains_nonalphabetic.test(passphrase)) {
+        warnings.text("must contain an nonalphabetic character");
+        return false;
+    }
+}
+
 function change_verification_mail() {
     next_frame("update-email-address");
 }
@@ -145,7 +174,6 @@ function on_submit_frame(e) {
             }
         });
     } else if (active_frame == "set-password") {
-        console.log("finish");
         let secret_question = $("#secret-question").val();
         let secret_answer = $("#secret-answer").val();
         let password = $("#password").val();
@@ -156,7 +184,7 @@ function on_submit_frame(e) {
             return;
         }
 
-        if (password == "") {
+        if (password == "" || !validate_passphrase()) {
             bad_input($(".input-container:has('#password')"));
             return;
         }

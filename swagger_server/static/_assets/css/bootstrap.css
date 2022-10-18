@@ -74,7 +74,8 @@
   background-color: #ccc;
 }
 
-#username-warnings {
+.input-constraints {
+  font-weight: bold;
   min-height: 1.5rem;
   line-height: 1.5rem;
 }
