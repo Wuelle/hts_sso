@@ -14,24 +14,19 @@ class AccountRecoveryupdatePassphraseContent(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, update_token: str=None, new_passphrase: str=None):  # noqa: E501
+    def __init__(self, new_passphrase: str=None):  # noqa: E501
         """AccountRecoveryupdatePassphraseContent - a model defined in Swagger
 
-        :param update_token: The update_token of this AccountRecoveryupdatePassphraseContent.  # noqa: E501
-        :type update_token: str
         :param new_passphrase: The new_passphrase of this AccountRecoveryupdatePassphraseContent.  # noqa: E501
         :type new_passphrase: str
         """
         self.swagger_types = {
-            'update_token': str,
             'new_passphrase': str
         }
 
         self.attribute_map = {
-            'update_token': 'update-token',
             'new_passphrase': 'new-passphrase'
         }
-        self._update_token = update_token
         self._new_passphrase = new_passphrase
 
     @classmethod
@@ -44,29 +39,6 @@ class AccountRecoveryupdatePassphraseContent(Model):
         :rtype: AccountRecoveryupdatePassphraseContent
         """
         return util.deserialize_model(dikt, cls)
-
-    @property
-    def update_token(self) -> str:
-        """Gets the update_token of this AccountRecoveryupdatePassphraseContent.
-
-
-        :return: The update_token of this AccountRecoveryupdatePassphraseContent.
-        :rtype: str
-        """
-        return self._update_token
-
-    @update_token.setter
-    def update_token(self, update_token: str):
-        """Sets the update_token of this AccountRecoveryupdatePassphraseContent.
-
-
-        :param update_token: The update_token of this AccountRecoveryupdatePassphraseContent.
-        :type update_token: str
-        """
-        if update_token is None:
-            raise ValueError("Invalid value for `update_token`, must not be `None`")  # noqa: E501
-
-        self._update_token = update_token
 
     @property
     def new_passphrase(self) -> str:

@@ -6,7 +6,7 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
-from swagger_server.models.next_frame import NextFrame  # noqa: F401,E501
+from swagger_server.models.initialized_session_content import InitializedSessionContent  # noqa: F401,E501
 from swagger_server.models.nonce_token import NonceToken  # noqa: F401,E501
 from swagger_server import util
 
@@ -16,17 +16,17 @@ class InitializedSession(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, nonce: NonceToken=None, content: NextFrame=None):  # noqa: E501
+    def __init__(self, nonce: NonceToken=None, content: InitializedSessionContent=None):  # noqa: E501
         """InitializedSession - a model defined in Swagger
 
         :param nonce: The nonce of this InitializedSession.  # noqa: E501
         :type nonce: NonceToken
         :param content: The content of this InitializedSession.  # noqa: E501
-        :type content: NextFrame
+        :type content: InitializedSessionContent
         """
         self.swagger_types = {
             'nonce': NonceToken,
-            'content': NextFrame
+            'content': InitializedSessionContent
         }
 
         self.attribute_map = {
@@ -69,22 +69,22 @@ class InitializedSession(Model):
         self._nonce = nonce
 
     @property
-    def content(self) -> NextFrame:
+    def content(self) -> InitializedSessionContent:
         """Gets the content of this InitializedSession.
 
 
         :return: The content of this InitializedSession.
-        :rtype: NextFrame
+        :rtype: InitializedSessionContent
         """
         return self._content
 
     @content.setter
-    def content(self, content: NextFrame):
+    def content(self, content: InitializedSessionContent):
         """Sets the content of this InitializedSession.
 
 
         :param content: The content of this InitializedSession.
-        :type content: NextFrame
+        :type content: InitializedSessionContent
         """
 
         self._content = content

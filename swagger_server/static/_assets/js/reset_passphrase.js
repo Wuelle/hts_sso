@@ -13,13 +13,14 @@ $(document).ready(() => {
     }
 });
 
-const contains_uppercase = new RegExp("(?=.*[a-z])");
+const contains_uppercase = new RegExp("(?=.*[A-Z])");
 const contains_lowercase = new RegExp("(?=.*[a-z])");
 const contains_nonalphabetic = new RegExp("(?=.*[^a-zA-Z])");
 
 function validate_passphrase() {
     let passphrase = $("#new-passphrase").val();
     let warnings = $("#passphrase-warnings");
+    warnings.text("");
     if (passphrase.length < 15) {
         warnings.text("must be at least 15 characters long");
         return false;

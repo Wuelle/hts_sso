@@ -11,8 +11,10 @@ from swagger_server.models.login_submit_frame_body import LoginSubmitFrameBody  
 from swagger_server.models.nonce_token1 import NonceToken1  # noqa: E501
 from swagger_server import util
 
-from swagger_server.models.logininit_session_content import LogininitSessionContent  # noqa: F401,E501
-from swagger_server.models.next_frame import NextFrame  # noqa: F401,E501
+from swagger_server.models.initialized_session_content import InitializedSessionContent  # noqa: F401,E501
+from swagger_server.models.initialized_session1_content import InitializedSession1Content  # noqa: F401,E501
+from swagger_server.models.login_frame import LoginFrame  # noqa: F401,E501
+from swagger_server.models.successful_authentication import SuccessfulAuthentication  # noqa: F401,E501
 
 def login_init_session(body):  # noqa: E501
     """Start logging in
@@ -26,7 +28,7 @@ def login_init_session(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = InitLoginSession.from_dict(connexion.request.get_json())  # noqa: E501
-    return InitializedSession(nonce="abc", content=NextFrame(next="username", show_captcha=False)), 200
+    return InitializedSession(nonce="abc", content=InitializedSessionContent(first_frame=LoginFrame.USERNAME)), 200
 
 
 def login_submit_frame(body, login_session=None):  # noqa: E501
@@ -45,19 +47,19 @@ def login_submit_frame(body, login_session=None):  # noqa: E501
         body = LoginSubmitFrameBody.from_dict(connexion.request.get_json())  # noqa: E501
     if body.content.frame == "username":
         if body.content.value == "Alaska":  # only existing user
-            return InitializedSession(nonce="abc", content=NextFrame(next="password", show_captcha=False)), 200
+            return InitializedSession1(nonce="abc", content=InitializedSession1Content(next=LoginFrame.PASSWORD)), 200
         else:
             return InlineResponse403(nonce="abc"), 403
     elif body.content.frame == "password":
         if body.content.value == "beepboop":
-            return InitializedSession(nonce="abc", content=NextFrame(next="captcha", show_captcha=True)), 200
+            return InitializedSession1(nonce="abc", content=InitializedSession1Content(next=LoginFrame.CAPTCHA)), 200
         else:
             return InlineResponse403(nonce="abc"), 403
     elif body.content.frame == "captcha":
-        return InitializedSession(nonce="abc", content=NextFrame(next="mfa", show_captcha=True)), 200
+        return InitializedSession1(nonce="abc", content=InitializedSession1Content(next=LoginFrame.MFA)), 200
     elif body.content.frame == "mfa":
         if body.content.value == "123":
-            return InlineResponse201(nonce="abc", redirect="https://hackthissite.org")
+            return InlineResponse201(nonce="abc", content=SuccessfulAuthentication(redirect="https://hackthissite.org")), 201
         else:
             return InlineResponse403(nonce="abc"), 403
 

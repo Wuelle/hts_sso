@@ -6,6 +6,7 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
+from swagger_server.models.nonce_token4_content import NonceToken4Content  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -14,20 +15,25 @@ class NonceToken4(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, nonce: str=None):  # noqa: E501
+    def __init__(self, nonce: str=None, content: NonceToken4Content=None):  # noqa: E501
         """NonceToken4 - a model defined in Swagger
 
         :param nonce: The nonce of this NonceToken4.  # noqa: E501
         :type nonce: str
+        :param content: The content of this NonceToken4.  # noqa: E501
+        :type content: NonceToken4Content
         """
         self.swagger_types = {
-            'nonce': str
+            'nonce': str,
+            'content': NonceToken4Content
         }
 
         self.attribute_map = {
-            'nonce': 'nonce'
+            'nonce': 'nonce',
+            'content': 'content'
         }
         self._nonce = nonce
+        self._content = content
 
     @classmethod
     def from_dict(cls, dikt) -> 'NonceToken4':
@@ -62,3 +68,24 @@ class NonceToken4(Model):
             raise ValueError("Invalid value for `nonce`, must not be `None`")  # noqa: E501
 
         self._nonce = nonce
+
+    @property
+    def content(self) -> NonceToken4Content:
+        """Gets the content of this NonceToken4.
+
+
+        :return: The content of this NonceToken4.
+        :rtype: NonceToken4Content
+        """
+        return self._content
+
+    @content.setter
+    def content(self, content: NonceToken4Content):
+        """Sets the content of this NonceToken4.
+
+
+        :param content: The content of this NonceToken4.
+        :type content: NonceToken4Content
+        """
+
+        self._content = content

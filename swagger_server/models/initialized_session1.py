@@ -6,7 +6,7 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
-from swagger_server.models.next_frame import NextFrame  # noqa: F401,E501
+from swagger_server.models.initialized_session1_content import InitializedSession1Content  # noqa: F401,E501
 from swagger_server.models.nonce_token import NonceToken  # noqa: F401,E501
 from swagger_server import util
 
@@ -16,17 +16,17 @@ class InitializedSession1(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, nonce: NonceToken=None, content: NextFrame=None):  # noqa: E501
+    def __init__(self, nonce: NonceToken=None, content: InitializedSession1Content=None):  # noqa: E501
         """InitializedSession1 - a model defined in Swagger
 
         :param nonce: The nonce of this InitializedSession1.  # noqa: E501
         :type nonce: NonceToken
         :param content: The content of this InitializedSession1.  # noqa: E501
-        :type content: NextFrame
+        :type content: InitializedSession1Content
         """
         self.swagger_types = {
             'nonce': NonceToken,
-            'content': NextFrame
+            'content': InitializedSession1Content
         }
 
         self.attribute_map = {
@@ -71,22 +71,22 @@ class InitializedSession1(Model):
         self._nonce = nonce
 
     @property
-    def content(self) -> NextFrame:
+    def content(self) -> InitializedSession1Content:
         """Gets the content of this InitializedSession1.
 
 
         :return: The content of this InitializedSession1.
-        :rtype: NextFrame
+        :rtype: InitializedSession1Content
         """
         return self._content
 
     @content.setter
-    def content(self, content: NextFrame):
+    def content(self, content: InitializedSession1Content):
         """Sets the content of this InitializedSession1.
 
 
         :param content: The content of this InitializedSession1.
-        :type content: NextFrame
+        :type content: InitializedSession1Content
         """
         if content is None:
             raise ValueError("Invalid value for `content`, must not be `None`")  # noqa: E501

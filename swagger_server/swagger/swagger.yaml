@@ -19,6 +19,10 @@ paths:
     post:
       tags:
       - Account Recovery
+      summary: Prove that the user completed a captcha
+      description: "After several operations, the user may need to complete a captcha\
+        \ before their changes are actually applied on the server. (like resetting\
+        \ their passphrase). "
       operationId: account_recovery_submit_captcha_token
       requestBody:
         content:
@@ -65,10 +69,6 @@ paths:
     post:
       tags:
       - Account Recovery
-      summary: Send a username reminder mail
-      description: Receive a mail containing the usernames associated with a given
-        address. Note that the response does *not* reveal whether that email belongs
-        to *any* account
       operationId: account_recovery_submit_passphrase_update_token
       requestBody:
         content:
@@ -78,14 +78,18 @@ paths:
         required: true
       responses:
         "200":
-          description: "If any accounts are associated with that email address, then\
-            \ we sent a list of their usernames to it. The user can be prompted to\
-            \ answer their secret question (if set). If no secret question is required,\
-            \ the response should **not** contain a secret-question field"
+          description: The passphrase update token is valid - user may need to answer
+            their secret question (if set) before updating their passphrase
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/NonceToken_2'
+        "403":
+          description: Invalid update token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonceToken_3'
       x-openapi-router-controller: swagger_server.controllers.account_recovery_controller
   /account_recovery/update_passphrase:
     post:
@@ -105,13 +109,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NonceToken_3'
+                $ref: '#/components/schemas/NonceToken_4'
         "403":
           description: Invalid verification token or passphrase
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NonceToken_4'
+                $ref: '#/components/schemas/NonceToken_3'
       x-openapi-router-controller: swagger_server.controllers.account_recovery_controller
   /account_recovery/submit_secret_answer:
     post:
@@ -130,13 +134,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NonceToken_4'
+                $ref: '#/components/schemas/NonceToken_3'
         "403":
           description: Invalid secret answer
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NonceToken_4'
+                $ref: '#/components/schemas/NonceToken_3'
       x-openapi-router-controller: swagger_server.controllers.account_recovery_controller
   /account_recovery/request_username_reminder:
     post:
@@ -446,27 +450,14 @@ components:
     NonceToken:
       type: string
       example: <token>
-    NextFrame:
-      required:
-      - next
-      - show-captcha
-      type: object
-      properties:
-        next:
-          type: string
-          description: The next frame that should be shown to the user
-          enum:
-          - username
-          - password
-          - mfa
-        show-captcha:
-          type: boolean
-          description: Whether or not the user must complete a captcha to continue
-            authentication
-      description: Information about the next login frame shown to the user
-      example:
-        next: password
-        show-captcha: false
+    LoginFrame:
+      type: string
+      description: A type of frame in the login sequence
+      enum:
+      - username
+      - password
+      - mfa
+      - captcha
     CaptchaPrompt:
       required:
       - show-captcha
@@ -573,15 +564,20 @@ components:
         nonce: nonce
         content:
           secret-question: secret-question
+    NonceToken_3:
+      title: NonceToken
+      required:
+      - nonce
+      properties:
+        nonce:
+          type: string
+      example:
+        nonce: nonce
     account_recoveryupdate_passphrase_content:
       required:
       - new-passphrase
-      - update-token
       type: object
       properties:
-        update-token:
-          type: string
-          example: <reset token>
         new-passphrase:
           type: string
     UpdatePassphrase:
@@ -595,19 +591,6 @@ components:
           $ref: '#/components/schemas/NonceToken'
         content:
           $ref: '#/components/schemas/account_recoveryupdate_passphrase_content'
-    NonceToken_3:
-      title: NonceToken
-      required:
-      - nonce
-      properties:
-        nonce:
-          type: string
-        content:
-          $ref: '#/components/schemas/NonceToken_3_content'
-      example:
-        nonce: nonce
-        content:
-          captcha-required: true
     NonceToken_4:
       title: NonceToken
       required:
@@ -615,8 +598,12 @@ components:
       properties:
         nonce:
           type: string
+        content:
+          $ref: '#/components/schemas/NonceToken_4_content'
       example:
         nonce: nonce
+        content:
+          captcha-required: true
     account_recoverysubmit_secret_answer_content:
       required:
       - secret-answer
@@ -663,7 +650,7 @@ components:
         nonce:
           type: string
         content:
-          $ref: '#/components/schemas/NonceToken_3_content'
+          $ref: '#/components/schemas/NonceToken_4_content'
       example:
         nonce: nonce
         content:
@@ -702,12 +689,11 @@ components:
         nonce:
           $ref: '#/components/schemas/NonceToken'
         content:
-          $ref: '#/components/schemas/NextFrame'
+          $ref: '#/components/schemas/InitializedSession_content'
       example:
         nonce: <token>
         content:
-          next: password
-          show-captcha: false
+          first-frame: username
     loginsubmit_frame_content:
       required:
       - frame
@@ -715,13 +701,7 @@ components:
       type: object
       properties:
         frame:
-          type: string
-          description: The frame that was submitted by the user
-          example: password
-          enum:
-          - username
-          - password
-          - mfa
+          $ref: '#/components/schemas/LoginFrame'
         value:
           type: string
           description: The value submitted by the user
@@ -748,12 +728,11 @@ components:
         nonce:
           $ref: '#/components/schemas/NonceToken'
         content:
-          $ref: '#/components/schemas/NextFrame'
+          $ref: '#/components/schemas/InitializedSession_1_content'
       example:
         nonce: <token>
         content:
-          next: password
-          show-captcha: false
+          next: username
     inline_response_201:
       required:
       - content
@@ -958,7 +937,7 @@ components:
           type: string
       example:
         secret-question: secret-question
-    NonceToken_3_content:
+    NonceToken_4_content:
       required:
       - captcha-required
       type: object
@@ -967,6 +946,24 @@ components:
           type: boolean
       example:
         captcha-required: true
+    InitializedSession_content:
+      required:
+      - first-frame
+      type: object
+      properties:
+        first-frame:
+          $ref: '#/components/schemas/LoginFrame'
+      example:
+        first-frame: username
+    InitializedSession_1_content:
+      required:
+      - next
+      type: object
+      properties:
+        next:
+          $ref: '#/components/schemas/LoginFrame'
+      example:
+        next: username
     IsUsernameAvailable_content:
       required:
       - is-available

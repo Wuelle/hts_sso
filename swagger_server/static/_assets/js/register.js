@@ -25,13 +25,14 @@ $(document).ready(() => {
     }
 })
 
-const contains_uppercase = new RegExp("(?=.*[a-z])");
+const contains_uppercase = new RegExp("(?=.*[A-Z])");
 const contains_lowercase = new RegExp("(?=.*[a-z])");
 const contains_nonalphabetic = new RegExp("(?=.*[^a-zA-Z])");
 
 function validate_passphrase() {
     let passphrase = $("#password").val();
     let warnings = $("#passphrase-warnings");
+    warnings.text("");
     if (passphrase.length < 15) {
         warnings.text("must be at least 15 characters long");
         return false;
@@ -52,6 +53,7 @@ function validate_passphrase() {
         warnings.text("must contain an nonalphabetic character");
         return false;
     }
+    return true;
 }
 
 function change_verification_mail() {
@@ -241,7 +243,7 @@ function on_submit_frame(e) {
             }),
             statusCode: {
                 200: (e) => {
-                    $("#second-frame").find("#email-used").text(new_email);
+                    $("#email-used").text(new_email);
                     next_frame("verification-code");
                 },
                 403: (e) => {

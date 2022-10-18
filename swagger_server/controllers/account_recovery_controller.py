@@ -15,8 +15,7 @@ from swagger_server.models.update_passphrase1 import UpdatePassphrase1  # noqa: 
 from swagger_server import util
 
 from swagger_server.models.nonce_token2_content import NonceToken2Content  # noqa: F401,E501
-from swagger_server.models.nonce_token3_content import NonceToken3Content  # noqa: F401,E501
-
+from swagger_server.models.nonce_token4_content import NonceToken4Content  # noqa: F401,E501
 
 def account_recovery_request_passphrase_reset_token(body):  # noqa: E501
     """account_recovery_request_passphrase_reset_token
@@ -45,7 +44,7 @@ def account_recovery_request_username_reminder(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = RequestUsernameReminder.from_dict(connexion.request.get_json())  # noqa: E501
-    return NonceToken5(nonce="abc", content=NonceToken3Content(captcha_required=True)), 200
+    return NonceToken4(nonce="abc", content=NonceToken4Content(captcha_required=True)), 200
 
 
 def account_recovery_submit_captcha_token(body):  # noqa: E501
@@ -108,4 +107,4 @@ def account_recovery_update_passphrase(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = UpdatePassphrase.from_dict(connexion.request.get_json())  # noqa: E501
-    return "done", 200
+    return NonceToken3(nonce="abc"), 200

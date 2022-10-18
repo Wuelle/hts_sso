@@ -6,6 +6,7 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
+from swagger_server.models.login_frame import LoginFrame  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -14,18 +15,18 @@ class LoginsubmitFrameContent(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, frame: str=None, value: str=None, h_captcha_response: str=None):  # noqa: E501
+    def __init__(self, frame: LoginFrame=None, value: str=None, h_captcha_response: str=None):  # noqa: E501
         """LoginsubmitFrameContent - a model defined in Swagger
 
         :param frame: The frame of this LoginsubmitFrameContent.  # noqa: E501
-        :type frame: str
+        :type frame: LoginFrame
         :param value: The value of this LoginsubmitFrameContent.  # noqa: E501
         :type value: str
         :param h_captcha_response: The h_captcha_response of this LoginsubmitFrameContent.  # noqa: E501
         :type h_captcha_response: str
         """
         self.swagger_types = {
-            'frame': str,
+            'frame': LoginFrame,
             'value': str,
             'h_captcha_response': str
         }
@@ -51,31 +52,25 @@ class LoginsubmitFrameContent(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def frame(self) -> str:
+    def frame(self) -> LoginFrame:
         """Gets the frame of this LoginsubmitFrameContent.
 
-        The frame that was submitted by the user  # noqa: E501
 
         :return: The frame of this LoginsubmitFrameContent.
-        :rtype: str
+        :rtype: LoginFrame
         """
         return self._frame
 
     @frame.setter
-    def frame(self, frame: str):
+    def frame(self, frame: LoginFrame):
         """Sets the frame of this LoginsubmitFrameContent.
 
-        The frame that was submitted by the user  # noqa: E501
 
         :param frame: The frame of this LoginsubmitFrameContent.
-        :type frame: str
+        :type frame: LoginFrame
         """
-        allowed_values = ["username", "password", "mfa"]  # noqa: E501
-        if frame not in allowed_values:
-            raise ValueError(
-                "Invalid value for `frame` ({0}), must be one of {1}"
-                .format(frame, allowed_values)
-            )
+        if frame is None:
+            raise ValueError("Invalid value for `frame`, must not be `None`")  # noqa: E501
 
         self._frame = frame
 

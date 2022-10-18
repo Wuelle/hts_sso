@@ -3,12 +3,18 @@ $(document).ready(() => {
 	// only the input in the active frame is required for form submission
 	$("#form-container").on("submit", on_submit_frame);
 
-	let data = {
-		redirect: new RegExp('[\?&]redirect=([^&#]*)').exec(window.location.href)[1],
-	};
+    let data = {}
 
-	if (window.location.href.search("username=") != -1) {
-		data.username = new RegExp('[\?&]username=([^&#]*)').exec(window.location.href)[1]
+    const GET_redirect = new RegExp('[\?&]redirect=([^&#]*)')
+	if (GET_redirect.test(window.location.href)) {
+        data.redirect = GET-redirect.exec(window.location.href)[1];
+    } else {
+        data.redirect = "hackthissite.org" // TODO: replace with the right link
+    }
+
+    const GET_username = new RegExp('[\?&]username=([^&#]*)');
+	if (GET_username.test(window.location.href)) {
+		data.username = GET_username.exec(window.location.href)[1];
 	}
 
     init_session("login").then(() => {
@@ -20,9 +26,8 @@ $(document).ready(() => {
             data: JSON.stringify(data), // TODO error handling
             statusCode: {
                 200: (e) => {
-                    console.log(e);
-                    set_initial_frame(e["next"]);
-                    if (e["next"] != "username") create_back_button();
+                    set_initial_frame(e["first-frame"]);
+                    if (e["first-frame"] != "username") create_back_button();
                 }
             }
         })

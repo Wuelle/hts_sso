@@ -53,7 +53,7 @@ class TestAccountRecoveryController(BaseTestCase):
     def test_account_recovery_submit_captcha_token(self):
         """Test case for account_recovery_submit_captcha_token
 
-        
+        Prove that the user completed a captcha
         """
         body = SubmitCaptchaToken()
         response = self.client.open(
@@ -67,7 +67,7 @@ class TestAccountRecoveryController(BaseTestCase):
     def test_account_recovery_submit_passphrase_update_token(self):
         """Test case for account_recovery_submit_passphrase_update_token
 
-        Send a username reminder mail
+        
         """
         body = PassphraseUpdateToken()
         response = self.client.open(

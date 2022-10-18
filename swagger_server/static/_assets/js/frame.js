@@ -27,6 +27,7 @@ function set_initial_frame(frame_name) {
     let initial_frame = get_frame(frame_name);
     get_frame_container().append(initial_frame);
     active_frame_name = frame_name;
+    initial_frame.find("input").eq(0).focus();
 }
 
 function grow_to(target_height) {
