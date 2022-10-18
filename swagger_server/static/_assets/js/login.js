@@ -70,6 +70,11 @@ function on_submit_frame(e) {
   		statusCode: {
   			200: (e) => {
   				next_frame(e["next"]);
+                if (active_frame === "username" && e["next"] !== "username") {
+                    create_back_button();
+                } else if (active_frame !== "username" && e["next"] === "username") {
+	                $("#restart-btn").remove();
+                }
   			},
   			409: () => {
   				$("#error-modal").modal("show");
@@ -111,15 +116,6 @@ function on_restart(e) {
 	e.preventDefault();
 
 	// put the username frame on the left
-	$("#frame-container").css("left", -$("#form-container").outerWidth());
-	$("#frame-container").prepend(get_frame("username"));
-	get_frame("username").after(get_frame(active_frame));
-	active_frame = "username";
-	$("#frame-container").animate(
-		{
-			left: "+=" + $("#form-container").outerWidth()
-		},
-		after_frame_change,
-	);
+    previous_frame("username");
 	$("#restart-btn").remove();
 }
