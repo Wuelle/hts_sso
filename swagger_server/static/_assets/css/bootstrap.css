@@ -100,7 +100,7 @@
     font-size: 1rem;
   }
 }
-.button-primary:hover {
+.button-primary:hover, .button-primary:disabled {
   background-color: #00379f !important;
 }
 

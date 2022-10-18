@@ -14,20 +14,20 @@ class NonceToken2Content(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, captcha_required: bool=None):  # noqa: E501
+    def __init__(self, secret_question: str=None):  # noqa: E501
         """NonceToken2Content - a model defined in Swagger
 
-        :param captcha_required: The captcha_required of this NonceToken2Content.  # noqa: E501
-        :type captcha_required: bool
+        :param secret_question: The secret_question of this NonceToken2Content.  # noqa: E501
+        :type secret_question: str
         """
         self.swagger_types = {
-            'captcha_required': bool
+            'secret_question': str
         }
 
         self.attribute_map = {
-            'captcha_required': 'captcha-required'
+            'secret_question': 'secret-question'
         }
-        self._captcha_required = captcha_required
+        self._secret_question = secret_question
 
     @classmethod
     def from_dict(cls, dikt) -> 'NonceToken2Content':
@@ -41,24 +41,22 @@ class NonceToken2Content(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def captcha_required(self) -> bool:
-        """Gets the captcha_required of this NonceToken2Content.
+    def secret_question(self) -> str:
+        """Gets the secret_question of this NonceToken2Content.
 
 
-        :return: The captcha_required of this NonceToken2Content.
-        :rtype: bool
+        :return: The secret_question of this NonceToken2Content.
+        :rtype: str
         """
-        return self._captcha_required
+        return self._secret_question
 
-    @captcha_required.setter
-    def captcha_required(self, captcha_required: bool):
-        """Sets the captcha_required of this NonceToken2Content.
+    @secret_question.setter
+    def secret_question(self, secret_question: str):
+        """Sets the secret_question of this NonceToken2Content.
 
 
-        :param captcha_required: The captcha_required of this NonceToken2Content.
-        :type captcha_required: bool
+        :param secret_question: The secret_question of this NonceToken2Content.
+        :type secret_question: str
         """
-        if captcha_required is None:
-            raise ValueError("Invalid value for `captcha_required`, must not be `None`")  # noqa: E501
 
-        self._captcha_required = captcha_required
+        self._secret_question = secret_question

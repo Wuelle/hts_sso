@@ -45,7 +45,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RequestPasswordResetToken'
+              $ref: '#/components/schemas/RequestPassphraseResetToken'
         required: true
       responses:
         "200":
@@ -61,6 +61,32 @@ paths:
               schema:
                 $ref: '#/components/schemas/NonceToken_1'
       x-openapi-router-controller: swagger_server.controllers.account_recovery_controller
+  /account_recovery/submit_passphrase_update_token:
+    post:
+      tags:
+      - Account Recovery
+      summary: Send a username reminder mail
+      description: Receive a mail containing the usernames associated with a given
+        address. Note that the response does *not* reveal whether that email belongs
+        to *any* account
+      operationId: account_recovery_submit_passphrase_update_token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PassphraseUpdateToken'
+        required: true
+      responses:
+        "200":
+          description: "If any accounts are associated with that email address, then\
+            \ we sent a list of their usernames to it. The user can be prompted to\
+            \ answer their secret question (if set). If no secret question is required,\
+            \ the response should **not** contain a secret-question field"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonceToken_2'
+      x-openapi-router-controller: swagger_server.controllers.account_recovery_controller
   /account_recovery/update_passphrase:
     post:
       tags:
@@ -74,17 +100,43 @@ paths:
         required: true
       responses:
         "200":
-          description: Passphrase was successfully changed
+          description: "New passphrase is valid and accepted, the user might need\
+            \ to complete a captcha to update it"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NonceToken_2'
+                $ref: '#/components/schemas/NonceToken_3'
         "403":
           description: Invalid verification token or passphrase
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NonceToken_3'
+                $ref: '#/components/schemas/NonceToken_4'
+      x-openapi-router-controller: swagger_server.controllers.account_recovery_controller
+  /account_recovery/submit_secret_answer:
+    post:
+      tags:
+      - Account Recovery
+      operationId: account_recovery_submit_secret_answer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePassphrase_1'
+        required: true
+      responses:
+        "200":
+          description: "Correct answer, proceed to set new passphrase"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonceToken_4'
+        "403":
+          description: Invalid secret answer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonceToken_4'
       x-openapi-router-controller: swagger_server.controllers.account_recovery_controller
   /account_recovery/request_username_reminder:
     post:
@@ -108,7 +160,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NonceToken_2'
+                $ref: '#/components/schemas/NonceToken_5'
       x-openapi-router-controller: swagger_server.controllers.account_recovery_controller
   /session/get_nonce_token:
     get:
@@ -478,8 +530,8 @@ components:
         username:
           type: string
           example: Alaska
-    RequestPasswordResetToken:
-      title: RequestPasswordResetToken
+    RequestPassphraseResetToken:
+      title: RequestPassphraseResetToken
       required:
       - content
       - nonce
@@ -489,6 +541,38 @@ components:
           $ref: '#/components/schemas/NonceToken'
         content:
           $ref: '#/components/schemas/account_recoveryrequest_passphrase_update_token_content'
+    account_recoverysubmit_passphrase_update_token_content:
+      required:
+      - token
+      type: object
+      properties:
+        token:
+          type: string
+    PassphraseUpdateToken:
+      title: PassphraseUpdateToken
+      required:
+      - content
+      - nonce
+      type: object
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/account_recoverysubmit_passphrase_update_token_content'
+    NonceToken_2:
+      title: NonceToken
+      required:
+      - content
+      - nonce
+      properties:
+        nonce:
+          type: string
+        content:
+          $ref: '#/components/schemas/NonceToken_2_content'
+      example:
+        nonce: nonce
+        content:
+          secret-question: secret-question
     account_recoveryupdate_passphrase_content:
       required:
       - new-passphrase
@@ -511,20 +595,6 @@ components:
           $ref: '#/components/schemas/NonceToken'
         content:
           $ref: '#/components/schemas/account_recoveryupdate_passphrase_content'
-    NonceToken_2:
-      title: NonceToken
-      required:
-      - content
-      - nonce
-      properties:
-        nonce:
-          type: string
-        content:
-          $ref: '#/components/schemas/NonceToken_2_content'
-      example:
-        nonce: nonce
-        content:
-          captcha-required: true
     NonceToken_3:
       title: NonceToken
       required:
@@ -532,6 +602,39 @@ components:
       properties:
         nonce:
           type: string
+        content:
+          $ref: '#/components/schemas/NonceToken_3_content'
+      example:
+        nonce: nonce
+        content:
+          captcha-required: true
+    NonceToken_4:
+      title: NonceToken
+      required:
+      - nonce
+      properties:
+        nonce:
+          type: string
+      example:
+        nonce: nonce
+    account_recoverysubmit_secret_answer_content:
+      required:
+      - secret-answer
+      type: object
+      properties:
+        secret-answer:
+          type: string
+    UpdatePassphrase_1:
+      title: UpdatePassphrase
+      required:
+      - content
+      - nonce
+      type: object
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/account_recoverysubmit_secret_answer_content'
     account_recoveryrequest_username_reminder_content:
       required:
       - email
@@ -551,6 +654,20 @@ components:
           $ref: '#/components/schemas/NonceToken'
         content:
           $ref: '#/components/schemas/account_recoveryrequest_username_reminder_content'
+    NonceToken_5:
+      title: NonceToken
+      required:
+      - content
+      - nonce
+      properties:
+        nonce:
+          type: string
+        content:
+          $ref: '#/components/schemas/NonceToken_3_content'
+      example:
+        nonce: nonce
+        content:
+          captcha-required: true
     logininit_session_content:
       required:
       - redirect
@@ -835,6 +952,13 @@ components:
         content:
           $ref: '#/components/schemas/registerfinish_registration_content'
     NonceToken_2_content:
+      type: object
+      properties:
+        secret-question:
+          type: string
+      example:
+        secret-question: secret-question
+    NonceToken_3_content:
       required:
       - captcha-required
       type: object

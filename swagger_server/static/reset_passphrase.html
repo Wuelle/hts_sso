@@ -34,7 +34,7 @@
 					<div id="username-frame" class="frame" data-frame="username">
 						<div class="input-container">
 							<label class="visually-hidden" for="username">Username</label>
-							<input type="text" id="username" class="form-control input-primary input-underline" placeholder="Username" autofocus>
+							<input type="text" id="username" class="form-control input-primary input-underline" placeholder="Username">
 							<span class="underline"></span>
 						</div>
 						<div class="fst-italic fs-6 font-primary mt-1">
@@ -67,7 +67,7 @@
                             Please answer your secret question below
                         </div>
                         <div class="grouped-inputs mt-3">
-                            <div class="font-primary">
+                            <div id="secret-question" class="font-primary">
                                 What is my dogs name?
                             </div>
                             <div class="input-container mt-1">
@@ -85,6 +85,11 @@
 						<div class="input-container">
 							<label class="visually-hidden" for="new-passphrase">New Passphrase</label>
 							<input type="password" id="new-passphrase" class="form-control input-primary input-underline" placeholder="New Passphrase">
+							<span class="underline"></span>
+						</div>
+						<div class="input-container mt-3">
+							<label class="visually-hidden" for="confirm-passphrase">Confirm Passphrase</label>
+							<input type="password" id="confirm-passphrase" class="form-control input-primary input-underline" placeholder="Confirm Passphrase">
 							<span class="underline"></span>
 						</div>
 					</div>
