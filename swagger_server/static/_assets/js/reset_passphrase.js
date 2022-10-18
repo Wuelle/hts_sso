@@ -154,7 +154,6 @@ function on_submit_frame(e) {
             return;
         }
         data = {}
-        data["update-token"] = "foo"; // TODO: remove
         data["new-passphrase"] = passphrase;
 
         $.ajax({

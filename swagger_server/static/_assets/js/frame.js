@@ -31,12 +31,27 @@ function set_initial_frame(frame_name) {
 
 function grow_to(target_height) {
     let frame_container = get_frame_container();
-    frame_container.animate(
+    return frame_container.animate(
         {
             height: "+=" + (target_height - frame_container.height()),
         },
         animation_duration,
     );
+}
+
+function previous_frame(frame_name) {
+    let frame_container = get_frame_container();
+	frame_container.css("left", -$("#form-container").outerWidth());
+	frame_container.prepend(get_frame("username"));
+	get_frame("username").after(get_frame(active_frame));
+	active_frame = "username";
+	frame_container.animate(
+		{
+			left: "+=" + $("#form-container").outerWidth()
+		},
+		animation_duration,
+		after_frame_change,
+	);
 }
 
 function next_frame(frame_name) {

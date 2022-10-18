@@ -141,7 +141,6 @@ function on_submit_frame(e) {
     } else if (active_frame == "verification-code") {
         // verify email
         let verification_code = $("#verification-code").val();
-        let username = $("#username").val(); // TODO remove on next API iteration
         
         if (verification_code.length == 0) {
             bad_input($(".input-container:has('#verification-code')"));
@@ -154,7 +153,6 @@ function on_submit_frame(e) {
             contentType: "application/json",
             dataType: "json",
             data: JSON.stringify({
-                username: username,
                 "verification-code": verification_code,
             }),
             statusCode: {
@@ -231,8 +229,6 @@ function on_submit_frame(e) {
     } else if (active_frame == "update-email-address") {
         let old_email = $("#old-email").val();
         let new_email = $("#new-email").val();
-        let username = $("#username").val(); // TODO remove on next API iteration
-
 
         $.ajax({
             method: "POST",
@@ -242,7 +238,6 @@ function on_submit_frame(e) {
             data: JSON.stringify({
                 "old-email": old_email,
                 "new-email": new_email,
-                "username": username,
             }),
             statusCode: {
                 200: (e) => {
