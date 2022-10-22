@@ -1,3 +1,9 @@
+## static/dashboard
+Displays & updates:
+* Profile Picture
+* Account name (immutable)
+* Display name
+* link to change password
 # Swagger generated server
 
 ## Overview
