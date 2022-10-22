@@ -88,19 +88,19 @@
 .switch {
   position: relative;
   display: inline-block;
-  width: 30px;
-  height: 17px;
+  width: 2rem;
+  height: 1rem;
 }
 
 /* Hide default HTML checkbox */
 .switch input {
+  position: absolute;
   opacity: 0;
   width: 0;
   height: 0;
   margin: 0;
 }
 
-/* The slider */
 .slider {
   position: absolute;
   cursor: pointer;
@@ -116,10 +116,10 @@
 .slider:before {
   position: absolute;
   content: "";
-  height: 13px;
-  width: 13px;
-  left: 2px;
-  bottom: 2px;
+  height: 0.7rem;
+  width: 0.7rem;
+  left: 0.15rem;
+  bottom: 0.15rem;
   background-color: #666;
   -webkit-transition: 0.4s;
   transition: 0.4s;
@@ -130,9 +130,9 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(13px);
-  -ms-transform: translateX(13px);
-  transform: translateX(13px);
+  -webkit-transform: translateX(1rem);
+  -ms-transform: translateX(1rem);
+  transform: translateX(1rem);
 }
 
 .href-secondary {
@@ -287,6 +287,8 @@ hr {
   left: 0;
   height: 100%;
   flex: 15%;
+  overflow: scroll;
+  font-size: 1.3rem;
 }
 
 .dashboard-navigation-target {
@@ -296,12 +298,11 @@ hr {
 }
 
 .dashboard-navigation-category-list {
-  overflow: scroll;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .dashboard-navigation-image {
@@ -336,7 +337,9 @@ hr {
 }
 
 #page-privacy {
-  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 #profile-picture {
@@ -366,11 +369,14 @@ hr {
   opacity: 1;
 }
 
+svg {
+  fill: #eee;
+}
+
 #profile-picture-overlay svg {
   position: absolute;
   bottom: 3px;
   right: 3px;
-  fill: #eee;
 }
 
 .list-outer {
@@ -379,6 +385,82 @@ hr {
 
 .list-inner {
   list-style: none;
+}
+
+.oidc-button {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  height: 60px;
+  width: 300px;
+  border-radius: 2px;
+}
+
+.oidc-button:hover {
+  cursor: pointer;
+}
+
+.oidc-icon {
+  flex: 20%;
+  padding: 5px;
+  border-width: 1px 0px 1px 1px;
+  border-style: solid;
+  border-radius: 2px;
+}
+
+.oidc-icon {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.oidc-text {
+  display: flex;
+  flex: 80%;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.4rem;
+  color: #eee;
+  border-radius: 2px;
+  border-width: 1px 1px 1px 0px;
+  border-style: solid;
+}
+
+.oidc-github .oidc-icon {
+  background-color: #eee;
+  border-color: #24292f;
+}
+.oidc-github .oidc-text {
+  background-color: #24292f;
+  border-color: #eee;
+}
+.oidc-github svg {
+  fill: #24292f;
+}
+
+.oidc-gitlab .oidc-icon {
+  background-color: #eee;
+  border-color: #2f2a6b;
+}
+.oidc-gitlab .oidc-text {
+  background-color: #2f2a6b;
+  border-color: #eee;
+}
+.oidc-gitlab svg {
+  fill: #2f2a6b;
+}
+
+.oidc-discord .oidc-icon {
+  background-color: #fff;
+  border-color: #5865F2;
+}
+.oidc-discord .oidc-text {
+  background-color: #5865F2;
+  border-color: #fff;
+}
+.oidc-discord svg {
+  fill: #5865F2;
 }
 
 /*# sourceMappingURL=bootstrap.css.map */

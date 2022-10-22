@@ -83,6 +83,10 @@ $rotate-angle: 1deg;
 }
 
 // checkbox
+$slider-width: 2rem;
+$slider-height: 1rem;
+$sliderbox-padding: 0.15rem;
+$sliderbox-size: $slider-height - 2 * $sliderbox-padding;
 
 .switch-group{
     margin-top: 10px;
@@ -92,19 +96,19 @@ $rotate-angle: 1deg;
 .switch {
     position: relative;
     display: inline-block;
-    width: 30px;
-    height: 17px;
+    width: $slider-width;
+    height: $slider-height;
 }
 
 /* Hide default HTML checkbox */
 .switch input {
+    position: absolute;
     opacity: 0;
     width: 0;
     height: 0;
     margin: 0;
 }
 
-/* The slider */
 .slider {
     position: absolute;
     cursor: pointer;
@@ -120,10 +124,10 @@ $rotate-angle: 1deg;
 .slider:before {
     position: absolute;
     content: "";
-    height: 13px;
-    width: 13px;
-    left: 2px;
-    bottom: 2px;
+    height: $sliderbox-size;
+    width: $sliderbox-size;
+    left: $sliderbox-padding;
+    bottom: $sliderbox-padding;
     background-color: #666;
     -webkit-transition: .4s;
     transition: .4s;
@@ -134,7 +138,7 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-    -webkit-transform: translateX(13px);
-    -ms-transform: translateX(13px);
-    transform: translateX(13px);
+    -webkit-transform: translateX($slider-width - $sliderbox-size - 2 * $sliderbox-padding);
+    -ms-transform: translateX($slider-width - $sliderbox-size - 2 * $sliderbox-padding);
+    transform: translateX($slider-width - $sliderbox-size - 2 * $sliderbox-padding);
 }

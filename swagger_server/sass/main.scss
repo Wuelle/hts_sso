@@ -94,7 +94,8 @@ $navbar-width: 15%;
     left: 0;
     height: 100%;
     flex: $navbar-width;
-    // width: 240px; // TODO: make responsvee
+    overflow: scroll;
+    font-size: 1.3rem;
 }
 
 .dashboard-navigation-target {
@@ -104,12 +105,11 @@ $navbar-width: 15%;
 }
 
 .dashboard-navigation-category-list {
-    overflow: scroll;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .dashboard-navigation-image {
@@ -145,7 +145,9 @@ $navbar-width: 15%;
 
 // Account page
 #page-privacy {
-    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 #profile-picture {
@@ -175,11 +177,13 @@ $navbar-width: 15%;
     opacity: 1;
 }
 
+svg {
+    fill: $font-primary;
+}
 #profile-picture-overlay svg {
     position: absolute;
     bottom: 3px;
     right: 3px;
-    fill: $font-primary;
 }
 
 .list-outer {
@@ -188,4 +192,103 @@ $navbar-width: 15%;
 
 .list-inner {
     list-style: none;
+}
+
+
+// OIDC stuff
+$github-dark: #24292f;
+$github-light: #eee;
+
+$gitlab-dark: #2f2a6b;
+$gitlab-light: #eee;
+
+$discord-dark: #5865F2;
+$discord-light: #fff;
+
+.oidc-button {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    height: 60px;
+    width: 300px;
+    border-radius: 2px;
+}
+
+.oidc-button:hover {
+    cursor: pointer;
+}
+
+.oidc-icon {
+    flex: 20%;
+    padding: 5px;
+    border-width: 1px 0px 1px 1px;
+    border-style: solid;
+    border-radius: 2px;
+}
+
+.oidc-icon {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.oidc-text {
+    display: flex;
+    flex: 80%;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem;
+    color: $font-primary;
+    border-radius: 2px;
+    border-width: 1px 1px 1px 0px;
+    border-style: solid;
+}
+
+.oidc-github {
+    .oidc-icon {
+        background-color: $github-light;
+        border-color: $github-dark;
+    }
+
+    .oidc-text {
+        background-color: $github-dark;
+        border-color: $github-light;
+    }
+
+    svg {
+        fill: $github-dark;
+    }
+}
+
+.oidc-gitlab {
+    .oidc-icon {
+        background-color: $gitlab-light;
+        border-color: $gitlab-dark;
+    }
+
+    .oidc-text {
+        background-color: $gitlab-dark;
+        border-color: $gitlab-light;
+    }
+
+    svg {
+        fill: $gitlab-dark;
+    }
+}
+
+.oidc-discord {
+    .oidc-icon {
+        background-color: $discord-light;
+        border-color: $discord-dark;
+    }
+
+    .oidc-text {
+        background-color: $discord-dark;
+        border-color: $discord-light;
+    }
+
+    svg {
+        fill: $discord-dark;
+    }
 }

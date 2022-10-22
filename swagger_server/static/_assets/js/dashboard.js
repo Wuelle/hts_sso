@@ -1,4 +1,4 @@
-let active_page = "privacy";  // initial page
+let active_page = "profile";  // initial page
 $(document).ready(() => {
     $("[page-container]").append(get_page(active_page));
 });

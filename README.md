@@ -4,6 +4,14 @@ Displays & updates:
 * Account name (immutable)
 * Display name
 * link to change password
+
+## legal stuff (copyright)
+https://primer.style/octicons/guidelines/usage
+https://brand.github.com/ (github logo and the pen glyphicon are from github. Usage is okay)
+https://about.gitlab.com/press/press-kit/ (gitlab logo)
+https://discord.com/branding (discord logo)
+
+
 # Swagger generated server
 
 ## Overview
