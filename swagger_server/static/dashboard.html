@@ -11,7 +11,7 @@
 
 		<title>Account Dashboard</title>
 
-		<link href="http://172.17.0.2:8080/static/_assets/css/bootstrap.css" rel="stylesheet">
+		<link href="http://172.17.0.2:8080/static/_assets/css/dashboard.css" rel="stylesheet">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 		<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 
@@ -59,12 +59,43 @@
         </div>
         <div page-store style="display:none;">
             <div id="page-profile" data-page="profile">
+                <div id="profiledata-primary">
+                    <div id="profile-picture-container">
+                        <input id="profile-picture-upload" type="file" style="position:absolute;opacity:0;" accept="image/x-png,image/gif,image/jpeg">
+                        <div id="profile-picture" onclick="on_profile_picture_click()">
+                            <img src="https://www.hackthissite.org/pages/user/avatar.view.php?id=standard/freedom2.jpg" alt="Profile Picture">
+                            <div id="profile-picture-overlay">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M17.263 2.177a1.75 1.75 0 012.474 0l2.586 2.586a1.75 1.75 0 010 2.474L19.53 10.03l-.012.013L8.69 20.378a1.75 1.75 0 01-.699.409l-5.523 1.68a.75.75 0 01-.935-.935l1.673-5.5a1.75 1.75 0 01.466-.756L14.476 4.963l2.787-2.786zm-2.275 4.371l-10.28 9.813a.25.25 0 00-.067.108l-1.264 4.154 4.177-1.271a.25.25 0 00.1-.059l10.273-9.806-2.94-2.939zM19 8.44l2.263-2.262a.25.25 0 000-.354l-2.586-2.586a.25.25 0 00-.354 0L16.061 5.5 19 8.44z"></path></svg>
+                            </div>
+                        </div>
+                    </div>
 
-                <input id="profile-picture-upload" type="file" style="opacity: 0" accept="image/x-png,image/gif,image/jpeg">
-                <div id="profile-picture" onclick="on_profile_picture_click()">
-                    <img src="https://www.hackthissite.org/pages/user/avatar.view.php?id=standard/freedom2.jpg" alt="Profile Picture">
-                    <div id="profile-picture-overlay">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M17.263 2.177a1.75 1.75 0 012.474 0l2.586 2.586a1.75 1.75 0 010 2.474L19.53 10.03l-.012.013L8.69 20.378a1.75 1.75 0 01-.699.409l-5.523 1.68a.75.75 0 01-.935-.935l1.673-5.5a1.75 1.75 0 01.466-.756L14.476 4.963l2.787-2.786zm-2.275 4.371l-10.28 9.813a.25.25 0 00-.067.108l-1.264 4.154 4.177-1.271a.25.25 0 00.1-.059l10.273-9.806-2.94-2.939zM19 8.44l2.263-2.262a.25.25 0 000-.354l-2.586-2.586a.25.25 0 00-.354 0L16.061 5.5 19 8.44z"></path></svg>
+                    <div id="primary-data-container" class="font-primary">
+                        <label class="profile-data-key" for="account-name">ACCOUNT NAME </label><br><span id="account-name" class="profile-data-value">Wuelle</span>
+                        <br>
+                        <label class="profile-data-key" for="display-name">DISPLAY NAME</label><br>
+                        <span 
+                            id="display-name" 
+                            class="profile-data-value editable-value" 
+                            onfocusout="stop_editing('display-name');"
+                            spellcheck="false" 
+                            contenteditable="false"
+                        >Alaska</span>
+                        <button class="button-primary edit-button" onclick="edit('display-name');">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M17.263 2.177a1.75 1.75 0 012.474 0l2.586 2.586a1.75 1.75 0 010 2.474L19.53 10.03l-.012.013L8.69 20.378a1.75 1.75 0 01-.699.409l-5.523 1.68a.75.75 0 01-.935-.935l1.673-5.5a1.75 1.75 0 01.466-.756L14.476 4.963l2.787-2.786zm-2.275 4.371l-10.28 9.813a.25.25 0 00-.067.108l-1.264 4.154 4.177-1.271a.25.25 0 00.1-.059l10.273-9.806-2.94-2.939zM19 8.44l2.263-2.262a.25.25 0 000-.354l-2.586-2.586a.25.25 0 00-.354 0L16.061 5.5 19 8.44z"></path></svg>
+                        </button>
+                        <br>
+                        <label class="profile-data-key" for="email">EMAIL</label><br>
+                        <span 
+                            id="email" 
+                            class="profile-data-value editable-value" 
+                            onfocusout="stop_editing('email');"
+                            spellcheck="false" 
+                            contenteditable="false"
+                        >foo@example.com</span>
+                        <button class="button-primary edit-button" onclick="edit('email');">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M17.263 2.177a1.75 1.75 0 012.474 0l2.586 2.586a1.75 1.75 0 010 2.474L19.53 10.03l-.012.013L8.69 20.378a1.75 1.75 0 01-.699.409l-5.523 1.68a.75.75 0 01-.935-.935l1.673-5.5a1.75 1.75 0 01.466-.756L14.476 4.963l2.787-2.786zm-2.275 4.371l-10.28 9.813a.25.25 0 00-.067.108l-1.264 4.154 4.177-1.271a.25.25 0 00.1-.059l10.273-9.806-2.94-2.939zM19 8.44l2.263-2.262a.25.25 0 000-.354l-2.586-2.586a.25.25 0 00-.354 0L16.061 5.5 19 8.44z"></path></svg>
+                        </button>
                     </div>
                 </div>
                 <div class="oidc-button oidc-github mt-3">
@@ -100,6 +131,14 @@
                         Connect to Discord
                     </div>
                 </div>
+                <div id="about-me">
+                    <label style="z-index:3;" for="about-me-content" class="font-primary">ABOUT ME</label>
+                    <div style="position:relative;">
+                        <textarea id="about-me-content" maxlength=200 spellcheck="false">I like trains.</textarea>
+                        <span id="characters-remaining">200</span>
+                    </div>
+                </div>
+
             </div>
             <div id="page-privacy" data-page="privacy" class="font-primary">
                 <form>

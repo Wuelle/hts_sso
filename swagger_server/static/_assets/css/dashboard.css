@@ -463,4 +463,266 @@ svg {
   fill: #5865F2;
 }
 
-/*# sourceMappingURL=bootstrap.css.map */
+[contenteditable=true]:active,
+[contenteditable=true]:focus {
+  border: none;
+  outline: none;
+}
+
+.dashboard-container {
+  position: relative;
+  width: 75%;
+  height: 85%;
+  padding: 0 !important;
+  display: flex;
+  flex-direction: row;
+}
+
+.dashboard-navigation-bar {
+  background: #202020;
+  color: #eee;
+  position: relative;
+  left: 0;
+  height: 100%;
+  flex: 15%;
+  overflow: scroll;
+  font-size: 1.3rem;
+}
+
+.dashboard-navigation-target {
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-navigation-category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.dashboard-navigation-image {
+  width: 90%;
+  margin: 10px;
+}
+
+.dashboard-navigation-target a {
+  text-decoration: none;
+  color: #eee;
+}
+
+.dashboard-navigation-category {
+  border-bottom: 1px solid #555;
+}
+
+.dashboard-category-title {
+  font-weight: bold;
+  font-size: 0.7rem;
+}
+
+.dashboard-content {
+  flex: 85%;
+}
+
+#dashboard-content-title {
+  text-align: center;
+}
+
+.dashboard-page-container {
+  margin: 3rem;
+}
+
+#page-privacy {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+#profile-picture {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+#profile-picture img {
+  border-radius: 2px;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#profile-picture-overlay {
+  border-radius: 2px;
+  opacity: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#profile-picture-overlay:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+
+#profile-picture-container {
+  flex: 20%;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+#primary-data-container {
+  flex: 80%;
+}
+
+svg {
+  fill: #eee;
+}
+
+#profile-picture-overlay svg {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+}
+
+.list-outer {
+  list-style: none;
+}
+
+.list-inner {
+  list-style: none;
+}
+
+.oidc-button {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  height: 50px;
+  width: 280px;
+  border-radius: 2px;
+}
+
+.oidc-button:hover {
+  cursor: pointer;
+}
+
+.oidc-icon {
+  flex: 20%;
+  padding: 5px;
+  border-width: 1px 0px 1px 1px;
+  border-style: solid;
+  border-radius: 2px;
+}
+
+.oidc-icon {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.oidc-text {
+  display: flex;
+  flex: 80%;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.4rem;
+  color: #eee;
+  border-radius: 2px;
+  border-width: 1px 1px 1px 0px;
+  border-style: solid;
+}
+
+.oidc-github .oidc-icon {
+  background-color: #eee;
+  border-color: #24292f;
+}
+.oidc-github .oidc-text {
+  background-color: #24292f;
+  border-color: #eee;
+}
+.oidc-github svg {
+  fill: #24292f;
+}
+
+.oidc-gitlab .oidc-icon {
+  background-color: #eee;
+  border-color: #2f2a6b;
+}
+.oidc-gitlab .oidc-text {
+  background-color: #2f2a6b;
+  border-color: #eee;
+}
+.oidc-gitlab svg {
+  fill: #2f2a6b;
+}
+
+.oidc-discord .oidc-icon {
+  background-color: #fff;
+  border-color: #5865F2;
+}
+.oidc-discord .oidc-text {
+  background-color: #5865F2;
+  border-color: #fff;
+}
+.oidc-discord svg {
+  fill: #5865F2;
+}
+
+.profile-data-key {
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.profile-data-value {
+  padding: 3px 5px 3px 5px;
+}
+
+.editable-value {
+  border-radius: 1px;
+}
+
+span[contenteditable=true].editable-value {
+  background-color: #151515;
+}
+
+.edit-button {
+  padding: 2px;
+}
+
+#profiledata-primary {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.dashboard-page-container {
+  font-size: 20px;
+}
+
+#about-me {
+  position: relative;
+}
+#about-me #characters-remaining {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  color: #bbb;
+}
+#about-me textarea:active, #about-me textarea:focus {
+  outline: none;
+}
+#about-me textarea {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #212121;
+  color: #eee;
+}
+
+/*# sourceMappingURL=dashboard.css.map */
