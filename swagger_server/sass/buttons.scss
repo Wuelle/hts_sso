@@ -8,6 +8,17 @@ $input-underline: darkblue;
 	box-shadow: none!important;
 }
 
+.button-danger, .button-danger:focus, .button-danger:active {
+	border-radius: 3px;
+	background-color: darkred;
+	border: none;
+	box-shadow: none!important;
+}
+
+.button-danger:hover {
+	background-color: rgb(110, 0, 0);
+}
+
 @media screen and (max-width: 400px) {
   .button-primary  {
     font-size: 1rem;
@@ -17,6 +28,7 @@ $input-underline: darkblue;
 .button-primary:hover, .button-primary:disabled {
 	background-color: #00379f!important;
 }
+
 
 .button-border-underline {
 	position: relative;

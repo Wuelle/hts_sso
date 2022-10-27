@@ -1,6 +1,24 @@
-let active_page = "profile";  // initial page
+let active_page = "profile";  // initial page, can be overriden by fragment link
+
 $(document).ready(() => {
+    if (window.location.href.indexOf("#") != -1) {
+        let fragment_link = window.location.href.split("#", 2)[1].toLowerCase();
+        if (get_page(fragment_link).length > 0) {
+            active_page = fragment_link;
+        }
+    }
+
+    $(".contains-username").text("Alaska");
+
     $("[page-container]").append(get_page(active_page));
+    $("#timezone").select2();
+
+    $('#account-delete-modal').on('shown.bs.modal', function (e) {
+        console.log("shown");
+        $(this).find("input").eq(0).focus();
+    });
+
+    update_remaining_characters();
 });
 
 function get_page(page_name) {
@@ -35,4 +53,12 @@ function edit(name) {
 
 function stop_editing(name) {
     $("#" + name).prop("contenteditable", false);
+}
+
+function update_remaining_characters() {
+    let about_me = $("#about-me-content").val();
+    // we don't need to check for lengths above the maximum here, since
+    // the "maxlength" attribute on the textarea is set, those aren't possible
+    // in normal operation
+    $("#about-me-length").text(about_me.length);
 }

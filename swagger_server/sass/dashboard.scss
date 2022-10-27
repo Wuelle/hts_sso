@@ -54,10 +54,6 @@ $navbar-width: 15%;
     color: $font-primary;
 }
 
-.dashboard-navigation-category {
-    border-bottom: 1px solid #555;
-}
-
 .dashboard-category-title {
     font-weight: bold;
     font-size: 0.7rem;
@@ -119,7 +115,7 @@ $navbar-width: 15%;
 }
 
 #primary-data-container {
-    flex: 80%;
+    flex: 30%;
 }
 
 svg {
@@ -273,23 +269,37 @@ span[contenteditable=true].editable-value {
 
 #about-me {
     position: relative;
+    flex: 50%;
+    display: flex;
+    flex-direction: column;
 
-    #characters-remaining {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        color: $font-secondary;
-    }
-
-    textarea:active, textarea:focus {
-        outline: none;
-    }
-
-    textarea {
+    label {
         position: relative;
-        width: 100%;
-        height: 100%;
-        background-color: #212121;
-        color: $font-primary;
+        left: 0;
+        top: 0;
     }
+
+    #about-me-container {
+        position: relative;
+        left: 0;
+        flex-grow: 1;
+
+        textarea {
+            position: relative;
+            left: 0;
+            width: 70%;
+            height: 100%;
+            background-color: #212121;
+            border: 1px solid #444;
+            color: $font-primary;
+            padding: 5px 10px 5px 10px;
+            resize: none;
+        }
+
+        textarea:active, textarea:focus {
+            outline: none;
+        }
+    }
+
+
 }

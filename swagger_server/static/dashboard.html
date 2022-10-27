@@ -15,11 +15,45 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 		<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
         <!-- session manager must be included before other custom js -->
 		<script type="text/javascript" src="http://172.17.0.2:8080/static/_assets/js/session.js"></script>
 		<script type="text/javascript" src="http://172.17.0.2:8080/static/_assets/js/dashboard.js"></script>
 	</head>
 	<body class="background flex-center">
+		<div id="account-delete-modal" class="modal" tabindex="-1" role="dialog">
+  			<div class="modal-dialog" role="document">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<h5 class="modal-title">Account Deletion</h5>
+        				<button type="button" class="modal-close" aria-label="Close" onclick="$('#account-delete-modal').modal('hide')";>
+        					<span aria-hidden="true">&times;</span>
+        				</button>
+      				</div>
+      				<div class="modal-body" style="text-align:center">
+                        You are trying to delete your account at <a class="href-secondary" href="https://hackthissite.org">hackthissite.org</a><br>
+                        This action <b>cannot</b> be undone!<br>
+                        Please type <span class="inline-highlight" style="font-weight:bold;">HackThisSite/<span class="contains-username"></span></span> to confirm:<br>
+                        <form class="mt-3">
+                            <div class="input-container" style="width:70%;margin:auto;">
+                                <label class="visually-hidden" for="confirm-account-deletion">Confirm account deletion</label>
+                                <input 
+                                    type="text" 
+                                    id="confirm-account-deletion" 
+                                    class="form-control input-primary input-underline"
+                                    placeholder="HackThisSite/Alaska">
+                                <span class="underline"></span>
+                            </div>
+                        </form>
+      				</div>
+      				<div class="modal-footer">
+        				<button type="button" class="btn btn-primary btn-block button-danger" style="margin:auto;">Confirm</button>
+      				</div>
+    			</div>
+  			</div>
+		</div>
         <div class="elevated dashboard-container" autocomplete="off">
             <div class="dashboard-navigation-bar">
 				<img src="https://data.htscdn.org/images/hackthissite-meta-card.png" alt="HackThisSite Logo" class="rounded img-fluid bg-dark dashboard-navigation-image">
@@ -63,7 +97,7 @@
                     <div id="profile-picture-container">
                         <input id="profile-picture-upload" type="file" style="position:absolute;opacity:0;" accept="image/x-png,image/gif,image/jpeg">
                         <div id="profile-picture" onclick="on_profile_picture_click()">
-                            <img src="https://www.hackthissite.org/pages/user/avatar.view.php?id=standard/freedom2.jpg" alt="Profile Picture">
+                            <img src="https://www.hackthissite.org/pages/user/avatar.view.php?id=standard/terrora.jpg" alt="Profile Picture">
                             <div id="profile-picture-overlay">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M17.263 2.177a1.75 1.75 0 012.474 0l2.586 2.586a1.75 1.75 0 010 2.474L19.53 10.03l-.012.013L8.69 20.378a1.75 1.75 0 01-.699.409l-5.523 1.68a.75.75 0 01-.935-.935l1.673-5.5a1.75 1.75 0 01.466-.756L14.476 4.963l2.787-2.786zm-2.275 4.371l-10.28 9.813a.25.25 0 00-.067.108l-1.264 4.154 4.177-1.271a.25.25 0 00.1-.059l10.273-9.806-2.94-2.939zM19 8.44l2.263-2.262a.25.25 0 000-.354l-2.586-2.586a.25.25 0 00-.354 0L16.061 5.5 19 8.44z"></path></svg>
                             </div>
@@ -96,6 +130,16 @@
                         <button class="button-primary edit-button" onclick="edit('email');">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M17.263 2.177a1.75 1.75 0 012.474 0l2.586 2.586a1.75 1.75 0 010 2.474L19.53 10.03l-.012.013L8.69 20.378a1.75 1.75 0 01-.699.409l-5.523 1.68a.75.75 0 01-.935-.935l1.673-5.5a1.75 1.75 0 01.466-.756L14.476 4.963l2.787-2.786zm-2.275 4.371l-10.28 9.813a.25.25 0 00-.067.108l-1.264 4.154 4.177-1.271a.25.25 0 00.1-.059l10.273-9.806-2.94-2.939zM19 8.44l2.263-2.262a.25.25 0 000-.354l-2.586-2.586a.25.25 0 00-.354 0L16.061 5.5 19 8.44z"></path></svg>
                         </button>
+                    </div>
+                    <div id="about-me">
+                        <label style="z-index:3;" for="about-me-content" class="profile-data-key font-primary">ABOUT ME (<span id="about-me-length"></span>/200 characters)</label>
+                        <div id="about-me-container" class="mt-2">
+                            <textarea 
+                                id="about-me-content" 
+                                maxlength=200 
+                                spellcheck="false"
+                                onkeyup="update_remaining_characters();">I like trains.</textarea>
+                        </div>
                     </div>
                 </div>
                 <div class="oidc-button oidc-github mt-3">
@@ -131,14 +175,53 @@
                         Connect to Discord
                     </div>
                 </div>
-                <div id="about-me">
-                    <label style="z-index:3;" for="about-me-content" class="font-primary">ABOUT ME</label>
-                    <div style="position:relative;">
-                        <textarea id="about-me-content" maxlength=200 spellcheck="false">I like trains.</textarea>
-                        <span id="characters-remaining">200</span>
-                    </div>
-                </div>
+                <select id="timezone" class="mt-3">
+                    <option value="-12" selected="selected">(GMT - 12:00 hours) Enitwetok, Kwajalien</option>
+                    <option value="-11">(GMT - 11:00 hours) Midway Island, Samoa</option>
+                    <option value="-10">(GMT - 10:00 hours) Hawaii</option>
+                    <option value="-9">(GMT - 9:00 hours) Alaska</option>
+                    <option value="-8">(GMT - 8:00 hours) Pacific Time (US &amp; Canada)</option>
+                    <option value="-7">(GMT - 7:00 hours) Mountain Time (US &amp; Canada)</option>
+                    <option value="-6">(GMT - 6:00 hours) Central Time (US &amp; Canada), Mexico City</option>
+                    <option value="-5">(GMT - 5:00 hours) Eastern Time (US &amp; Canada), Bogota, Lima, Quito</option>
+                    <option value="-4">(GMT - 4:00 hours) Atlantic Time (Canada), Caracas, La Paz</option>
+                    <option value="-3">(GMT - 3:00 hours) Brazil, Buenos Aires, Georgetown, Falkland Is.</option>
+                    <option value="-2">(GMT - 2:00 hours) Mid-Atlantic, Ascention Is., St Helena</option>
+                    <option value="-1">(GMT - 1:00 hours) Azores, Cape Verde Islands</option>
+                    <option value="0">(GMT) Casablanca, Dublin, Edinburgh, London, Lisbon, Monrovia</option>
+                    <option value="1">(GMT + 1:00 hours) Berlin, Brussels, Copenhagen, Madrid, Paris, Rome</option>
+                    <option value="2">(GMT + 2:00 hours) Kaliningrad, South Africa, Warsaw</option>
+                    <option value="3">(GMT + 3:00 hours) Baghdad, Riyadh, Moscow, Nairobi</option>
+                    <option value="4">(GMT + 4:00 hours) Abu Dhabi, Baku, Muscat, Tbilisi</option>
+                    <option value="5">(GMT + 5:00 hours) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
+                    <option value="6">(GMT + 6:00 hours) Almaty, Colomba, Dhakra</option>
+                    <option value="7">(GMT + 7:00 hours) Bangkok, Hanoi, Jakarta</option>
+                    <option value="8">(GMT + 8:00 hours) Beijing, Hong Kong, Perth, Singapore, Taipei</option>
+                    <option value="9">(GMT + 9:00 hours) Osaka, Sapporo, Seoul, Tokyo, Yakutsk</option>
+                    <option value="10">(GMT + 10:00 hours) Melbourne, Papua New Guinea, Sydney, Vladivostok</option>
+                    <option value="11">(GMT + 11:00 hours) Magadan, New Caledonia, Solomon Islands</option>
+                    <option value="12">(GMT + 12:00 hours) Auckland, Wellington, Fiji, Marshall Island</option>
+                </select>
+            </div>
 
+            <div id="page-security" data-page="security">
+                <form>
+                    <div class="input-container">
+                        <label for="current-passphrase">Passphrase</label>
+                        <input type="password" id="current-passphrase" class="form-control input-primary input-underline" placeholder="Current Passphrase">
+                        <span class="underline"></span>
+                    </div>
+                    <div class="input-container">
+                        <label for="new-passphrase">New Passphrase</label>
+                        <input type="password" id="new-passphrase" class="form-control input-primary input-underline" placeholder="New Passphrase">
+                        <span class="underline"></span>
+                    </div>
+                    <div class="input-container">
+                        <label for="confirm-passphrase">Confirm Passphrase</label>
+                        <input type="password" id="confirm-passphrase" class="form-control input-primary input-underline" placeholder="Confirm Passphrase">
+                        <span class="underline"></span>
+                    </div>
+                </form>
             </div>
             <div id="page-privacy" data-page="privacy" class="font-primary">
                 <form>

@@ -32,12 +32,14 @@ function set_initial_frame(frame_name) {
 
 function grow_to(target_height) {
     let frame_container = get_frame_container();
-    return frame_container.animate(
-        {
-            height: "+=" + (target_height - frame_container.height()),
-        },
-        animation_duration,
-    ).promise();
+    if (target_height !== frame_container.height()) {
+        return frame_container.animate(
+            {
+                height: "+=" + (target_height - frame_container.height()),
+            },
+            animation_duration,
+        ).promise();
+    }
 }
 
 // Like next_frame, except sliding to the right
