@@ -1,4 +1,5 @@
 @import "main.scss";
+@import "select2.scss";
 
 // Eliminate useless defaults on contenteditable elements
 [contenteditable="true"]:active,
@@ -9,132 +10,257 @@
 
 // Dashboard stuff
 $navbar-width: 15%;
+$dashboard-width: 75%;
+$min-dashboard-height: 85%;
 
 .dashboard-container {
     position: relative;
+    top: calc((100% - $min-dashboard-height) / 2);
+    left: calc((100% - $dashboard-width) / 2);
     width: 75%;
-    height: 85%;
+    min-height: 85%;
     padding: 0!important;
     display: flex;
     flex-direction: row;
+
+    #dashboard-navigation-bar {
+        background: #202020;
+        color: $font-primary;
+        position: relative;
+        left: 0;
+        overflow: scroll;
+        font-size: 1.3rem;
+        width: $navbar-width;
+
+        #close-sidebar-btn {
+            background-color: rgba(0, 0, 0, 0);
+            margin: 5px;
+            padding: 3px;
+            height: min-content;
+            width: min-content;
+            border: none;
+
+            svg {
+                fill: $font-primary;
+            }
+        }
+
+        #dashboard-navigation-image {
+            width: 90%;
+            margin: 10px;
+        }
+
+        #dashboard-navigation-category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding-left: 20px;
+            padding-right: 20px;
+
+            .dashboard-category-title {
+                font-weight: bold;
+                font-size: 0.7rem;
+            }
+
+            .dashboard-navigation-target {
+                overflow: scroll;
+                display: flex;
+                flex-direction: column;
+                
+                a {
+                    text-decoration: none;
+                    color: $font-primary;
+                }
+            }
+        }
+    }
+
+
+    #dashboard-content {
+        position: relative;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+
+        #open-sidebar-btn {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0);
+            margin: 5px;
+            padding: 3px;
+            height: min-content;
+            width: min-content;
+            border: none;
+
+            svg {
+                fill: $font-primary;
+            }
+        }
+
+        #dashboard-content-title {
+            text-align: center;
+            margin-bottom: 0;
+        }
+
+        #dashboard-title-warning {
+            color: $font-primary;
+            font-size: 0.9rem;
+            margin: auto;
+            text-align: center;
+
+            svg {
+                fill: $font-primary;
+            }
+        }
+
+        hr {
+            margin-top: 2px;
+        }
+
+        #dashboard-page-container {
+            font-size: 20px;
+            flex-grow: 1; // take up all the remaining space
+            margin: 3rem;
+        }
+    }
+
+    #dashboard-content[data-dirty=false] #dashboard-title-warning {
+        opacity: 0;
+    }
 }
 
-.dashboard-navigation-bar {
-    background: #202020;
-    color: $font-primary;
-    position: relative;
-    left: 0;
-    height: 100%;
-    flex: $navbar-width;
-    overflow: scroll;
-    font-size: 1.3rem;
+
+// Profile page
+#page-profile {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    #profile-picture-container {
+        display: flex;
+        flex-direction: column;
+
+        // only needed to open the file upload form
+        input {
+            position: absolute;
+            width: 0;
+            height: 0;
+            opacity: 0;
+        }
+
+        #profile-picture {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: auto;
+
+            img {
+                border-radius: 2px;
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        #profile-picture-overlay {
+            border-radius: 2px;
+            opacity: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+
+            svg {
+                position: absolute;
+                bottom: 3px;
+                right: 3px;
+                fill: $font-primary;
+            }
+        }
+
+        #profile-picture-overlay:hover {
+            cursor: pointer;
+            opacity: 1;
+        }
+
+        #account-dates {
+            flex-grow: 1;
+            color: $font-primary;
+            font-size: 0.9rem;
+            margin: auto;
+            text-align: center;
+        }
+    }
+
+    #about-me {
+        grid-column: span 2;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        label {
+            position: relative;
+            left: 0;
+            top: 0;
+        }
+
+        #about-me-container {
+            position: relative;
+            left: 0;
+            flex-grow: 1;
+
+            textarea {
+                position: relative;
+                left: 0;
+                width: 70%;
+                height: 100%;
+                background-color: #212121;
+                border: 1px solid #444;
+                color: $font-primary;
+                padding: 5px 10px 5px 10px;
+                resize: none;
+            }
+
+            textarea:active, textarea:focus {
+                outline: none;
+            }
+        }
+
+
+    }
 }
 
-.dashboard-navigation-target {
-    overflow: scroll;
+
+#page-security {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
+
+    #change-passphrase, #add-mfa, #change-secret-question {
+        text-align: center;
+    }
 }
 
-.dashboard-navigation-category-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
-}
-
-.dashboard-navigation-image {
-    width: 90%;
-    margin: 10px;
-}
-
-.dashboard-navigation-target a {
-    text-decoration: none;
-    color: $font-primary;
-}
-
-.dashboard-category-title {
-    font-weight: bold;
-    font-size: 0.7rem;
-}
-
-.dashboard-content {
-    flex: 100% - $navbar-width;
-}
-
-#dashboard-content-title {
-    text-align: center;
-}
-
-.dashboard-page-container {
-    margin: 3rem;
-}
-
-// Account page
 #page-privacy {
     display: flex;
     flex-direction: row;
     justify-content: center;
+
+    #privacy-options-list, #submit-privacy {
+        margin: 0 auto;
+    }
+
+    .list-outer {
+        list-style: none;
+    }
+
+    .list-inner {
+        list-style: none;
+    }
 }
 
-#profile-picture {
-    position: relative;
-    width: 100px;
-    height: 100px;
-}
 
-#profile-picture img {
-    border-radius: 2px;
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-#profile-picture-overlay {
-    border-radius: 2px;
-    opacity: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-#profile-picture-overlay:hover {
-    cursor: pointer;
-    opacity: 1;
-}
-
-#profile-picture-container {
-    flex: 20%;
-    display: flex;
-    justify-content: center;
-    align-content: center;
-}
-
-#primary-data-container {
-    flex: 30%;
-}
-
-svg {
-    fill: $font-primary;
-}
-
-#profile-picture-overlay svg {
-    position: absolute;
-    bottom: 3px;
-    right: 3px;
-}
-
-.list-outer {
-    list-style: none;
-}
-
-.list-inner {
-    list-style: none;
-}
 
 
 // OIDC stuff
@@ -154,38 +280,37 @@ $discord-light: #fff;
     height: 50px;
     width: 280px;
     border-radius: 2px;
+
+    .oidc-icon {
+        flex: 20%;
+        padding: 5px;
+        border-width: 1px 0px 1px 1px;
+        border-style: solid;
+        border-radius: 2px;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    .oidc-text {
+        display: flex;
+        flex: 80%;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.4rem;
+        color: $font-primary;
+        border-radius: 2px;
+        border-width: 1px 1px 1px 0px;
+        border-style: solid;
+    }
 }
 
 .oidc-button:hover {
     cursor: pointer;
 }
 
-.oidc-icon {
-    flex: 20%;
-    padding: 5px;
-    border-width: 1px 0px 1px 1px;
-    border-style: solid;
-    border-radius: 2px;
-}
 
-.oidc-icon {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-}
-
-.oidc-text {
-    display: flex;
-    flex: 80%;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.4rem;
-    color: $font-primary;
-    border-radius: 2px;
-    border-width: 1px 1px 1px 0px;
-    border-style: solid;
-}
 
 .oidc-github {
     .oidc-icon {
@@ -255,51 +380,10 @@ span[contenteditable=true].editable-value {
 
 .edit-button {
     padding: 2px;
-}
 
-#profiledata-primary {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.dashboard-page-container {
-    font-size: 20px;
-}
-
-#about-me {
-    position: relative;
-    flex: 50%;
-    display: flex;
-    flex-direction: column;
-
-    label {
-        position: relative;
-        left: 0;
-        top: 0;
+    svg {
+        fill: $font-primary;
     }
-
-    #about-me-container {
-        position: relative;
-        left: 0;
-        flex-grow: 1;
-
-        textarea {
-            position: relative;
-            left: 0;
-            width: 70%;
-            height: 100%;
-            background-color: #212121;
-            border: 1px solid #444;
-            color: $font-primary;
-            padding: 5px 10px 5px 10px;
-            resize: none;
-        }
-
-        textarea:active, textarea:focus {
-            outline: none;
-        }
-    }
-
-
 }
+
+

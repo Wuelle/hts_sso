@@ -135,6 +135,15 @@ input:checked + .slider:before {
   transform: translateX(1rem);
 }
 
+.href-primary {
+  color: #eee;
+}
+
+.href-primary:hover {
+  color: #eee;
+  filter: brightness(0.7);
+}
+
 .href-secondary {
   color: #bbb;
 }
@@ -224,6 +233,7 @@ input:checked + .slider:before {
 }
 
 html, body {
+  width: 100%;
   height: 100%;
 }
 
@@ -278,7 +288,7 @@ hr {
   position: relative;
   color: #eee;
   width: 80%;
-  left: 10%;
+  margin: auto;
 }
 
 /*# sourceMappingURL=bootstrap.css.map */

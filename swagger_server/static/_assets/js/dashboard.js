@@ -1,4 +1,15 @@
 let active_page = "profile";  // initial page, can be overriden by fragment link
+let is_dirty = false;
+let animation_duration = 400;  // ms
+
+$(window).on("beforeunload", () => {
+    if (is_dirty) {
+        // This message is not actually displayed (in firefox at least)
+        // but the fact that we return a nonempty string leads to the browser
+        // asking the user effectively the same thing
+        return "You have unsaved changes, are you sure you want to leave?";
+    }
+});
 
 $(document).ready(() => {
     if (window.location.href.indexOf("#") != -1) {
@@ -11,7 +22,7 @@ $(document).ready(() => {
     $(".contains-username").text("Alaska");
 
     $("[page-container]").append(get_page(active_page));
-    $("#timezone").select2();
+    // $("#timezone").select2();
 
     $('#account-delete-modal').on('shown.bs.modal', function (e) {
         console.log("shown");
@@ -33,6 +44,20 @@ function show_page(page_name) {
 
 function on_profile_picture_click() {
     $("#profile-picture-upload").click();
+}
+
+function on_profile_picture_upload() {
+    let new_pp = $("#profile-picture-upload")[0].files[0];
+
+    // 20kB max
+    if (new_pp.size > 20 * 1024) {
+        alert("too large");
+    } else {
+        let url = URL.createObjectURL(new_pp);
+        console.log(url);
+        $("#profile-picture")[0].src = url;
+        console.log("update pp");
+    }
 }
 
 function edit(name) {
@@ -61,4 +86,24 @@ function update_remaining_characters() {
     // the "maxlength" attribute on the textarea is set, those aren't possible
     // in normal operation
     $("#about-me-length").text(about_me.length);
+}
+
+function set_sidebar_visible(visibility) {
+    let width;
+    if (visibility) {
+        width = "15%";
+    } else {
+        width = 0;
+    }
+
+    $("#dashboard-navigation-bar").animate(
+        {
+            width: width,
+        },
+        animation_duration,
+    );
+}
+
+function set_dashboard_dirty(dirty) {
+    $("#dashboard-content").attr("data-dirty", dirty);
 }

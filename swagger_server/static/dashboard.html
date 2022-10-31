@@ -22,7 +22,7 @@
 		<script type="text/javascript" src="http://172.17.0.2:8080/static/_assets/js/session.js"></script>
 		<script type="text/javascript" src="http://172.17.0.2:8080/static/_assets/js/dashboard.js"></script>
 	</head>
-	<body class="background flex-center">
+	<body class="background">
 		<div id="account-delete-modal" class="modal" tabindex="-1" role="dialog">
   			<div class="modal-dialog" role="document">
     			<div class="modal-content">
@@ -55,9 +55,12 @@
   			</div>
 		</div>
         <div class="elevated dashboard-container" autocomplete="off">
-            <div class="dashboard-navigation-bar">
-				<img src="https://data.htscdn.org/images/hackthissite-meta-card.png" alt="HackThisSite Logo" class="rounded img-fluid bg-dark dashboard-navigation-image">
-                <div class="dashboard-navigation-category-list">
+            <div id="dashboard-navigation-bar">
+				<img id="dashboard-navigation-image" src="https://data.htscdn.org/images/hackthissite-meta-card.png" alt="HackThisSite Logo" class="rounded img-fluid bg-dark">
+                <button type="button" id="close-sidebar-btn" onclick="set_sidebar_visible(false);">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg>
+                </button>
+                <div id="dashboard-navigation-category-list">
                     <div class="dashboard-navigation-category">
                         <span class="dashboard-category-title">GENERAL</span>
                         <div class="dashboard-navigation-target">
@@ -69,7 +72,7 @@
                         <div class="dashboard-navigation-target">
                             <a href="#Privacy" onclick="show_page('privacy');">Privacy</a>
                         </div>
-                        </div>
+                    </div>
                     <div class="dashboard-navigation-category">
                         <span class="dashboard-category-title">MODERATION</span>
                         <div class="dashboard-navigation-target">
@@ -84,143 +87,229 @@
                     </div>
                 </div>
             </div>
-            <div class="dashboard-content"> 
+            <div id="dashboard-content" data-dirty=false> 
+                <button id="open-sidebar-btn" aria-label="open sidebar" type="button" onclick="set_sidebar_visible(true);">
+                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z"></path></svg>
+                </button>
                 <h1 id="dashboard-content-title" class="mt-3 font-primary">Account Dashboard</h1>
+                <span id="dashboard-title-warning"> 
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M8.22 1.754a.25.25 0 00-.44 0L1.698 13.132a.25.25 0 00.22.368h12.164a.25.25 0 00.22-.368L8.22 1.754zm-1.763-.707c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0114.082 15H1.918a1.75 1.75 0 01-1.543-2.575L6.457 1.047zM9 11a1 1 0 11-2 0 1 1 0 012 0zm-.25-5.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5z"></path></svg>
+                    Careful, you have unsaved changes!
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M8.22 1.754a.25.25 0 00-.44 0L1.698 13.132a.25.25 0 00.22.368h12.164a.25.25 0 00.22-.368L8.22 1.754zm-1.763-.707c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0114.082 15H1.918a1.75 1.75 0 01-1.543-2.575L6.457 1.047zM9 11a1 1 0 11-2 0 1 1 0 012 0zm-.25-5.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5z"></path></svg>
+                </span>
                 <hr>
-                <div class="dashboard-page-container" page-container>
+                <div id="dashboard-page-container" page-container>
                 </div>
             </div>
         </div>
         <div page-store style="display:none;">
             <div id="page-profile" data-page="profile">
-                <div id="profiledata-primary">
-                    <div id="profile-picture-container">
-                        <input id="profile-picture-upload" type="file" style="position:absolute;opacity:0;" accept="image/x-png,image/gif,image/jpeg">
-                        <div id="profile-picture" onclick="on_profile_picture_click()">
-                            <img src="https://www.hackthissite.org/pages/user/avatar.view.php?id=standard/terrora.jpg" alt="Profile Picture">
-                            <div id="profile-picture-overlay">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M17.263 2.177a1.75 1.75 0 012.474 0l2.586 2.586a1.75 1.75 0 010 2.474L19.53 10.03l-.012.013L8.69 20.378a1.75 1.75 0 01-.699.409l-5.523 1.68a.75.75 0 01-.935-.935l1.673-5.5a1.75 1.75 0 01.466-.756L14.476 4.963l2.787-2.786zm-2.275 4.371l-10.28 9.813a.25.25 0 00-.067.108l-1.264 4.154 4.177-1.271a.25.25 0 00.1-.059l10.273-9.806-2.94-2.939zM19 8.44l2.263-2.262a.25.25 0 000-.354l-2.586-2.586a.25.25 0 00-.354 0L16.061 5.5 19 8.44z"></path></svg>
-                            </div>
+                <div id="profile-picture-container">
+                    <input id="profile-picture-upload" type="file" accept="image/png,image/gif,image/jpeg" onchange="on_profile_picture_upload();">
+                    <div id="profile-picture" onclick="on_profile_picture_click()">
+                        <img id="profile-picture" src="https://www.hackthissite.org/pages/user/avatar.view.php?id=standard/terrora.jpg" alt="Profile Picture">
+                        <div id="profile-picture-overlay">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M17.263 2.177a1.75 1.75 0 012.474 0l2.586 2.586a1.75 1.75 0 010 2.474L19.53 10.03l-.012.013L8.69 20.378a1.75 1.75 0 01-.699.409l-5.523 1.68a.75.75 0 01-.935-.935l1.673-5.5a1.75 1.75 0 01.466-.756L14.476 4.963l2.787-2.786zm-2.275 4.371l-10.28 9.813a.25.25 0 00-.067.108l-1.264 4.154 4.177-1.271a.25.25 0 00.1-.059l10.273-9.806-2.94-2.939zM19 8.44l2.263-2.262a.25.25 0 000-.354l-2.586-2.586a.25.25 0 00-.354 0L16.061 5.5 19 8.44z"></path></svg>
                         </div>
                     </div>
+                    <div id="account-dates">
+                        <em>Last Login <span id="last-logged-in-date">21.10.21</span></em>
+                        <br>
+                        <em>Joined <span id="joined-date">21.10.21</span></em>
+                    </div>
+                </div>
 
-                    <div id="primary-data-container" class="font-primary">
-                        <label class="profile-data-key" for="account-name">ACCOUNT NAME </label><br><span id="account-name" class="profile-data-value">Wuelle</span>
-                        <br>
-                        <label class="profile-data-key" for="display-name">DISPLAY NAME</label><br>
-                        <span 
-                            id="display-name" 
-                            class="profile-data-value editable-value" 
-                            onfocusout="stop_editing('display-name');"
-                            spellcheck="false" 
-                            contenteditable="false"
-                        >Alaska</span>
-                        <button class="button-primary edit-button" onclick="edit('display-name');">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M17.263 2.177a1.75 1.75 0 012.474 0l2.586 2.586a1.75 1.75 0 010 2.474L19.53 10.03l-.012.013L8.69 20.378a1.75 1.75 0 01-.699.409l-5.523 1.68a.75.75 0 01-.935-.935l1.673-5.5a1.75 1.75 0 01.466-.756L14.476 4.963l2.787-2.786zm-2.275 4.371l-10.28 9.813a.25.25 0 00-.067.108l-1.264 4.154 4.177-1.271a.25.25 0 00.1-.059l10.273-9.806-2.94-2.939zM19 8.44l2.263-2.262a.25.25 0 000-.354l-2.586-2.586a.25.25 0 00-.354 0L16.061 5.5 19 8.44z"></path></svg>
-                        </button>
-                        <br>
-                        <label class="profile-data-key" for="email">EMAIL</label><br>
-                        <span 
-                            id="email" 
-                            class="profile-data-value editable-value" 
-                            onfocusout="stop_editing('email');"
-                            spellcheck="false" 
-                            contenteditable="false"
-                        >foo@example.com</span>
-                        <button class="button-primary edit-button" onclick="edit('email');">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M17.263 2.177a1.75 1.75 0 012.474 0l2.586 2.586a1.75 1.75 0 010 2.474L19.53 10.03l-.012.013L8.69 20.378a1.75 1.75 0 01-.699.409l-5.523 1.68a.75.75 0 01-.935-.935l1.673-5.5a1.75 1.75 0 01.466-.756L14.476 4.963l2.787-2.786zm-2.275 4.371l-10.28 9.813a.25.25 0 00-.067.108l-1.264 4.154 4.177-1.271a.25.25 0 00.1-.059l10.273-9.806-2.94-2.939zM19 8.44l2.263-2.262a.25.25 0 000-.354l-2.586-2.586a.25.25 0 00-.354 0L16.061 5.5 19 8.44z"></path></svg>
-                        </button>
+                <div id="primary-data-container" class="font-primary">
+                    <label class="profile-data-key" for="account-name">ACCOUNT NAME </label><br><span id="account-name" class="profile-data-value">Wuelle</span>
+                    <br>
+                    <label class="profile-data-key" for="display-name">DISPLAY NAME</label><br>
+                    <span 
+                        id="display-name" 
+                        class="profile-data-value editable-value" 
+                        onfocusout="stop_editing('display-name');"
+                        spellcheck="false" 
+                        contenteditable="false"
+                    >Alaska</span>
+                    <button class="button-primary edit-button" onclick="edit('display-name');">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M17.263 2.177a1.75 1.75 0 012.474 0l2.586 2.586a1.75 1.75 0 010 2.474L19.53 10.03l-.012.013L8.69 20.378a1.75 1.75 0 01-.699.409l-5.523 1.68a.75.75 0 01-.935-.935l1.673-5.5a1.75 1.75 0 01.466-.756L14.476 4.963l2.787-2.786zm-2.275 4.371l-10.28 9.813a.25.25 0 00-.067.108l-1.264 4.154 4.177-1.271a.25.25 0 00.1-.059l10.273-9.806-2.94-2.939zM19 8.44l2.263-2.262a.25.25 0 000-.354l-2.586-2.586a.25.25 0 00-.354 0L16.061 5.5 19 8.44z"></path></svg>
+                    </button>
+                    <br>
+                    <label class="profile-data-key" for="email">EMAIL</label><br>
+                    <span 
+                        id="email" 
+                        class="profile-data-value editable-value" 
+                        onfocusout="stop_editing('email');"
+                        spellcheck="false" 
+                        contenteditable="false"
+                    >foo@example.com</span>
+                    <button class="button-primary edit-button" onclick="edit('email');">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M17.263 2.177a1.75 1.75 0 012.474 0l2.586 2.586a1.75 1.75 0 010 2.474L19.53 10.03l-.012.013L8.69 20.378a1.75 1.75 0 01-.699.409l-5.523 1.68a.75.75 0 01-.935-.935l1.673-5.5a1.75 1.75 0 01.466-.756L14.476 4.963l2.787-2.786zm-2.275 4.371l-10.28 9.813a.25.25 0 00-.067.108l-1.264 4.154 4.177-1.271a.25.25 0 00.1-.059l10.273-9.806-2.94-2.939zM19 8.44l2.263-2.262a.25.25 0 000-.354l-2.586-2.586a.25.25 0 00-.354 0L16.061 5.5 19 8.44z"></path></svg>
+                    </button>
+                </div>
+
+                <div id="about-me">
+                    <label style="z-index:3;" for="about-me-content" class="profile-data-key font-primary">ABOUT ME (<span id="about-me-length"></span>/200 characters)</label>
+                    <div id="about-me-container" class="mt-2">
+                        <textarea 
+                            id="about-me-content" 
+                            maxlength=200 
+                            spellcheck="false"
+                            onkeyup="update_remaining_characters();">I like trains.</textarea>
                     </div>
-                    <div id="about-me">
-                        <label style="z-index:3;" for="about-me-content" class="profile-data-key font-primary">ABOUT ME (<span id="about-me-length"></span>/200 characters)</label>
-                        <div id="about-me-container" class="mt-2">
-                            <textarea 
-                                id="about-me-content" 
-                                maxlength=200 
-                                spellcheck="false"
-                                onkeyup="update_remaining_characters();">I like trains.</textarea>
+                </div>
+
+                <div id="secondary-data-container" class="font-primary">
+                    <label class="profile-data-key" for="website">WEBSITE</label><br>
+                    <span 
+                        id="website" 
+                        class="profile-data-value editable-value"
+                        onfocusout="stop_editing('website');"
+                        spellcheck="false" 
+                        contenteditable="false"
+                    >
+                        <a class="href-primary" href="https://hackthissite.org" rel="nofollow">hackthissite.org</a>
+                    </span>
+                    <button class="button-primary edit-button" onclick="edit('website');">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M17.263 2.177a1.75 1.75 0 012.474 0l2.586 2.586a1.75 1.75 0 010 2.474L19.53 10.03l-.012.013L8.69 20.378a1.75 1.75 0 01-.699.409l-5.523 1.68a.75.75 0 01-.935-.935l1.673-5.5a1.75 1.75 0 01.466-.756L14.476 4.963l2.787-2.786zm-2.275 4.371l-10.28 9.813a.25.25 0 00-.067.108l-1.264 4.154 4.177-1.271a.25.25 0 00.1-.059l10.273-9.806-2.94-2.939zM19 8.44l2.263-2.262a.25.25 0 000-.354l-2.586-2.586a.25.25 0 00-.354 0L16.061 5.5 19 8.44z"></path></svg>
+                    </button>
+                    <br>
+
+                    <label class="profile-data-key" for="timezone">TIMEZONE</label><br>
+                    <span 
+                        id="timezone" 
+                        class="profile-data-value editable-value" 
+                        onfocusout="stop_editing('timezone');"
+                        spellcheck="false" 
+                        contenteditable="false"
+                    >North Carolina</span>
+                    <button class="button-primary edit-button" onclick="edit('display-name');">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M17.263 2.177a1.75 1.75 0 012.474 0l2.586 2.586a1.75 1.75 0 010 2.474L19.53 10.03l-.012.013L8.69 20.378a1.75 1.75 0 01-.699.409l-5.523 1.68a.75.75 0 01-.935-.935l1.673-5.5a1.75 1.75 0 01.466-.756L14.476 4.963l2.787-2.786zm-2.275 4.371l-10.28 9.813a.25.25 0 00-.067.108l-1.264 4.154 4.177-1.271a.25.25 0 00.1-.059l10.273-9.806-2.94-2.939zM19 8.44l2.263-2.262a.25.25 0 000-.354l-2.586-2.586a.25.25 0 00-.354 0L16.061 5.5 19 8.44z"></path></svg>
+                    </button>
+                </div>
+
+
+                <div id="oidc-connect">
+                    <div class="oidc-button oidc-github mt-3">
+                        <div class="oidc-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                        </div>
+                        <div class="oidc-text">
+                            Connect to GitHub
+                        </div>
+                    </div>
+                    <div class="oidc-button oidc-gitlab mt-3">
+                        <div class="oidc-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 380"><defs><style>.cls-1{fill:#e24329;}.cls-2{fill:#fc6d26;}.cls-3{fill:#fca326;}</style></defs><g id="LOGO"><path class="cls-1" d="M282.83,170.73l-.27-.69-26.14-68.22a6.81,6.81,0,0,0-2.69-3.24,7,7,0,0,0-8,.43,7,7,0,0,0-2.32,3.52l-17.65,54H154.29l-17.65-54A6.86,6.86,0,0,0,134.32,99a7,7,0,0,0-8-.43,6.87,6.87,0,0,0-2.69,3.24L97.44,170l-.26.69a48.54,48.54,0,0,0,16.1,56.1l.09.07.24.17,39.82,29.82,19.7,14.91,12,9.06a8.07,8.07,0,0,0,9.76,0l12-9.06,19.7-14.91,40.06-30,.1-.08A48.56,48.56,0,0,0,282.83,170.73Z"/><path class="cls-2" d="M282.83,170.73l-.27-.69a88.3,88.3,0,0,0-35.15,15.8L190,229.25c19.55,14.79,36.57,27.64,36.57,27.64l40.06-30,.1-.08A48.56,48.56,0,0,0,282.83,170.73Z"/><path class="cls-3" d="M153.43,256.89l19.7,14.91,12,9.06a8.07,8.07,0,0,0,9.76,0l12-9.06,19.7-14.91S209.55,244,190,229.25C170.45,244,153.43,256.89,153.43,256.89Z"/><path class="cls-2" d="M132.58,185.84A88.19,88.19,0,0,0,97.44,170l-.26.69a48.54,48.54,0,0,0,16.1,56.1l.09.07.24.17,39.82,29.82s17-12.85,36.57-27.64Z"/></g></svg>
+                        </div>
+                        <div class="oidc-text">
+                            Connect to GitLab
+                        </div>
+                    </div>
+                    <div class="oidc-button oidc-discord mt-3">
+                        <div class="oidc-icon">
+                            <svg viewBox="0 0 71 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0)">
+                                <path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z" fill="#5865F2"/>
+                                </g>
+                                <defs>
+                                <clipPath id="clip0">
+                                <rect width="71" height="55" fill="white"/>
+                                </clipPath>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="oidc-text">
+                            Connect to Discord
                         </div>
                     </div>
                 </div>
-                <div class="oidc-button oidc-github mt-3">
-                    <div class="oidc-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-                    </div>
-                    <div class="oidc-text">
-                        Connect to GitHub
-                    </div>
+
+                <div id="secondary-account-data"> 
+                    <!--
+                    <select id="timezone" class="mt-3">
+                        <option value="-12" selected="selected">(GMT - 12:00 hours) Enitwetok, Kwajalien</option>
+                        <option value="-11">(GMT - 11:00 hours) Midway Island, Samoa</option>
+                        <option value="-10">(GMT - 10:00 hours) Hawaii</option>
+                        <option value="-9">(GMT - 9:00 hours) Alaska</option>
+                        <option value="-8">(GMT - 8:00 hours) Pacific Time (US &amp; Canada)</option>
+                        <option value="-7">(GMT - 7:00 hours) Mountain Time (US &amp; Canada)</option>
+                        <option value="-6">(GMT - 6:00 hours) Central Time (US &amp; Canada), Mexico City</option>
+                        <option value="-5">(GMT - 5:00 hours) Eastern Time (US &amp; Canada), Bogota, Lima, Quito</option>
+                        <option value="-4">(GMT - 4:00 hours) Atlantic Time (Canada), Caracas, La Paz</option>
+                        <option value="-3">(GMT - 3:00 hours) Brazil, Buenos Aires, Georgetown, Falkland Is.</option>
+                        <option value="-2">(GMT - 2:00 hours) Mid-Atlantic, Ascention Is., St Helena</option>
+                        <option value="-1">(GMT - 1:00 hours) Azores, Cape Verde Islands</option>
+                        <option value="0">(GMT) Casablanca, Dublin, Edinburgh, London, Lisbon, Monrovia</option>
+                        <option value="1">(GMT + 1:00 hours) Berlin, Brussels, Copenhagen, Madrid, Paris, Rome</option>
+                        <option value="2">(GMT + 2:00 hours) Kaliningrad, South Africa, Warsaw</option>
+                        <option value="3">(GMT + 3:00 hours) Baghdad, Riyadh, Moscow, Nairobi</option>
+                        <option value="4">(GMT + 4:00 hours) Abu Dhabi, Baku, Muscat, Tbilisi</option>
+                        <option value="5">(GMT + 5:00 hours) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
+                        <option value="6">(GMT + 6:00 hours) Almaty, Colomba, Dhakra</option>
+                        <option value="7">(GMT + 7:00 hours) Bangkok, Hanoi, Jakarta</option>
+                        <option value="8">(GMT + 8:00 hours) Beijing, Hong Kong, Perth, Singapore, Taipei</option>
+                        <option value="9">(GMT + 9:00 hours) Osaka, Sapporo, Seoul, Tokyo, Yakutsk</option>
+                        <option value="10">(GMT + 10:00 hours) Melbourne, Papua New Guinea, Sydney, Vladivostok</option>
+                        <option value="11">(GMT + 11:00 hours) Magadan, New Caledonia, Solomon Islands</option>
+                        <option value="12">(GMT + 12:00 hours) Auckland, Wellington, Fiji, Marshall Island</option>
+                    </select>
+                    -->
                 </div>
-                <div class="oidc-button oidc-gitlab mt-3">
-                    <div class="oidc-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 380"><defs><style>.cls-1{fill:#e24329;}.cls-2{fill:#fc6d26;}.cls-3{fill:#fca326;}</style></defs><g id="LOGO"><path class="cls-1" d="M282.83,170.73l-.27-.69-26.14-68.22a6.81,6.81,0,0,0-2.69-3.24,7,7,0,0,0-8,.43,7,7,0,0,0-2.32,3.52l-17.65,54H154.29l-17.65-54A6.86,6.86,0,0,0,134.32,99a7,7,0,0,0-8-.43,6.87,6.87,0,0,0-2.69,3.24L97.44,170l-.26.69a48.54,48.54,0,0,0,16.1,56.1l.09.07.24.17,39.82,29.82,19.7,14.91,12,9.06a8.07,8.07,0,0,0,9.76,0l12-9.06,19.7-14.91,40.06-30,.1-.08A48.56,48.56,0,0,0,282.83,170.73Z"/><path class="cls-2" d="M282.83,170.73l-.27-.69a88.3,88.3,0,0,0-35.15,15.8L190,229.25c19.55,14.79,36.57,27.64,36.57,27.64l40.06-30,.1-.08A48.56,48.56,0,0,0,282.83,170.73Z"/><path class="cls-3" d="M153.43,256.89l19.7,14.91,12,9.06a8.07,8.07,0,0,0,9.76,0l12-9.06,19.7-14.91S209.55,244,190,229.25C170.45,244,153.43,256.89,153.43,256.89Z"/><path class="cls-2" d="M132.58,185.84A88.19,88.19,0,0,0,97.44,170l-.26.69a48.54,48.54,0,0,0,16.1,56.1l.09.07.24.17,39.82,29.82s17-12.85,36.57-27.64Z"/></g></svg>
-                    </div>
-                    <div class="oidc-text">
-                        Connect to GitLab
-                    </div>
-                </div>
-                <div class="oidc-button oidc-discord mt-3">
-                    <div class="oidc-icon">
-                        <svg viewBox="0 0 71 55" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g clip-path="url(#clip0)">
-                            <path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z" fill="#5865F2"/>
-                            </g>
-                            <defs>
-                            <clipPath id="clip0">
-                            <rect width="71" height="55" fill="white"/>
-                            </clipPath>
-                            </defs>
-                        </svg>
-                    </div>
-                    <div class="oidc-text">
-                        Connect to Discord
-                    </div>
-                </div>
-                <select id="timezone" class="mt-3">
-                    <option value="-12" selected="selected">(GMT - 12:00 hours) Enitwetok, Kwajalien</option>
-                    <option value="-11">(GMT - 11:00 hours) Midway Island, Samoa</option>
-                    <option value="-10">(GMT - 10:00 hours) Hawaii</option>
-                    <option value="-9">(GMT - 9:00 hours) Alaska</option>
-                    <option value="-8">(GMT - 8:00 hours) Pacific Time (US &amp; Canada)</option>
-                    <option value="-7">(GMT - 7:00 hours) Mountain Time (US &amp; Canada)</option>
-                    <option value="-6">(GMT - 6:00 hours) Central Time (US &amp; Canada), Mexico City</option>
-                    <option value="-5">(GMT - 5:00 hours) Eastern Time (US &amp; Canada), Bogota, Lima, Quito</option>
-                    <option value="-4">(GMT - 4:00 hours) Atlantic Time (Canada), Caracas, La Paz</option>
-                    <option value="-3">(GMT - 3:00 hours) Brazil, Buenos Aires, Georgetown, Falkland Is.</option>
-                    <option value="-2">(GMT - 2:00 hours) Mid-Atlantic, Ascention Is., St Helena</option>
-                    <option value="-1">(GMT - 1:00 hours) Azores, Cape Verde Islands</option>
-                    <option value="0">(GMT) Casablanca, Dublin, Edinburgh, London, Lisbon, Monrovia</option>
-                    <option value="1">(GMT + 1:00 hours) Berlin, Brussels, Copenhagen, Madrid, Paris, Rome</option>
-                    <option value="2">(GMT + 2:00 hours) Kaliningrad, South Africa, Warsaw</option>
-                    <option value="3">(GMT + 3:00 hours) Baghdad, Riyadh, Moscow, Nairobi</option>
-                    <option value="4">(GMT + 4:00 hours) Abu Dhabi, Baku, Muscat, Tbilisi</option>
-                    <option value="5">(GMT + 5:00 hours) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
-                    <option value="6">(GMT + 6:00 hours) Almaty, Colomba, Dhakra</option>
-                    <option value="7">(GMT + 7:00 hours) Bangkok, Hanoi, Jakarta</option>
-                    <option value="8">(GMT + 8:00 hours) Beijing, Hong Kong, Perth, Singapore, Taipei</option>
-                    <option value="9">(GMT + 9:00 hours) Osaka, Sapporo, Seoul, Tokyo, Yakutsk</option>
-                    <option value="10">(GMT + 10:00 hours) Melbourne, Papua New Guinea, Sydney, Vladivostok</option>
-                    <option value="11">(GMT + 11:00 hours) Magadan, New Caledonia, Solomon Islands</option>
-                    <option value="12">(GMT + 12:00 hours) Auckland, Wellington, Fiji, Marshall Island</option>
-                </select>
             </div>
 
             <div id="page-security" data-page="security">
-                <form>
-                    <div class="input-container">
-                        <label for="current-passphrase">Passphrase</label>
-                        <input type="password" id="current-passphrase" class="form-control input-primary input-underline" placeholder="Current Passphrase">
-                        <span class="underline"></span>
+                <form id="change-passphrase" class="grouped-inputs">
+                    <div class="font-primary">
+                        Change your passphrase
                     </div>
-                    <div class="input-container">
-                        <label for="new-passphrase">New Passphrase</label>
+                    <div class="input-container mt-3">
+                        <label for="new-passphrase" class="visually-hidden">New Passphrase</label>
                         <input type="password" id="new-passphrase" class="form-control input-primary input-underline" placeholder="New Passphrase">
                         <span class="underline"></span>
                     </div>
-                    <div class="input-container">
-                        <label for="confirm-passphrase">Confirm Passphrase</label>
+                    <div class="input-container mt-2">
+                        <label for="confirm-passphrase" class="visually-hidden">Confirm Passphrase</label>
                         <input type="password" id="confirm-passphrase" class="form-control input-primary input-underline" placeholder="Confirm Passphrase">
                         <span class="underline"></span>
                     </div>
+                </form>
+                <form id="add-mfa" class="grouped-inputs">
+                    <div class="font-primary">
+                        Add Multi-factor Authentication<br>to your account
+                    </div>
+                    <div class="input-container mt-3">
+                        <label for="phone-number" class="visually-hidden">Phone Number</label>
+                        <input type="text" id="phone-number" class="form-control input-primary input-underline" placeholder="Phone number">
+                        <span class="underline"></span>
+                    </div>
+                </form>
+                <form id="change-secret-question" class="grouped-inputs">
+                    <div class="font-primary">
+                        Change your secret question
+                    </div>
+                    <div class="input-container mt-3">
+                        <label for="new-secret-question" class="visually-hidden">New Secret question</label>
+                        <input type="text" id="new-secret-question" class="form-control input-primary input-underline" placeholder="New Secret question">
+                        <span class="underline"></span>
+                    </div>
+                    <div class="input-container mt-2">
+                        <label for="new-passphrase" class="visually-hidden">Secret answer</label>
+                        <input type="password" id="new-passphrase" class="form-control input-primary input-underline" placeholder="Secret Answer">
+                        <span class="underline"></span>
+                    </div>
+                    <div class="input-container mt-2">
+                        <label for="confirm-passphrase" class="visually-hidden">Confirm secret answer</label>
+                        <input type="password" id="confirm-passphrase" class="form-control input-primary input-underline" placeholder="Confirm Secret Answer">
+                        <span class="underline"></span>
+                    </div>
+                    <div class="checkbox-container mt-3">
+                        <input type="checkbox" id="no-secret-question" class="form-check-input">
+                        <br>
+                        <label for="no-secret-question" class="font-primary fst-italic">
+                            <em style="font-size:0.9rem;">I do not want to use a secret question</em>
+                        </label>
+                    </div>
+
                 </form>
             </div>
             <div id="page-privacy" data-page="privacy" class="font-primary">
@@ -228,8 +317,8 @@
                     These settings apply to your public profile and in <a class="href-secondary" href="https://www.hackthissite.org/discord">our Discord server</a>.
                     <br>
                     <em>Note that HackThisSite Staff can <b>always</b> see these hidden values.</em>
-                    <div class="privacy-options grouped-inputs mt-3">
-                        <ul style="text-align:left;" class="list-outer">
+                    <div id="privacy-options" class="grouped-inputs mt-3">
+                        <ul id="privacy-options-list" style="text-align:left;" class="list-outer">
                             <li>
                                 Email address
                                 <ul class="list-inner">
@@ -288,6 +377,7 @@
                                 </ul>
                             </li>
                         </ul>
+					    <button id="submit-privacy" class="btn btn-lg btn-primary button-primary btn-block">Submit</button>
                     </div>
                 </div>
             </form>
