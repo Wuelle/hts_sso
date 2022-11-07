@@ -138,58 +138,65 @@ $min-dashboard-height: 85%;
         display: flex;
         flex-direction: column;
 
-        // only needed to open the file upload form
-        input {
-            position: absolute;
-            width: 0;
-            height: 0;
-            opacity: 0;
-        }
-
-        #profile-picture {
-            position: relative;
-            width: 100px;
-            height: 100px;
+        .grouped-inputs {
+            width: min-content;
             margin: auto;
 
-            img {
-                border-radius: 2px;
+            // only needed to open the file upload form
+            input {
+                position: absolute;
+                width: 0;
+                height: 0;
+                opacity: 0;
+            }
+
+            #profile-picture {
                 position: relative;
+                width: 150px;
+                height: 150px;
+                margin: auto;
+
+                img {
+                    border-radius: 2px;
+                    position: relative;
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+
+            #profile-picture-overlay {
+                border-radius: 2px;
+                opacity: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                position: absolute;
+                top: 0;
+                left: 0;
                 width: 100%;
                 height: 100%;
+
+                svg {
+                    position: absolute;
+                    bottom: 3px;
+                    right: 3px;
+                    fill: $font-primary;
+                }
             }
-        }
 
-        #profile-picture-overlay {
-            border-radius: 2px;
-            opacity: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-
-            svg {
-                position: absolute;
-                bottom: 3px;
-                right: 3px;
-                fill: $font-primary;
+            #profile-picture-overlay:hover {
+                cursor: pointer;
+                opacity: 1;
             }
+
+            #account-dates {
+                flex-grow: 1;
+                color: $font-primary;
+                font-size: 0.9rem;
+                margin: auto;
+                text-align: center;
+            }
+
         }
 
-        #profile-picture-overlay:hover {
-            cursor: pointer;
-            opacity: 1;
-        }
-
-        #account-dates {
-            flex-grow: 1;
-            color: $font-primary;
-            font-size: 0.9rem;
-            margin: auto;
-            text-align: center;
-        }
     }
 
     #about-me {
@@ -226,16 +233,20 @@ $min-dashboard-height: 85%;
                 outline: none;
             }
         }
-
-
     }
+}
+
+.gmt-offset {
+    font-size: 0.9rem;
+    font-style: italic;
 }
 
 
 #page-security {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-evenly;
+    flex-grow: 1;
 
     #change-passphrase, #add-mfa, #change-secret-question {
         text-align: center;
@@ -247,8 +258,13 @@ $min-dashboard-height: 85%;
     flex-direction: row;
     justify-content: center;
 
+    form {
+        text-align: center;
+    }
+
     #privacy-options-list, #submit-privacy {
-        margin: 0 auto;
+        display: block;
+        margin: 1rem auto 0 auto;
     }
 
     .list-outer {
@@ -386,4 +402,9 @@ span[contenteditable=true].editable-value {
     }
 }
 
-
+@media(min-width: 800px) {
+    // opening/closing the sidebar isn't necessary if the screen is large enough
+    #open-sidebar-btn, #close-sidebar-btn {
+        display: none;
+    }
+}

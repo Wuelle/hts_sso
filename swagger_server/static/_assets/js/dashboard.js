@@ -22,7 +22,23 @@ $(document).ready(() => {
     $(".contains-username").text("Alaska");
 
     $("[page-container]").append(get_page(active_page));
-    // $("#timezone").select2();
+    $("#timezone").select2({
+        theme: "hackthissite",
+        placeholder: "Select an option",
+        escapeMarkup: function(markup) {
+            return markup;
+        },
+        templateResult: (data) => {
+            if (data.hasOwnProperty("loading") && data["loading"]) {
+                return data;
+            } else {
+                return "<span class='gmt-offset'>(GMT" + data.element.attributes["gmt-offset"].value + ")</span>:<br>" + data.element.attributes["locations"].value
+            }
+        }
+    });
+    $("#timezone").on("select2:open", () => {
+        $('input.select2-search__field').attr('placeholder', 'Search');
+    });
 
     $('#account-delete-modal').on('shown.bs.modal', function (e) {
         console.log("shown");
