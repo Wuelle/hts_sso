@@ -154,9 +154,17 @@ body {
     #column-right {
         flex-basis: 66%;
         flex-grow: 0;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        background-color: blue;
+        display: flex;
+        flex-direction: column;
+
+        #profile-information {
+            display: flex;
+            flex-direction: row;
+
+            div {
+                flex-grow: 1;
+            }
+        }
     }
 
 
@@ -280,11 +288,11 @@ body {
     }
 
     #about-me {
-        grid-column: span 2;
         position: relative;
         display: flex;
         flex-direction: column;
         width: 100%;
+        flex-grow: 1;
 
         label {
             position: relative;
@@ -292,26 +300,21 @@ body {
             top: 0;
         }
 
-        #about-me-container {
+        #about-me-content {
+            margin: 0 0 0 5px;
             position: relative;
             left: 0;
-            flex-grow: 1;
+            width: 70%;
+            height: 70%;
+            background-color: #212121;
+            border: 1px solid #444;
+            color: $font-primary;
+            padding: 5px 10px 5px 10px;
+            resize: none;
+        }
 
-            textarea {
-                position: relative;
-                left: 0;
-                width: 70%;
-                height: 100%;
-                background-color: #212121;
-                border: 1px solid #444;
-                color: $font-primary;
-                padding: 5px 10px 5px 10px;
-                resize: none;
-            }
-
-            textarea:active, textarea:focus {
-                outline: none;
-            }
+        textarea:active, textarea:focus {
+            outline: none;
         }
     }
 }
