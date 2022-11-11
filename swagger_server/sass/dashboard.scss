@@ -1,5 +1,7 @@
 @import "main.scss";
 @import "select2.scss";
+@import "mixins.scss";
+@import "buttons.scss";
 
 // Eliminate useless defaults on contenteditable elements
 [contenteditable="true"]:active,
@@ -13,11 +15,17 @@ $navbar-width: 15%;
 $dashboard-width: 75%;
 $min-dashboard-height: 85%;
 
+body {
+    @include content-centered;
+
+    width: 100%;
+    height: 100%;
+    color: $font-primary;
+}
+
 .dashboard-container {
     position: relative;
-    top: calc((100% - $min-dashboard-height) / 2);
-    left: calc((100% - $dashboard-width) / 2);
-    width: 75%;
+    width: 60%;
     min-height: 85%;
     padding: 0!important;
     display: flex;
@@ -25,7 +33,6 @@ $min-dashboard-height: 85%;
 
     #dashboard-navigation-bar {
         background: #202020;
-        color: $font-primary;
         position: relative;
         left: 0;
         overflow: scroll;
@@ -131,41 +138,61 @@ $min-dashboard-height: 85%;
 
 // Profile page
 #page-profile {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+
+    #column-left, #column-right {
+        height: 100%;
+    }
+
+    #column-left {
+        flex-basis: 33%;
+        flex-grow: 0;
+    }
+
+    #column-right {
+        flex-basis: 66%;
+        flex-grow: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background-color: blue;
+    }
+
 
     #profile-picture-container {
-        display: flex;
-        flex-direction: column;
+        position: relative;
+        width: 50%;
+        aspect-ratio: 1 / 1; // profile pictures are square
+        margin: auto;
 
-        .grouped-inputs {
-            width: min-content;
+        // only needed to open the file upload form
+        #profile-picture-upload {
+            position: absolute;
+            width: 0;
+            height: 0;
+            opacity: 0;
+        }
+
+        #profile-picture {
+            @include round;
+
+            width: 100%;
+            height: 100%;
             margin: auto;
+            border: 1px solid #444;
+            overflow: hidden;
 
-            // only needed to open the file upload form
-            input {
-                position: absolute;
-                width: 0;
-                height: 0;
-                opacity: 0;
-            }
-
-            #profile-picture {
+            img {
                 position: relative;
-                width: 150px;
-                height: 150px;
-                margin: auto;
-
-                img {
-                    border-radius: 2px;
-                    position: relative;
-                    width: 100%;
-                    height: 100%;
-                }
+                width: 100%;
+                height: 100%;
             }
 
             #profile-picture-overlay {
-                border-radius: 2px;
+                @include round;
+
+                border: 1px solid #444;
                 opacity: 0;
                 background-color: rgba(0, 0, 0, 0.5);
                 position: absolute;
@@ -174,29 +201,82 @@ $min-dashboard-height: 85%;
                 width: 100%;
                 height: 100%;
 
-                svg {
-                    position: absolute;
-                    bottom: 3px;
-                    right: 3px;
-                    fill: $font-primary;
-                }
             }
 
             #profile-picture-overlay:hover {
                 cursor: pointer;
                 opacity: 1;
             }
-
-            #account-dates {
-                flex-grow: 1;
-                color: $font-primary;
-                font-size: 0.9rem;
-                margin: auto;
-                text-align: center;
-            }
-
         }
 
+        #profile-picture-edit-btn {
+            @include content-centered;
+            @include round;
+
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 40px;
+            height: 40px;
+            background-color: #333;
+            border: 2px solid #444;
+
+            svg {
+                fill: $font-primary;
+            }
+        }
+
+        #profile-picture-edit-btn:hover {
+            background-color: #222;
+        }
+    }
+
+    #profile-names {
+        width: 100%;
+        text-align: center;
+
+        #display-name-container {
+            height: min-content;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            #display-name {
+                font-size: 3rem;
+                line-height: 1;
+            }
+        }
+
+        #account-name {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        #edit-display-name-btn {
+            color: $font-primary;
+            position: relative;
+            width: 90%;
+            margin: 20px auto 0 auto;
+        }
+    }
+    
+    hr {
+        width: 90%;
+        margin: 20px auto 10px auto!important;
+    }
+
+    #account-dates {
+        width: 90%;
+        margin: auto;
+
+        th {
+            font-weight: normal;
+        }
+
+        #joined-date, #last-login-date {
+            font-style: italic;
+        }
     }
 
     #about-me {
@@ -396,6 +476,8 @@ span[contenteditable=true].editable-value {
 
 .edit-button {
     padding: 2px;
+    height: 35px;
+    aspect-ratio: 1 / 1;
 
     svg {
         fill: $font-primary;

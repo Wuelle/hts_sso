@@ -31,11 +31,7 @@ $search-background: #454545;
         color: #353535;
     }
 
-    .select2-results__option--selected {
-        background-color: #111;
-    }
-
-    .select2-results__option--highlighted.select2-results__option--selectable {
+    .select2-results__option--highlighted.select2-results__option--selectable{
         background-color: #222;
         color: white;
     }

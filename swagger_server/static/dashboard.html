@@ -104,6 +104,83 @@
         </div>
         <div page-store style="display:none;">
             <div id="page-profile" data-page="profile">
+                <div id="column-left">
+                    <div id="profile-picture-container">
+                        <input id="profile-picture-upload" type="file" accept="image/png,image/gif,image/jpeg" onchange="on_profile_picture_upload();">
+                        <div id="profile-picture" onclick="on_profile_picture_click()">
+                            <img id="profile-picture" src="https://www.hackthissite.org/pages/user/avatar.view.php?id=standard/terrora.jpg" alt="Profile Picture">
+                            <div id="profile-picture-overlay"></div>
+                        </div>
+                        <div id="profile-picture-edit-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M17.263 2.177a1.75 1.75 0 012.474 0l2.586 2.586a1.75 1.75 0 010 2.474L19.53 10.03l-.012.013L8.69 20.378a1.75 1.75 0 01-.699.409l-5.523 1.68a.75.75 0 01-.935-.935l1.673-5.5a1.75 1.75 0 01.466-.756L14.476 4.963l2.787-2.786zm-2.275 4.371l-10.28 9.813a.25.25 0 00-.067.108l-1.264 4.154 4.177-1.271a.25.25 0 00.1-.059l10.273-9.806-2.94-2.939zM19 8.44l2.263-2.262a.25.25 0 000-.354l-2.586-2.586a.25.25 0 00-.354 0L16.061 5.5 19 8.44z"></path></svg>
+                        </div>
+                    </div>
+
+                    <div id="profile-names" class="mt-3">
+                        <div id="display-name-container">
+                            <label class="visually-hidden" for="display-name">Display name</label>
+                            <span 
+                                id="display-name" 
+                                class="profile-data-value editable-value" 
+                                onfocusout="stop_editing('display-name');"
+                                spellcheck="false" 
+                                contenteditable="false"
+                            >Alaska</span>
+                        </div>
+                        <label class="visually-hidden" for="account-name">Account name</label>
+                        <span id="account-name" class="profile-data-value">(Wuelle)</span><br>
+                        <button id="edit-display-name-btn" class="button-primary" onclick="edit('display-name');">Edit profile</button>
+                    </div>
+                    <hr>
+                    <table id="account-dates"> 
+                        <tr>
+                            <th>Joined:</th>
+                            <td id="joined-date">20.12.2022</td>
+                        </tr>
+                        <tr>
+                            <th>Last Login:</th>
+                            <td id="last-login-date">20.12.2022</td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="column-right">
+                    <!--
+                    <div>
+                    <label class="profile-data-key" for="email">EMAIL</label><br>
+                    <span 
+                        id="email" 
+                        class="profile-data-value editable-value" 
+                        onfocusout="stop_editing('email');"
+                        spellcheck="false" 
+                        contenteditable="false"
+                    >foo@example.com</span>
+                    <button class="button-primary edit-button" onclick="edit('email');">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M17.263 2.177a1.75 1.75 0 012.474 0l2.586 2.586a1.75 1.75 0 010 2.474L19.53 10.03l-.012.013L8.69 20.378a1.75 1.75 0 01-.699.409l-5.523 1.68a.75.75 0 01-.935-.935l1.673-5.5a1.75 1.75 0 01.466-.756L14.476 4.963l2.787-2.786zm-2.275 4.371l-10.28 9.813a.25.25 0 00-.067.108l-1.264 4.154 4.177-1.271a.25.25 0 00.1-.059l10.273-9.806-2.94-2.939zM19 8.44l2.263-2.262a.25.25 0 000-.354l-2.586-2.586a.25.25 0 00-.354 0L16.061 5.5 19 8.44z"></path></svg>
+                    </button>
+                    </div>
+                    <div>
+                    </div>
+                    <div id="about-me">
+                        <label style="z-index:3;" for="about-me-content" class="profile-data-key font-primary">ABOUT ME (<span id="about-me-length"></span>/200 characters)</label>
+                        <div id="about-me-container" class="mt-2">
+                            <textarea 
+                                id="about-me-content" 
+                                maxlength=200 
+                                spellcheck="false"
+                                onkeyup="update_remaining_characters();">I like trains.</textarea>
+                        </div>
+                    </div>
+                    -->
+
+                    <!---
+                    <div id="account-dates" class="mt-1">
+                        <em>Last Login <span id="last-logged-in-date">21.10.21</span></em>
+                        <br>
+                        <em>Joined <span id="joined-date">21.10.21</span></em>
+                    </div>
+                    -->
+                </div>
+                <!--
                 <div id="profile-picture-container">
                     <div class="grouped-inputs">
                         <input id="profile-picture-upload" type="file" accept="image/png,image/gif,image/jpeg" onchange="on_profile_picture_upload();">
@@ -122,31 +199,7 @@
                 </div>
 
                 <div id="primary-data-container" class="font-primary">
-                    <label class="profile-data-key" for="account-name">ACCOUNT NAME </label><br><span id="account-name" class="profile-data-value">Wuelle</span>
                     <br>
-                    <label class="profile-data-key" for="display-name">DISPLAY NAME</label><br>
-                    <span 
-                        id="display-name" 
-                        class="profile-data-value editable-value" 
-                        onfocusout="stop_editing('display-name');"
-                        spellcheck="false" 
-                        contenteditable="false"
-                    >Alaska</span>
-                    <button class="button-primary edit-button" onclick="edit('display-name');">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M17.263 2.177a1.75 1.75 0 012.474 0l2.586 2.586a1.75 1.75 0 010 2.474L19.53 10.03l-.012.013L8.69 20.378a1.75 1.75 0 01-.699.409l-5.523 1.68a.75.75 0 01-.935-.935l1.673-5.5a1.75 1.75 0 01.466-.756L14.476 4.963l2.787-2.786zm-2.275 4.371l-10.28 9.813a.25.25 0 00-.067.108l-1.264 4.154 4.177-1.271a.25.25 0 00.1-.059l10.273-9.806-2.94-2.939zM19 8.44l2.263-2.262a.25.25 0 000-.354l-2.586-2.586a.25.25 0 00-.354 0L16.061 5.5 19 8.44z"></path></svg>
-                    </button>
-                    <br>
-                    <label class="profile-data-key" for="email">EMAIL</label><br>
-                    <span 
-                        id="email" 
-                        class="profile-data-value editable-value" 
-                        onfocusout="stop_editing('email');"
-                        spellcheck="false" 
-                        contenteditable="false"
-                    >foo@example.com</span>
-                    <button class="button-primary edit-button" onclick="edit('email');">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M17.263 2.177a1.75 1.75 0 012.474 0l2.586 2.586a1.75 1.75 0 010 2.474L19.53 10.03l-.012.013L8.69 20.378a1.75 1.75 0 01-.699.409l-5.523 1.68a.75.75 0 01-.935-.935l1.673-5.5a1.75 1.75 0 01.466-.756L14.476 4.963l2.787-2.786zm-2.275 4.371l-10.28 9.813a.25.25 0 00-.067.108l-1.264 4.154 4.177-1.271a.25.25 0 00.1-.059l10.273-9.806-2.94-2.939zM19 8.44l2.263-2.262a.25.25 0 000-.354l-2.586-2.586a.25.25 0 00-.354 0L16.061 5.5 19 8.44z"></path></svg>
-                    </button>
                 </div>
 
                 <div id="about-me">
@@ -191,7 +244,7 @@
                         <option value="-3"  gmt-offset="-3"  locations="Brazil, Buenos Aires, Georgetown, Falkland Is.">Brazil, Buenos Aires, Georgetown, Falkland Is. (GMT-3h)</option>
                         <option value="-2"  gmt-offset="-2"  locations="Mid-Atlantic, Ascention Is., St Helena">Mid-Atlantic, Ascention Is., St Helena (GMT-2h)</option>
                         <option value="-1"  gmt-offset="-1"  locations="Azores, Cape Verde Islands">Azores, Cape Verde Islands (GMT-1h)</option>
-                        <option value="0"   gmt-offset="0"   locations="Casablanca, Dublin, Edinburgh, London, Lisbon, Monrovia">Casablanca, Dublin, Edinburgh, London, Lisbon, Monrovia (GMT+0h)</option>
+                        <option value="0"   gmt-offset="+0"   locations="Casablanca, Dublin, Edinburgh, London, Lisbon, Monrovia">Casablanca, Dublin, Edinburgh, London, Lisbon, Monrovia (GMT+0h)</option>
                         <option value="1"   gmt-offset="+1"  locations="Berlin, Brussels, Copenhagen, Madrid, Paris, Rome">Berlin, Brussels, Copenhagen, Madrid, Paris, Rome (GMT+1h)</option>
                         <option value="2"   gmt-offset="+2"  locations="Kaliningrad, South Africa, Warsaw">Kaliningrad, South Africa, Warsaw (GMT+2h)</option>
                         <option value="3"   gmt-offset="+3"  locations="Baghdad, Riyadh, Moscow, Nairobi">Baghdad, Riyadh, Moscow, Nairobi (GMT+3h)</option>
@@ -298,6 +351,7 @@
                     </div>
 
                 </form>
+                -->
             </div>
             <div id="page-privacy" data-page="privacy" class="font-primary">
                 <form>
