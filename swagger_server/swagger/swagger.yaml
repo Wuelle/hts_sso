@@ -12,9 +12,31 @@ tags:
   description: Log into an existing account
 - name: Registration
   description: Create a new account
+- name: Dashboard
+  description: General account management
 - name: Account Recovery
   description: Get access to your account in case you forgot the login credentials
 paths:
+  /dashboard/get_user_info:
+    post:
+      tags:
+      - Dashboard
+      summary: Get a users account data
+      operationId: dashboard_get_user_info
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dashboard_get_user_info_body'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardInfoContainer'
+      x-openapi-router-controller: swagger_server.controllers.dashboard_controller
   /account_recovery/submit_captcha_token:
     post:
       tags:
@@ -57,13 +79,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NonceToken_1'
+                $ref: '#/components/schemas/NonceToken_2'
         "404":
           description: Username not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NonceToken_1'
+                $ref: '#/components/schemas/NonceToken_2'
       x-openapi-router-controller: swagger_server.controllers.account_recovery_controller
   /account_recovery/submit_passphrase_update_token:
     post:
@@ -83,13 +105,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NonceToken_2'
+                $ref: '#/components/schemas/NonceToken_3'
         "403":
           description: Invalid update token
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NonceToken_3'
+                $ref: '#/components/schemas/NonceToken_4'
       x-openapi-router-controller: swagger_server.controllers.account_recovery_controller
   /account_recovery/update_passphrase:
     post:
@@ -109,13 +131,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NonceToken_4'
+                $ref: '#/components/schemas/NonceToken_5'
         "403":
           description: Invalid verification token or passphrase
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NonceToken_3'
+                $ref: '#/components/schemas/NonceToken_4'
       x-openapi-router-controller: swagger_server.controllers.account_recovery_controller
   /account_recovery/submit_secret_answer:
     post:
@@ -134,13 +156,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NonceToken_3'
+                $ref: '#/components/schemas/NonceToken_4'
         "403":
           description: Invalid secret answer
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NonceToken_3'
+                $ref: '#/components/schemas/NonceToken_4'
       x-openapi-router-controller: swagger_server.controllers.account_recovery_controller
   /account_recovery/request_username_reminder:
     post:
@@ -164,7 +186,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NonceToken_5'
+                $ref: '#/components/schemas/NonceToken_6'
       x-openapi-router-controller: swagger_server.controllers.account_recovery_controller
   /session/get_nonce_token:
     get:
@@ -189,7 +211,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NonceToken_1'
+                $ref: '#/components/schemas/NonceToken_2'
       x-openapi-router-controller: swagger_server.controllers.session_controller
   /login/init_session:
     post:
@@ -219,7 +241,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NonceToken_1'
+                $ref: '#/components/schemas/NonceToken_2'
       x-openapi-router-controller: swagger_server.controllers.login_controller
   /login/submit_frame:
     post:
@@ -450,6 +472,31 @@ components:
     NonceToken:
       type: string
       example: <token>
+    LinkedAccount:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Alaska
+        href:
+          type: string
+          example: https://github.com/Wuelle
+      example:
+        name: Alaska
+        href: https://github.com/Wuelle
+    PrivacySetting:
+      required:
+      - hidden-from-discord
+      - hidden-from-profile
+      type: object
+      properties:
+        hidden-from-discord:
+          type: boolean
+        hidden-from-profile:
+          type: boolean
+      example:
+        hidden-from-discord: true
+        hidden-from-profile: true
     LoginFrame:
       type: string
       description: A type of frame in the login sequence
@@ -488,6 +535,66 @@ components:
       example:
         redirect: forums.hackthissite.org
         token: HackThisSite=<token>;path=/;domain=hackthissite.org
+    dashboardget_user_info_content:
+      type: object
+      properties:
+        account-token:
+          type: string
+    dashboard_get_user_info_body:
+      required:
+      - content
+      - nonce
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/dashboardget_user_info_content'
+    DashboardInfoContainer:
+      title: DashboardInfoContainer
+      type: object
+      properties:
+        nonce:
+          $ref: '#/components/schemas/NonceToken'
+        content:
+          $ref: '#/components/schemas/DashboardInfo'
+      example:
+        nonce: <token>
+        content:
+          account-info:
+            account-name: Wuelle
+            last-login: 1. Feb. 2010
+            website: www.example.com
+            display-name: Alaska
+            joined: 1. Feb. 2010
+            timezone: 4
+            about-me: about-me
+            avatar-url: https://www.hackthissite.org/pages/user/avatar.view.php?id=standard/terrora.jpg
+            email: foo@example.com
+            linked-accounts:
+              github: null
+              discord:
+                name: Alaska
+                href: https://github.com/Wuelle
+              gitlab: null
+          allowed-routes:
+          - children:
+            - name: General
+              disabled: true
+            - name: General
+              disabled: true
+            name: General
+          - children:
+            - name: General
+              disabled: true
+            - name: General
+              disabled: true
+            name: General
+          privacy-settings:
+            irc-nicks: null
+            linked-discord-accounts: null
+            email:
+              hidden-from-discord: true
+              hidden-from-profile: true
     account_recoverysubmit_captcha_token_content:
       required:
       - h-captcha-token
@@ -510,9 +617,9 @@ components:
       title: NonceToken
       properties:
         nonce:
-          type: string
+          $ref: '#/components/schemas/NonceToken'
       example:
-        nonce: nonce
+        nonce: <token>
     account_recoveryrequest_passphrase_update_token_content:
       required:
       - username
@@ -532,6 +639,13 @@ components:
           $ref: '#/components/schemas/NonceToken'
         content:
           $ref: '#/components/schemas/account_recoveryrequest_passphrase_update_token_content'
+    NonceToken_2:
+      title: NonceToken
+      properties:
+        nonce:
+          type: string
+      example:
+        nonce: nonce
     account_recoverysubmit_passphrase_update_token_content:
       required:
       - token
@@ -550,7 +664,7 @@ components:
           $ref: '#/components/schemas/NonceToken'
         content:
           $ref: '#/components/schemas/account_recoverysubmit_passphrase_update_token_content'
-    NonceToken_2:
+    NonceToken_3:
       title: NonceToken
       required:
       - content
@@ -559,12 +673,12 @@ components:
         nonce:
           type: string
         content:
-          $ref: '#/components/schemas/NonceToken_2_content'
+          $ref: '#/components/schemas/NonceToken_3_content'
       example:
         nonce: nonce
         content:
           secret-question: secret-question
-    NonceToken_3:
+    NonceToken_4:
       title: NonceToken
       required:
       - nonce
@@ -591,7 +705,7 @@ components:
           $ref: '#/components/schemas/NonceToken'
         content:
           $ref: '#/components/schemas/account_recoveryupdate_passphrase_content'
-    NonceToken_4:
+    NonceToken_5:
       title: NonceToken
       required:
       - nonce
@@ -599,7 +713,7 @@ components:
         nonce:
           type: string
         content:
-          $ref: '#/components/schemas/NonceToken_4_content'
+          $ref: '#/components/schemas/NonceToken_5_content'
       example:
         nonce: nonce
         content:
@@ -641,7 +755,7 @@ components:
           $ref: '#/components/schemas/NonceToken'
         content:
           $ref: '#/components/schemas/account_recoveryrequest_username_reminder_content'
-    NonceToken_5:
+    NonceToken_6:
       title: NonceToken
       required:
       - content
@@ -650,7 +764,7 @@ components:
         nonce:
           type: string
         content:
-          $ref: '#/components/schemas/NonceToken_4_content'
+          $ref: '#/components/schemas/NonceToken_5_content'
       example:
         nonce: nonce
         content:
@@ -930,14 +1044,188 @@ components:
           $ref: '#/components/schemas/NonceToken'
         content:
           $ref: '#/components/schemas/registerfinish_registration_content'
-    NonceToken_2_content:
+    DashboardInfo_children:
+      required:
+      - disabled
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          example: General
+        disabled:
+          type: boolean
+      description: A single route on the dashboard. May be disabled if the user can
+        *see* but not *use* the route
+      example:
+        name: General
+        disabled: true
+    RouteCategory:
+      title: RouteCategory
+      type: object
+      properties:
+        name:
+          type: string
+          example: General
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardInfo_children'
+      example:
+        children:
+        - name: General
+          disabled: true
+        - name: General
+          disabled: true
+        name: General
+    LinkedAccounts:
+      title: LinkedAccounts
+      type: object
+      properties:
+        discord:
+          $ref: '#/components/schemas/LinkedAccount'
+        github:
+          $ref: '#/components/schemas/LinkedAccount'
+        gitlab:
+          $ref: '#/components/schemas/LinkedAccount'
+      description: Lists third party accounts that have been linked with this HTS
+        account
+      example:
+        github: null
+        discord:
+          name: Alaska
+          href: https://github.com/Wuelle
+        gitlab: null
+    AccountInfo:
+      title: AccountInfo
+      type: object
+      properties:
+        account-name:
+          type: string
+          example: Wuelle
+        display-name:
+          type: string
+          example: Alaska
+        joined:
+          type: string
+          example: 1. Feb. 2010
+        last-login:
+          type: string
+          example: 1. Feb. 2010
+        email:
+          type: string
+          example: foo@example.com
+        website:
+          type: string
+          example: www.example.com
+        timezone:
+          type: integer
+          example: 4
+        avatar-url:
+          type: string
+          example: https://www.hackthissite.org/pages/user/avatar.view.php?id=standard/terrora.jpg
+        about-me:
+          type: string
+        linked-accounts:
+          $ref: '#/components/schemas/LinkedAccounts'
+      description: Public information about a specific account
+      example:
+        account-name: Wuelle
+        last-login: 1. Feb. 2010
+        website: www.example.com
+        display-name: Alaska
+        joined: 1. Feb. 2010
+        timezone: 4
+        about-me: about-me
+        avatar-url: https://www.hackthissite.org/pages/user/avatar.view.php?id=standard/terrora.jpg
+        email: foo@example.com
+        linked-accounts:
+          github: null
+          discord:
+            name: Alaska
+            href: https://github.com/Wuelle
+          gitlab: null
+    PrivacySettings:
+      title: PrivacySettings
+      type: object
+      properties:
+        email:
+          $ref: '#/components/schemas/PrivacySetting'
+        irc-nicks:
+          $ref: '#/components/schemas/PrivacySetting'
+        linked-discord-accounts:
+          $ref: '#/components/schemas/PrivacySetting'
+      example:
+        irc-nicks: null
+        linked-discord-accounts: null
+        email:
+          hidden-from-discord: true
+          hidden-from-profile: true
+    DashboardInfo:
+      title: DashboardInfo
+      required:
+      - account-info
+      - allowed-routes
+      - privacy-settings
+      type: object
+      properties:
+        allowed-routes:
+          title: AllowedRoutes
+          type: array
+          description: "Routes on the dashboard that can be viewed by the user. These\
+            \ routes may be disabled (for example, if the user is required to change\
+            \ their password before they can edit their account)"
+          items:
+            $ref: '#/components/schemas/RouteCategory'
+        account-info:
+          $ref: '#/components/schemas/AccountInfo'
+        privacy-settings:
+          $ref: '#/components/schemas/PrivacySettings'
+      description: Information required to display the user dashboard
+      example:
+        account-info:
+          account-name: Wuelle
+          last-login: 1. Feb. 2010
+          website: www.example.com
+          display-name: Alaska
+          joined: 1. Feb. 2010
+          timezone: 4
+          about-me: about-me
+          avatar-url: https://www.hackthissite.org/pages/user/avatar.view.php?id=standard/terrora.jpg
+          email: foo@example.com
+          linked-accounts:
+            github: null
+            discord:
+              name: Alaska
+              href: https://github.com/Wuelle
+            gitlab: null
+        allowed-routes:
+        - children:
+          - name: General
+            disabled: true
+          - name: General
+            disabled: true
+          name: General
+        - children:
+          - name: General
+            disabled: true
+          - name: General
+            disabled: true
+          name: General
+        privacy-settings:
+          irc-nicks: null
+          linked-discord-accounts: null
+          email:
+            hidden-from-discord: true
+            hidden-from-profile: true
+    NonceToken_3_content:
       type: object
       properties:
         secret-question:
           type: string
       example:
         secret-question: secret-question
-    NonceToken_4_content:
+    NonceToken_5_content:
       required:
       - captcha-required
       type: object

@@ -6,6 +6,7 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
+from swagger_server.models.nonce_token import NonceToken  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -14,14 +15,14 @@ class NonceToken1(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, nonce: str=None):  # noqa: E501
+    def __init__(self, nonce: NonceToken=None):  # noqa: E501
         """NonceToken1 - a model defined in Swagger
 
         :param nonce: The nonce of this NonceToken1.  # noqa: E501
-        :type nonce: str
+        :type nonce: NonceToken
         """
         self.swagger_types = {
-            'nonce': str
+            'nonce': NonceToken
         }
 
         self.attribute_map = {
@@ -41,22 +42,22 @@ class NonceToken1(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def nonce(self) -> str:
+    def nonce(self) -> NonceToken:
         """Gets the nonce of this NonceToken1.
 
 
         :return: The nonce of this NonceToken1.
-        :rtype: str
+        :rtype: NonceToken
         """
         return self._nonce
 
     @nonce.setter
-    def nonce(self, nonce: str):
+    def nonce(self, nonce: NonceToken):
         """Sets the nonce of this NonceToken1.
 
 
         :param nonce: The nonce of this NonceToken1.
-        :type nonce: str
+        :type nonce: NonceToken
         """
 
         self._nonce = nonce

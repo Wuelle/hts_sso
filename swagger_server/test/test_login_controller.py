@@ -12,7 +12,7 @@ from swagger_server.models.inline_response201 import InlineResponse201  # noqa: 
 from swagger_server.models.inline_response401 import InlineResponse401  # noqa: E501
 from swagger_server.models.inline_response403 import InlineResponse403  # noqa: E501
 from swagger_server.models.login_submit_frame_body import LoginSubmitFrameBody  # noqa: E501
-from swagger_server.models.nonce_token1 import NonceToken1  # noqa: E501
+from swagger_server.models.nonce_token2 import NonceToken2  # noqa: E501
 from swagger_server.test import BaseTestCase
 
 

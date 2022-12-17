@@ -6,7 +6,7 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
-from swagger_server.models.nonce_token4_content import NonceToken4Content  # noqa: F401,E501
+from swagger_server.models.nonce_token5_content import NonceToken5Content  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -15,17 +15,17 @@ class NonceToken5(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, nonce: str=None, content: NonceToken4Content=None):  # noqa: E501
+    def __init__(self, nonce: str=None, content: NonceToken5Content=None):  # noqa: E501
         """NonceToken5 - a model defined in Swagger
 
         :param nonce: The nonce of this NonceToken5.  # noqa: E501
         :type nonce: str
         :param content: The content of this NonceToken5.  # noqa: E501
-        :type content: NonceToken4Content
+        :type content: NonceToken5Content
         """
         self.swagger_types = {
             'nonce': str,
-            'content': NonceToken4Content
+            'content': NonceToken5Content
         }
 
         self.attribute_map = {
@@ -70,24 +70,22 @@ class NonceToken5(Model):
         self._nonce = nonce
 
     @property
-    def content(self) -> NonceToken4Content:
+    def content(self) -> NonceToken5Content:
         """Gets the content of this NonceToken5.
 
 
         :return: The content of this NonceToken5.
-        :rtype: NonceToken4Content
+        :rtype: NonceToken5Content
         """
         return self._content
 
     @content.setter
-    def content(self, content: NonceToken4Content):
+    def content(self, content: NonceToken5Content):
         """Sets the content of this NonceToken5.
 
 
         :param content: The content of this NonceToken5.
-        :type content: NonceToken4Content
+        :type content: NonceToken5Content
         """
-        if content is None:
-            raise ValueError("Invalid value for `content`, must not be `None`")  # noqa: E501
 
         self._content = content

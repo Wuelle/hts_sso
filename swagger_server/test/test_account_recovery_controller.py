@@ -10,6 +10,7 @@ from swagger_server.models.nonce_token2 import NonceToken2  # noqa: E501
 from swagger_server.models.nonce_token3 import NonceToken3  # noqa: E501
 from swagger_server.models.nonce_token4 import NonceToken4  # noqa: E501
 from swagger_server.models.nonce_token5 import NonceToken5  # noqa: E501
+from swagger_server.models.nonce_token6 import NonceToken6  # noqa: E501
 from swagger_server.models.passphrase_update_token import PassphraseUpdateToken  # noqa: E501
 from swagger_server.models.request_passphrase_reset_token import RequestPassphraseResetToken  # noqa: E501
 from swagger_server.models.request_username_reminder import RequestUsernameReminder  # noqa: E501

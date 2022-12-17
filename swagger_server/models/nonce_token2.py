@@ -6,7 +6,6 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
-from swagger_server.models.nonce_token2_content import NonceToken2Content  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -15,25 +14,20 @@ class NonceToken2(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, nonce: str=None, content: NonceToken2Content=None):  # noqa: E501
+    def __init__(self, nonce: str=None):  # noqa: E501
         """NonceToken2 - a model defined in Swagger
 
         :param nonce: The nonce of this NonceToken2.  # noqa: E501
         :type nonce: str
-        :param content: The content of this NonceToken2.  # noqa: E501
-        :type content: NonceToken2Content
         """
         self.swagger_types = {
-            'nonce': str,
-            'content': NonceToken2Content
+            'nonce': str
         }
 
         self.attribute_map = {
-            'nonce': 'nonce',
-            'content': 'content'
+            'nonce': 'nonce'
         }
         self._nonce = nonce
-        self._content = content
 
     @classmethod
     def from_dict(cls, dikt) -> 'NonceToken2':
@@ -64,30 +58,5 @@ class NonceToken2(Model):
         :param nonce: The nonce of this NonceToken2.
         :type nonce: str
         """
-        if nonce is None:
-            raise ValueError("Invalid value for `nonce`, must not be `None`")  # noqa: E501
 
         self._nonce = nonce
-
-    @property
-    def content(self) -> NonceToken2Content:
-        """Gets the content of this NonceToken2.
-
-
-        :return: The content of this NonceToken2.
-        :rtype: NonceToken2Content
-        """
-        return self._content
-
-    @content.setter
-    def content(self, content: NonceToken2Content):
-        """Sets the content of this NonceToken2.
-
-
-        :param content: The content of this NonceToken2.
-        :type content: NonceToken2Content
-        """
-        if content is None:
-            raise ValueError("Invalid value for `content`, must not be `None`")  # noqa: E501
-
-        self._content = content

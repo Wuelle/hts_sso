@@ -5,7 +5,7 @@ from __future__ import absolute_import
 from flask import json
 from six import BytesIO
 
-from swagger_server.models.nonce_token1 import NonceToken1  # noqa: E501
+from swagger_server.models.nonce_token2 import NonceToken2  # noqa: E501
 from swagger_server.test import BaseTestCase
 
 

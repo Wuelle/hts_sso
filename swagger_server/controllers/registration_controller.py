@@ -14,10 +14,6 @@ from swagger_server.models.resend_verification_mail import ResendVerificationMai
 from swagger_server.models.username import Username  # noqa: E501
 from swagger_server import util
 
-from swagger_server.models.is_username_available_content import IsUsernameAvailableContent  # noqa: F401,E501
-from swagger_server.models.inline_response200_content import InlineResponse200Content  # noqa: F401,E501
-from swagger_server.models.successful_authentication import SuccessfulAuthentication
-
 
 def register_change_verification_mail(body):  # noqa: E501
     """Change the email linked with an account that is currently being registered.
@@ -31,7 +27,7 @@ def register_change_verification_mail(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = ChangeVericationMailAddress.from_dict(connexion.request.get_json())  # noqa: E501
-    return InlineResponse401(nonce="new nonce"), 200
+    return 'do some magic!'
 
 
 def register_finish_registration(body):  # noqa: E501
@@ -46,11 +42,8 @@ def register_finish_registration(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = FinishRegistration.from_dict(connexion.request.get_json())  # noqa: E501
-    content = SuccessfulAuthentication(
-            redirect="https://hackthissite.org",
-            token="example login token"
-    )
-    return InlineResponse201(nonce="abc", content=content), 201;
+    return 'do some magic!'
+
 
 def register_is_username_available(body):  # noqa: E501
     """Check if a username is available
@@ -64,13 +57,7 @@ def register_is_username_available(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = Username.from_dict(connexion.request.get_json())  # noqa: E501
-
-    response = IsUsernameAvailable(nonce="abc")
-    if body.content.username == "Alaska":
-        response.content = IsUsernameAvailableContent(False)
-    else:
-        response.content = IsUsernameAvailableContent(True)
-    return response
+    return 'do some magic!'
 
 
 def register_resend_verification_mail(body):  # noqa: E501
@@ -85,7 +72,7 @@ def register_resend_verification_mail(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = ResendVerificationMail.from_dict(connexion.request.get_json())  # noqa: E501
-    return InlineResponse401(nonce="new nonce"), 200;
+    return 'do some magic!'
 
 
 def register_start_registration(body):  # noqa: E501
@@ -100,11 +87,7 @@ def register_start_registration(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = PrimaryAccountDetails.from_dict(connexion.request.get_json())  # noqa: E501
-    if body.content.username == "Alaska":  # totally invalid username
-        return InlineResponse401(nonce="new nonce"), 403;
-    else:
-        return InlineResponse401(nonce="new nonce"), 200;
-
+    return 'do some magic!'
 
 
 def register_verify_email_address(body):  # noqa: E501
@@ -119,7 +102,4 @@ def register_verify_email_address(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = EmailVerificationToken.from_dict(connexion.request.get_json())  # noqa: E501
-    if body.content.verification_code != "123":
-        return InlineResponse401(nonce="new nonce"), 403;
-    else:
-        return InlineResponse200(nonce="new nonce", content=InlineResponse200Content(True)), 200;
+    return 'do some magic!'

@@ -19,8 +19,6 @@ $(document).ready(() => {
         }
     }
 
-    $(".contains-username").text("Alaska");
-
     $("[page-container]").append(get_page(active_page));
     $("#timezone").select2({
         theme: "hackthissite",
@@ -36,6 +34,7 @@ $(document).ready(() => {
             }
         }
     });
+
     $("#timezone").on("select2:open", () => {
         $('input.select2-search__field').attr('placeholder', 'Search');
     });
@@ -45,7 +44,56 @@ $(document).ready(() => {
         $(this).find("input").eq(0).focus();
     });
 
-    update_remaining_characters();
+    
+
+    init_session("dashboard").then(() => {
+        $.ajax({
+            method: "POST",
+            url: "http://172.17.0.2:8080/_api/dashboard/get_user_info",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({}),
+            statusCode: {
+                200: (e) => {
+                    // Update basic account info
+                    $(".contains-username").text(e["account-info"]["account-name"]);
+                    $("#account-name").text(e["account-info"]["account-name"]);
+                    $("#display-name").text(e["account-info"]["display-name"]);
+                    $("#joined-date").text(e["account-info"]["joined"]);
+                    $("#last-login-date").text(e["account-info"]["last-login"]);
+                    $("#email").text(e["account-info"]["email"]);
+                    $("#website a").text(e["account-info"]["website"].replace("http://", "").replace("https://", ""));
+                    $("#website a").attr("href", e["account-info"]["website"]);
+                    $("#about-me-content").text(e["account-info"]["about-me"]);
+                    update_remaining_characters();
+
+                    // Update linked accounts
+                    let linked_accounts = e["account-info"]["linked-accounts"]
+                    for(const site in linked_accounts) {
+                        let label = $("<label class=\"profile-data-key\">" + site.toUpperCase() + "</label>");
+                        let name = $("<a class=\"profile-data-value href-primary\" rel=\"nofollow\" href=\"" + linked_accounts[site].href + "\">" + linked_accounts[site].name + "</span>");
+                        $("#linked-accounts").append(label);
+                        $("#linked-accounts").append($("<br>"));
+                        $("#linked-accounts").append(name);
+                        $("#linked-accounts").append($("<br>"));
+
+                    }
+
+                    // Update timezone
+                    $("#timezone").val(e["account-info"]["timezone"]);
+                    $("#timezone").trigger("change"); 
+
+                    // Update privacy settings
+                    $("#privacy-email-hide-from-profile input").prop("checked", e["privacy-settings"]["email"]["hidden-from-profile"]);
+                    $("#privacy-email-hide-from-discord input").prop("checked", e["privacy-settings"]["email"]["hidden-from-discord"]);
+                    $("#privacy-discord-hide-from-profile input").prop("checked", e["privacy-settings"]["linked-discord-accounts"]["hidden-from-profile"]);
+                    $("#privacy-discord-hide-from-discord input").prop("checked", e["privacy-settings"]["linked-discord-accounts"]["hidden-from-discord"]);
+                    $("#privacy-irc-hide-from-profile input").prop("checked", e["privacy-settings"]["irc-nicks"]["hidden-from-profile"]);
+                    $("#privacy-irc-hide-from-discord input").prop("checked", e["privacy-settings"]["irc-nicks"]["hidden-from-discord"]);
+                }
+            }
+        })
+    });
 });
 
 function get_page(page_name) {
